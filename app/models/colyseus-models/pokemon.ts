@@ -7459,7 +7459,7 @@ export class MimeJr extends Pokemon {
   atk = 6
   def = 2
   speDef = 2
-  maxPP = 85
+  maxPP = 75
   range = 2
   skill = Ability.MIMIC
   additional = true
@@ -7478,7 +7478,7 @@ export class MrMime extends Pokemon {
   atk = 15
   def = 2
   speDef = 4
-  maxPP = 85
+  maxPP = 75
   range = 2
   skill = Ability.MIMIC
   additional = true
