@@ -4825,7 +4825,7 @@ export class Eevee extends Pokemon {
   stars = 1
   hp = 90
   atk = 5
-  def = 2
+  def = 3
   speDef = 2
   maxPP = 100
   range = 1
@@ -4878,8 +4878,8 @@ export class Vaporeon extends Pokemon {
   stars = 2
   hp = 180
   atk = 12
-  def = 1
-  speDef = 1
+  def = 3
+  speDef = 2
   maxPP = 100
   range = 1
   skill = Ability.HAPPY_HOUR
@@ -4892,8 +4892,8 @@ export class Jolteon extends Pokemon {
   stars = 2
   hp = 180
   atk = 12
-  def = 1
-  speDef = 1
+  def = 3
+  speDef = 2
   maxPP = 100
   range = 1
   skill = Ability.HAPPY_HOUR
@@ -4908,7 +4908,7 @@ export class Flareon extends Pokemon {
   atk = 12
   def = 3
   speDef = 2
-  maxPP = 80
+  maxPP = 100
   range = 1
   skill = Ability.HAPPY_HOUR
   attackSprite = AttackSprite.FIRE_MELEE
@@ -4920,8 +4920,8 @@ export class Espeon extends Pokemon {
   stars = 2
   hp = 180
   atk = 12
-  def = 1
-  speDef = 1
+  def = 3
+  speDef = 2
   maxPP = 80
   range = 1
   skill = Ability.HAPPY_HOUR
@@ -4962,8 +4962,8 @@ export class Sylveon extends Pokemon {
   stars = 2
   hp = 180
   atk = 12
-  def = 1
-  speDef = 1
+  def = 3
+  speDef = 2
   maxPP = 80
   range = 1
   skill = Ability.HAPPY_HOUR
@@ -4976,8 +4976,8 @@ export class Glaceon extends Pokemon {
   stars = 2
   hp = 180
   atk = 12
-  def = 1
-  speDef = 1
+  def = 3
+  speDef = 2
   maxPP = 80
   range = 1
   skill = Ability.HAPPY_HOUR
