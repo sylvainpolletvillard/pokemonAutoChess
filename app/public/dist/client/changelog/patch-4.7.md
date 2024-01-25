@@ -35,6 +35,7 @@
 - Buff Eevee, Vaporeon, Jolteon, Espeon, Umbreon, Glaceon, Sylveon: Def 3 Spedef 2
 - Buff Uxie, Mesprit, Azelf : Attack ~~12~~ 14
 - Buff Mime Jr line: PP ~~85~~ 75
+- Buff Tinkatink line: PP ~~150~~ 120
 - Adapted Magic Bounce (Natu): fixed duration to 5 seconds, replace 40 flat damage by 50/100% of damage reflected, can now deal and reflect ability crits
 - Genesect lock-on ability now deals **additional** true damage
 - New ability for Staryu/Starmie: Psybeam: Deal 30/60/100 special damage to all enemy Pokémon behind the target with 50% chance to make them confused for 4 seconds

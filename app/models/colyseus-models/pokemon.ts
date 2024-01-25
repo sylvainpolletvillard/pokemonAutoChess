@@ -9752,7 +9752,7 @@ export class Tinkatink extends Pokemon {
   atk = 11
   def = 3
   speDef = 3
-  maxPP = 150
+  maxPP = 120
   range = 1
   skill = Ability.GIGATON_HAMMER
   attackSprite = AttackSprite.FAIRY_MELEE
@@ -9767,7 +9767,7 @@ export class Tinkatuff extends Pokemon {
   atk = 22
   def = 4
   speDef = 4
-  maxPP = 150
+  maxPP = 120
   range = 1
   skill = Ability.GIGATON_HAMMER
   attackSprite = AttackSprite.FAIRY_MELEE
@@ -9781,7 +9781,7 @@ export class Tinkaton extends Pokemon {
   atk = 44
   def = 8
   speDef = 8
-  maxPP = 150
+  maxPP = 120
   range = 1
   skill = Ability.GIGATON_HAMMER
   attackSprite = AttackSprite.FAIRY_MELEE
