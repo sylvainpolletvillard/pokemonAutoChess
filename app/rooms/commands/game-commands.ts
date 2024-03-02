@@ -790,6 +790,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           case Effect.GOLDEN_EGGS:
             player.titles.add(Title.BABYSITTER)
             break
+          case Effect.BERSERK:
+            player.titles.add(Title.BEAST_MASTER)
+            break
           case Effect.MAX_ILLUMINATION:
             player.titles.add(Title.CHOSEN_ONE)
             break

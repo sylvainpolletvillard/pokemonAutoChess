@@ -99,6 +99,7 @@ export default function PlayerBox(props: { user: ILobbyUser }) {
             <img
               src={getAvatarSrc(PkmIndex[name] + "/Normal")}
               className="pokemon-portrait"
+              key={"fav_" + name}
             />
           ))}
         </p>
