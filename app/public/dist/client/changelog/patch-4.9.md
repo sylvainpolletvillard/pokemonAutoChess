@@ -67,6 +67,7 @@
 
 - Synergies are now correctly updated after an unit being force-pushed from bench
 - Fixed magmarizer not inflicting burn
+- Fixed targeting of abilities Triple Kick, Corrupted Nature, Shell Smash
 
 # Misc
 
