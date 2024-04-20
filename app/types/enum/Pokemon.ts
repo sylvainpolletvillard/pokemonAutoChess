@@ -408,6 +408,8 @@ export enum Pkm {
   VENOMOTH = "VENOMOTH",
   VOLTORB = "VOLTORB",
   ELECTRODE = "ELECTRODE",
+  HISUI_VOLTORB = "HISUI_VOLTORB",
+  HISUI_ELECTRODE = "HISUI_ELECTRODE",
   SLUGMA = "SLUGMA",
   MAGCARGO = "MAGCARGO",
   SNEASEL = "SNEASEL",
@@ -1170,6 +1172,8 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.VENOMOTH]: "0049",
   [Pkm.VOLTORB]: "0100",
   [Pkm.ELECTRODE]: "0101",
+  [Pkm.HISUI_VOLTORB]: "0100-0001",
+  [Pkm.HISUI_ELECTRODE]: "0101-0001",
   [Pkm.SLUGMA]: "0218",
   [Pkm.MAGCARGO]: "0219",
   [Pkm.SNEASEL]: "0215",
@@ -1926,6 +1930,8 @@ export const PkmFamily: { [key in Pkm]: Pkm } = {
   [Pkm.VENOMOTH]: Pkm.VENONAT,
   [Pkm.VOLTORB]: Pkm.VOLTORB,
   [Pkm.ELECTRODE]: Pkm.VOLTORB,
+  [Pkm.HISUI_VOLTORB]: Pkm.HISUI_VOLTORB,
+  [Pkm.HISUI_ELECTRODE]: Pkm.HISUI_ELECTRODE,
   [Pkm.SLUGMA]: Pkm.SLUGMA,
   [Pkm.MAGCARGO]: Pkm.SLUGMA,
   [Pkm.SNEASEL]: Pkm.SNEASEL,
@@ -4420,6 +4426,16 @@ export const AnimationConfig: {
     emote: AnimationType.Pose
   },
   [Pkm.ELECTRODE]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Hurt,
+    emote: AnimationType.Twirl
+  },
+  [Pkm.HISUI_VOLTORB]: {
+    attack: AnimationType.Twirl,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Twirl
+  },
+  [Pkm.HISUI_ELECTRODE]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Hurt,
     emote: AnimationType.Twirl

@@ -11,7 +11,7 @@ export function NameTab() {
 
   if (user && user.anonymous) {
     return (
-      <div className="my-container">
+      <div className="my-box">
         <p>{t("anonymous_users_name_hint")}</p>
       </div>
     )

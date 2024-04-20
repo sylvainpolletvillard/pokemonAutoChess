@@ -329,7 +329,8 @@
     "SPARK": "Spark",
     "CRUNCH": "Crunch",
     "CROSS_POISON": "Cross Poison",
-    "DOUBLE_EDGE": "Double Edge"
+    "DOUBLE_EDGE": "Double Edge",
+    "ENERGY_BALL": "Energy Ball"
   },
   "pkm": {
     "DEFAULT": "MissingNo.",
@@ -739,6 +740,8 @@
     "VENOMOTH": "Venomoth",
     "VOLTORB": "Voltorb",
     "ELECTRODE": "Electrode",
+    "HISUI_VOLTORB": "Hisuian Voltorb",
+    "HISUI_ELECTRODE": "Hisuian Electrode",
     "SLUGMA": "Slugma",
     "MAGCARGO": "Magcargo",
     "SNEASEL": "Sneasel",
@@ -1207,7 +1210,7 @@
     "FUTURE_SIGHT": "Deals [15,30,60,SP] SPECIAL to 5 enemies",
     "FAKE_TEARS": "Deals [3,6,9,SP] SPECIAL to the whole enemy team and trigger ARMOR_REDUCTION for 3 seconds",
     "SPARKLING_ARIA": "Deals [15,30,60,SP] SPECIAL to the target and adjacent enemies. If adjacent allies are BURN, the burn is healed.",
-    "DRAGON_DARTS": "Throws 3 darts that deals [10,20,40,SP] SPECIAL each to the target. If the target dies, regain 40 PP.",
+    "DRAGON_DARTS": "Throws 3 darts that deals [10,20,40,SP] SPECIAL each to the target. If the target is KO, regain 40 PP.",
     "GRASSY_SURGE": "Increase ATK of all GRASS pokemons by [5,SP]",
     "MISTY_SURGE": "Give [30,SP] PP to FAIRY allies",
     "SKY_ATTACK": "Rises in the air and fall on the farthest target after one second, dealing [120,SP] SPECIAL",
@@ -1400,7 +1403,8 @@
     "SPARK": "The pokémon fires a spark charged with electricity at the target, inflicting [40,80,SP] SPECIAL. The spark can bounce up to 4 times between adjacent enemies. Each rebound halves the SPECIAL",
     "CRUNCH": "Deal [150,SP] SPECIAL. If it kills the target, heal for 50% of target's max HP.",
     "CROSS_POISON": "Deal [30,60,120,SP] to target and enemies adjacent to it, and POISONNED them for 3 seconds",
-    "DOUBLE_EDGE": "Deal [55,110,220,SP] PHYSICAL to target. The user hurts itself for [20,40,60] PHYSICAL"
+    "DOUBLE_EDGE": "Deal [55,110,220,SP] PHYSICAL to target. The user hurts itself for [20,40,60] PHYSICAL",
+    "ENERGY_BALL": "Fires an energy ball in a line, traversing all units, dealing [25,50,100] SPECIAL and reducing SPE_DEF of enemies by [3,SP], and giving [25,50,100,SP] SHIELD to allies"
   },
   "effect": {
     "INGRAIN": "Ingrain",
@@ -1879,7 +1883,7 @@
     "AQUA_VEIL": "Give RUNE_PROTECT under RAIN",
     "PORYGON": "Porygon2 is looking for an UPGRADE",
     "SLOWBRO": "Slowbro is looking for a KINGS_ROCK",
-    "MOXIE": "Every time an enemy pokémon dies, it gains ATK equal to its stars",
+    "MOXIE": "Every time an enemy pokémon is KO, it gains ATK equal to its stars",
     "BELLSPROUT": "Weepinbell is looking for berries",
     "CLEFAIRY": "Clefairy is looking for a POKE_DOLL",
     "ILLUMISE_VOLBEAT": "Illumise and Volbeat gain 5 PP per second for each other member of their species alive on the board",
@@ -2034,7 +2038,7 @@
     "GROUND": "GROUND pokemons gain bonus ATK, DEF and SPE_DEF every 3 seconds.",
     "POISON": "POISON pokemons have a chance to POISONNED their target for 4 seconds with their basic attacks. Poison inflicts TRUE over time.",
     "DRAGON": "DRAGON amplify synergies and gains more stats when fully evolved.",
-    "FIELD": "When a FIELD pokemon dies, all the other FIELD pokemons are healed and gain ATK_SPEED",
+    "FIELD": "When a FIELD pokemon is KO, all the other FIELD pokemons are healed and gain ATK_SPEED",
     "MONSTER": "MONSTER pokemons can FLINCH their opponents. Every time they get a KO, they gain stats, heal and grow in size.",
     "HUMAN": "HUMAN pokemons seek to stay on their feet. All your team heals for a percentage of the damage they deal with attacks and abilities",
     "AQUATIC": "AQUATIC pokemons reduce the duration of status afflictions for all your team",

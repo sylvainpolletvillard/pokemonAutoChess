@@ -8233,6 +8233,29 @@ export class CrossPoisonStrategy extends AbilityStrategy {
   }
 }
 
+export class EnergyBallStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    state: PokemonState,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, state, board, target, crit)
+    const damage = [25,50,100][pokemon.stars - 1] ?? 100
+    const shield = [25,50,100][pokemon.stars - 1] ?? 100
+
+    effectInLine(board, pokemon, target, (targetInLine) => {
+      if (targetInLine.team !== pokemon.team) {
+        target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit, true)
+        target.addSpecialDefense(-3, true)
+      } else {
+        target.addShield(shield, pokemon, true)
+      }
+    })
+  }
+}
+
 export * from "./hidden-power"
 
 export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
@@ -8544,5 +8567,6 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.SPARK]: new SparkStrategy(),
   [Ability.CRUNCH]: new CrunchStrategy(),
   [Ability.CROSS_POISON]: new CrossPoisonStrategy(),
-  [Ability.SHELTER]: new ShelterStrategy()
+  [Ability.SHELTER]: new ShelterStrategy(),
+  [Ability.ENERGY_BALL]: new EnergyBallStrategy()
 }
