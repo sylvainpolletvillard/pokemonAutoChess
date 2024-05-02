@@ -15,6 +15,8 @@
 
 # UI
 
+- Regional mons are now shown for each map in Wiki > Regions
+
 # Bugfix
 
 # Misc
