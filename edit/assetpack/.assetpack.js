@@ -1,17 +1,17 @@
 import { path } from "@assetpack/core"
-import { compressJpg, compressPng } from "@assetpack/plugin-compress"
-//import { audio } from "@assetpack/plugin-ffmpeg"
-import { json } from "@assetpack/plugin-json"
-import fs from "fs-extra"
+import { compressJpg, compressPng } from "@assetpack/core/compress"
+//import { audio } from "@assetpack/core/ffmpeg"
+import { json } from "@assetpack/core/json"
 import { texturePacker } from "./plugin-texturepacker-fork/dist/es/index.js"
+import fs from "fs-extra"
 
 export default {
   entry: "../../app/public/src/assets",
   output: "../../app/public/dist/client/assets",
-  plugins: {
-    compressPng: compressPng(),
-    compressJpg: compressJpg(),
-    /*audio: audio({
+  pipes: [
+    compressPng(),
+    compressJpg(),
+    /*audio({
       inputs: [".mp3", ".wav", ".ogg"],
       outputs: [
         {
@@ -34,8 +34,8 @@ export default {
         }
       ]
     }),*/
-    json: json(),
-    texturePacker: texturePacker({
+    json(),
+    texturePacker({
       texturePacker: {
         exporter: "Phaser3",
         allowRotation: false // i spotted some bugs when activated
@@ -45,8 +45,8 @@ export default {
         template: "" // prevent adding @1x suffix when not generating multiple resolutions
       }
     }),
-    texturePackIndexer: texturePackAtlas()
-  }
+    texturePackAtlas()
+  ]
 }
 
 function texturePackAtlas() {
