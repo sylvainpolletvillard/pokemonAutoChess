@@ -1,16 +1,15 @@
 import { path } from "@assetpack/core"
-import { compressJpg, compressPng } from "@assetpack/core/compress"
+import { compress } from "@assetpack/core/image"
 //import { audio } from "@assetpack/core/ffmpeg"
 import { json } from "@assetpack/core/json"
-import { texturePacker } from "./plugin-texturepacker-fork/dist/es/index.js"
+import { texturePacker } from "@assetpack/core/texture-packer"
+//import { texturePacker } from "./plugin-texturepacker-fork/dist/es/index.js"
 import fs from "fs-extra"
 
 export default {
   entry: "../../app/public/src/assets",
   output: "../../app/public/dist/client/assets",
   pipes: [
-    compressPng(),
-    compressJpg(),
     /*audio({
       inputs: [".mp3", ".wav", ".ogg"],
       outputs: [
@@ -34,7 +33,6 @@ export default {
         }
       ]
     }),*/
-    json(),
     texturePacker({
       texturePacker: {
         exporter: "Phaser3",
@@ -45,7 +43,9 @@ export default {
         template: "" // prevent adding @1x suffix when not generating multiple resolutions
       }
     }),
-    texturePackAtlas()
+    compress(),
+    json()
+    //texturePackAtlas()
   ]
 }
 
