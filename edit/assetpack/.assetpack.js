@@ -44,8 +44,8 @@ export default {
       }
     }),
     compress(),
-    json()
-    //texturePackAtlas()
+    json(),
+    texturePackAtlas()
   ]
 }
 
@@ -53,8 +53,8 @@ function texturePackAtlas() {
   return {
     folder: true,
     name: "texture-pack-indexer",
-    finish(tree, processor) {
-      const atlasPath = path.joinSafe(processor.config.entry, "atlas.json")
+    async finish(rootAsset, options, pipeSystem) {
+      const atlasPath = path.joinSafe(pipeSystem.entryPath, "atlas.json")
 
       const existingAtlas = fs.existsSync(atlasPath)
         ? fs.readJSONSync(atlasPath)
@@ -70,15 +70,16 @@ function texturePackAtlas() {
         packs: {}
       }
 
-      function walk(node) {
-        if (node.isFolder && node.files) {
-          for (let f in node.files) walk(node.files[f])
+      function walk(asset) {
+        if (asset.children.length > 0) {
+          for (let child of asset.children) walk(child)
         } else if (
-          node.pathTags["tps"] === true &&
-          node.path.endsWith(".png")
+          asset.parent &&
+          asset.parent.path.includes("{tps}") &&
+          asset.path.endsWith(".png")
         ) {
-          let [packPath, animName] = node.parent.split("{tps}")
-          packPath = packPath.replace(tree.path + "/", "")
+          let [packPath, animName] = asset.parent.path.split("{tps}")
+          packPath = packPath.replace(rootAsset.path + "/", "")
           let packName = packPath.split("/").pop()
 
           if (packPath in atlas.packs === false) {
@@ -86,14 +87,14 @@ function texturePackAtlas() {
           }
 
           // declare automatically anims if it matches 000.png, 001.png etc.
-          if (/\d\d\d\.png$/.test(node.path)) {
+          if (/\d\d\d\.png$/.test(asset.path)) {
             if ("anims" in atlas.packs[packPath] === false) {
               atlas.packs[packPath].anims = {}
             }
 
             if (animName === "") {
               // case where the pack contains a single anim (no sub folder)
-              animName = node.parent.split("/").pop().replace("{tps}", "")
+              animName = asset.parent.path.split("/").pop().replace("{tps}", "")
             } else {
               // case where the pack contains several anims, we remove trailing slash
               animName = animName.replace(/^\//, "")
@@ -109,7 +110,7 @@ function texturePackAtlas() {
           }
         }
       }
-      walk(tree)
+      walk(rootAsset)
 
       //fs.writeJSONSync("tree.json", tree)
       fs.writeJSONSync(atlasPath, atlas)
