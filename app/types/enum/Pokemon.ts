@@ -808,7 +808,9 @@ export enum Pkm {
   KLEFKI = "KLEFKI",
   HAWLUCHA = "HAWLUCHA",
   MIENFOO = "MIENFOO",
-  MIENSHAO = "MIENSHAO"
+  MIENSHAO = "MIENSHAO",
+  THROH = "THROH",
+  SAWK = "SAWK"
 }
 
 export const PkmIndex: { [key in Pkm]: string } = {
@@ -1619,7 +1621,9 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.KLEFKI]: "0707",
   [Pkm.HAWLUCHA]: "0701",
   [Pkm.MIENFOO]: "0619",
-  [Pkm.MIENSHAO]: "0620"
+  [Pkm.MIENSHAO]: "0620",
+  [Pkm.THROH]: "0538",
+  [Pkm.SAWK]: "0539"
 }
 
 export const PkmFamily: { [key in Pkm]: Pkm } = {
@@ -2430,7 +2434,9 @@ export const PkmFamily: { [key in Pkm]: Pkm } = {
   [Pkm.KLEFKI]: Pkm.KLEFKI,
   [Pkm.HAWLUCHA]: Pkm.HAWLUCHA,
   [Pkm.MIENFOO]: Pkm.MIENFOO,
-  [Pkm.MIENSHAO]: Pkm.MIENFOO
+  [Pkm.MIENSHAO]: Pkm.MIENFOO,
+  [Pkm.THROH]: Pkm.THROH,
+  [Pkm.SAWK]: Pkm.SAWK
 }
 
 export const PkmRegionalVariants: { [key in Pkm]?: Pkm[] } = {
@@ -2449,7 +2455,8 @@ export enum PkmDuo {
   LATIOS_LATIAS = "LATIOS_LATIAS",
   PLUSLE_MINUN = "PLUSLE_MINUN",
   ILLUMISE_VOLBEAT = "ILLUMISE_VOLBEAT",
-  NINJASK_SHEDINJA = "NINJASK_SHEDINJA"
+  NINJASK_SHEDINJA = "NINJASK_SHEDINJA",
+  THROH_SAWK = "THROH_SAWK"
 }
 
 export type PkmProposition = Pkm | PkmDuo
@@ -2458,7 +2465,8 @@ export const PkmDuos = {
   [PkmDuo.LATIOS_LATIAS]: [Pkm.LATIOS, Pkm.LATIAS],
   [PkmDuo.PLUSLE_MINUN]: [Pkm.PLUSLE, Pkm.MINUN],
   [PkmDuo.ILLUMISE_VOLBEAT]: [Pkm.ILLUMISE, Pkm.VOLBEAT],
-  [PkmDuo.NINJASK_SHEDINJA]: [Pkm.NINJASK, Pkm.SHEDINJA]
+  [PkmDuo.NINJASK_SHEDINJA]: [Pkm.NINJASK, Pkm.SHEDINJA],
+  [PkmDuo.THROH_SAWK]: [Pkm.THROH, Pkm.SAWK]
 }
 
 export const Unowns: Pkm[] = [
@@ -6635,5 +6643,15 @@ export const AnimationConfig: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,
     emote: AnimationType.Charge
+  },
+  [Pkm.THROH]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Shoot
+  },
+  [Pkm.SAWK]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Shoot
   }
 }

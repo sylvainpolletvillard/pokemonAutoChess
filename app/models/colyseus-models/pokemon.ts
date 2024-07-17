@@ -14214,6 +14214,34 @@ export class Hawlucha extends Pokemon {
   attackSprite = AttackSprite.FIGHTING_MELEE
 }
 
+export class Throh extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.HUMAN])
+  rarity = Rarity.UNIQUE
+  stars = 3
+  hp = 180
+  atk = 10
+  def = 3
+  speDef = 3
+  maxPP = 100
+  range = 1
+  skill = Ability.STORM_THROW
+  attackSprite = AttackSprite.FIGHTING_MELEE
+}
+
+export class Sawk extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.HUMAN])
+  rarity = Rarity.UNIQUE
+  stars = 3
+  hp = 140
+  atk = 16
+  def = 3
+  speDef = 3
+  maxPP = 100
+  range = 1
+  skill = Ability.ROCK_SMASH
+  attackSprite = AttackSprite.FIGHTING_MELEE
+}
+
 export const PokemonClasses: Record<
   Pkm,
   new (
@@ -15028,5 +15056,7 @@ export const PokemonClasses: Record<
   [Pkm.KLEFKI]: Klefki,
   [Pkm.HAWLUCHA]: Hawlucha,
   [Pkm.MIENFOO]: Mienfoo,
-  [Pkm.MIENSHAO]: Mienshao
+  [Pkm.MIENSHAO]: Mienshao,
+  [Pkm.THROH]: Throh,
+  [Pkm.SAWK]: Sawk
 }
