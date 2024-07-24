@@ -68,7 +68,7 @@ export default config({
     app.use(express.static(clientSrc))
 
     // set up rate limiter: maximum of five requests per minute
-    const limiter = rateLimit({
+    /*const limiter = rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes
       max: 5000, // Allow 500 requests per minute
       message: "Too many requests, please try again later.",
@@ -77,7 +77,7 @@ export default config({
     })
 
     // Apply the rate limiting middleware to all requests
-    app.use(limiter)
+    app.use(limiter)*/
 
     app.get("/", (req, res) => {
       res.sendFile(viewsSrc)

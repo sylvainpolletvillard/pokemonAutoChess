@@ -300,30 +300,24 @@ export default class Simulation extends Schema implements ISimulation {
   }
 
   getFirstAvailablePlaceOnBoard(teamIndex: number): { x: number; y: number } {
-    let candidateX = 0,
-      candidateY = 0
     if (teamIndex === 0) {
-      outerloop: for (let y = 0; y < this.board.rows; y++) {
+      for (let y = 0; y < this.board.rows; y++) {
         for (let x = 0; x < this.board.columns; x++) {
           if (this.board.getValue(x, y) === undefined) {
-            candidateX = x
-            candidateY = y
-            break outerloop
+            return { x, y }
           }
         }
       }
     } else {
-      outerloop: for (let y = 0; y < this.board.rows; y++) {
+      for (let y = 0; y < this.board.rows; y++) {
         for (let x = this.board.columns - 1; x >= 0; x--) {
           if (this.board.getValue(x, y) === undefined) {
-            candidateX = x
-            candidateY = y
-            break outerloop
+            return { x, y }
           }
         }
       }
     }
-    return { x: candidateX, y: candidateY }
+    return { x: 0, y: 0 }
   }
 
   getClosestAvailablePlaceOnBoardTo(
