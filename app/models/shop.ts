@@ -394,6 +394,7 @@ export default class Shop {
   pickPokemon(player: Player, state: GameState) {
     if (
       state.specialGameRule !== SpecialGameRule.DITTO_PARTY &&
+      player.experienceManager.level >= 3 &&
       chance(DITTO_RATE)
     ) {
       return Pkm.DITTO
