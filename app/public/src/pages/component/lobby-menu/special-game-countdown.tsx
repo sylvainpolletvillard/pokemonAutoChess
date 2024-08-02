@@ -27,6 +27,7 @@ export function SpecialGameCountdown() {
         }
         className="rank icon"
         src={"/assets/ranks/" + nextSpecialGame.minRank + ".svg"}
+        style={{ width: "50px" }}
       />
     )
   } else if (nextSpecialGame.mode === GameMode.SCRIBBLE) {

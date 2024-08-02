@@ -27,12 +27,9 @@ import { ISpecialGamePlanned } from "../../../types/interfaces/Lobby"
 
 export interface IUserLobbyState {
   botLogDatabase: string[]
-  messages: IChatV2[]
-  users: ILobbyUser[]
   leaderboard: ILeaderboardInfo[]
   botLeaderboard: ILeaderboardBotInfo[]
   levelLeaderboard: ILeaderboardInfo[]
-  user: ILobbyUser | undefined
   searchedUser: ILobbyUser | undefined
   tabIndex: number
   preparationRooms: RoomAvailable[]
@@ -54,12 +51,9 @@ const initialState: IUserLobbyState = {
   suggestions: [],
   boosterContent: [],
   pokemonCollection: [],
-  messages: [],
-  users: [],
   leaderboard: [],
   botLeaderboard: [],
   levelLeaderboard: [],
-  user: undefined,
   tabIndex: 0,
   preparationRooms: [],
   gameRooms: [],
@@ -88,14 +82,6 @@ export const lobbySlice = createSlice({
     pushBotLog: (state, action: PayloadAction<string>) => {
       state.botLogDatabase.push(action.payload)
     },
-    pushMessage: (state, action: PayloadAction<Message>) => {
-      state.messages.push(structuredClone(action.payload))
-    },
-    removeMessage: (state, action: PayloadAction<Message>) => {
-      state.messages = state.messages.filter(
-        (m) => m.payload !== action.payload.payload
-      )
-    },
     setLeaderboard: (state, action: PayloadAction<ILeaderboardInfo[]>) => {
       state.leaderboard = action.payload
     },
@@ -123,36 +109,6 @@ export const lobbySlice = createSlice({
         clonedCollection[index][action.payload.field] = action.payload.value
         state.pokemonCollection = clonedCollection
       }
-    },
-    addUser: (state, action: PayloadAction<LobbyUser>) => {
-      const u: ILobbyUser = JSON.parse(JSON.stringify(action.payload))
-      if (!state.users.find((user) => user.id === u.id)) {
-        state.users.push(u)
-        state.users.sort((a, b) => b.elo - a.elo)
-      }
-    },
-    changeUser: (
-      state,
-      action: PayloadAction<{ id: string; field: string; value: any }>
-    ) => {
-      if (state.user && action.payload.id == state.user.id) {
-        state.user[action.payload.field] = action.payload.value
-      }
-      const index = state.users.findIndex((u) => u.id == action.payload.id)
-
-      if (index != -1) {
-        state.users[index][action.payload.field] = action.payload.value
-      }
-    },
-    removeUser: (state, action: PayloadAction<string>) => {
-      state.users.splice(
-        state.users.findIndex((u) => u.id == action.payload),
-        1
-      )
-    },
-    setUser: (state, action: PayloadAction<LobbyUser>) => {
-      const u: ILobbyUser = JSON.parse(JSON.stringify(action.payload))
-      state.user = u
     },
     setTabIndex: (state, action: PayloadAction<number>) => {
       state.tabIndex = action.payload
@@ -307,18 +263,12 @@ export const lobbySlice = createSlice({
 
 export const {
   setLanguage,
-  removeMessage,
   setBoosterContent,
   addPokemonConfig,
   changePokemonConfig,
-  pushMessage,
   setLeaderboard,
   setBotLeaderboard,
   setLevelLeaderboard,
-  addUser,
-  changeUser,
-  removeUser,
-  setUser,
   setTabIndex,
   addRoom,
   removeRoom,

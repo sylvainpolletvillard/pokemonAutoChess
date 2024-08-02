@@ -3,14 +3,13 @@ import { type NonFunctionPropNames } from "@colyseus/schema/lib/types/HelperType
 import firebase from "firebase/compat/app"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Navigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import LobbyUser from "../../../models/colyseus-models/lobby-user"
 import {
   TournamentBracketSchema,
   TournamentPlayerSchema,
   TournamentSchema
 } from "../../../models/colyseus-models/tournament"
-import PokemonConfig from "../../../models/colyseus-models/pokemon-config"
 import { IBot } from "../../../models/mongo-models/bot-v2"
 import {
   ICustomLobbyState,
@@ -19,39 +18,29 @@ import {
   Transfer
 } from "../../../types"
 import { useAppDispatch, useAppSelector } from "../hooks"
-import i18n from "../i18n"
 import store from "../stores"
 import {
-  addPokemonConfig,
   addRoom,
   addTournament,
   addTournamentBracket,
-  addUser,
-  changePokemonConfig,
   changeTournament,
   changeTournamentBracket,
   changeTournamentPlayer,
-  changeUser,
   leaveLobby,
   pushBotLog,
-  pushMessage,
-  removeMessage,
   removeRoom,
   removeTournament,
   removeTournamentBracket,
-  removeUser,
   setBoosterContent,
   setBotData,
   setBotLeaderboard,
   setBotList,
-  setLanguage,
   setLeaderboard,
   setLevelLeaderboard,
   setNextSpecialGame,
   setPastebinUrl,
   setSearchedUser,
   setSuggestions,
-  setUser,
   updateTournament
 } from "../stores/LobbyStore"
 import {
@@ -63,10 +52,10 @@ import {
   requestLevelLeaderboard,
   setProfile
 } from "../stores/NetworkStore"
-import RoomMenu from "./component/available-room-menu/room-menu"
-import CurrentUsers from "./component/available-user-menu/current-users"
-import Chat from "./component/chat/chat"
-import TabMenu from "./component/lobby-menu/tab-menu"
+import RoomMenu from "./component/lobby-menu/room-menu"
+import { GameRoomsMenu } from "./component/lobby-menu/game-rooms-menu"
+import LeaderboardMenu from "./component/lobby-menu/leaderboard-menu"
+import { TournamentMenu } from "./component/lobby-menu/tournament-menu"
 import { MainSidebar } from "./component/main-sidebar/main-sidebar"
 import { FIREBASE_CONFIG } from "./utils/utils"
 import { IUserMetadata } from "../../../models/mongo-models/user-metadata"
@@ -74,7 +63,9 @@ import { logger } from "../../../utils/logger"
 import { localStore, LocalStoreKeys } from "./utils/store"
 import { cc } from "./utils/jsx"
 import { Modal } from "./component/modal/modal"
+import { LobbyMenu } from "./component/lobby-menu/lobby-menu"
 import "./lobby.css"
+
 
 export default function Lobby() {
   const dispatch = useAppDispatch()
@@ -89,17 +80,16 @@ export default function Lobby() {
   )
   const showGameReconnect = gameToReconnect != null && gameRooms.some((r) => r.roomId === gameToReconnect)
 
-  const [toPreparation, setToPreparation] = useState<boolean>(false)
   const [toGame, setToGame] = useState<boolean>(false)
-  const [toAuth, setToAuth] = useState<boolean>(false)
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const client = store.getState().network.client
     if (!lobbyJoined.current) {
       joinLobbyRoom(dispatch, client).catch((err) => {
         logger.error(err)
-        setToAuth(true)
+        navigate("/")
       })
       lobbyJoined.current = true
     }
@@ -110,16 +100,8 @@ export default function Lobby() {
     await firebase.auth().signOut()
     dispatch(leaveLobby())
     dispatch(logOut())
-    setToAuth(true)
+    navigate("/")
   }, [dispatch, lobby])
-
-  if (toAuth) {
-    return <Navigate to={"/"} />
-  }
-
-  if (toPreparation) {
-    return <Navigate to="/preparation"></Navigate>
-  }
 
   if (toGame) {
     return <Navigate to="/game"></Navigate>
@@ -133,10 +115,7 @@ export default function Lobby() {
         leaveLabel={t("sign_out")}
       />
       <div className="lobby-container">
-        <MainLobby
-          toPreparation={toPreparation}
-          setToPreparation={setToPreparation}
-        />
+        <MainLobby />
       </div>
       <Modal show={showGameReconnect}
         header={t("game-reconnect-modal-title")}
@@ -160,64 +139,75 @@ export default function Lobby() {
   )
 }
 
-function MainLobby({ toPreparation, setToPreparation }) {
-  const [activeSection, setActive] = useState<string>("leaderboard")
+function MainLobby() {
+  const [activeSection, setActive] = useState<string>("rooms")
   const { t } = useTranslation()
-  return (
-    <div className="main-lobby">
-      <nav className="main-lobby-nav">
-        <ul>
-          <li
-            onClick={() => setActive("leaderboard")}
-            className={cc({ active: activeSection === "leaderboard" })}
-          >
-            <img width={32} height={32} src={`assets/ui/leaderboard.svg`} />
-            {t("leaderboard")}
-          </li>
-          <li
-            onClick={() => setActive("rooms")}
-            className={cc({ active: activeSection === "rooms" })}
-          >
-            <img width={32} height={32} src={`assets/ui/room.svg`} />
-            {t("rooms")}
-          </li>
-          <li
-            onClick={() => setActive("online")}
-            className={cc({ active: activeSection === "online" })}
-          >
-            <img width={32} height={32} src={`assets/ui/players.svg`} />
-            {t("online")}
-          </li>
-          <li
-            onClick={() => setActive("chat")}
-            className={cc({ active: activeSection === "chat" })}
-          >
-            <img width={32} height={32} src={`assets/ui/chat.svg`} />
-            {t("chat")}
-          </li>
-        </ul>
-      </nav>
-      <section
-        className={cc("leaderboard", {
-          active: activeSection === "leaderboard"
-        })}
-      >
-        <TabMenu />
-      </section>
-      <section className={cc("rooms", { active: activeSection === "rooms" })}>
-        <RoomMenu
-          toPreparation={toPreparation}
-          setToPreparation={setToPreparation}
-        />
-      </section>
-      <section className={cc("online", { active: activeSection === "online" })}>
-        <CurrentUsers />
-      </section>
-      <section className={cc("chat", { active: activeSection === "chat" })}>
-        <Chat source="lobby" />
-      </section>
-    </div>
+  const tournaments: TournamentSchema[] = useAppSelector(
+    (state) => state.lobby.tournaments
   )
+
+  /*const quickPlay = throttle(async function quickPlay() {
+    const existingQuickPlayRoom = preparationRooms.find(
+      (room) => room.metadata?.gameMode === GameMode.QUICKPLAY
+    )
+    if (existingQuickPlayRoom) {
+      joinPrepRoom(existingQuickPlayRoom)
+    } else {
+      createRoom(GameMode.QUICKPLAY)
+    }
+  }, 1000)*/
+
+
+  return <>
+    <div className="lobby-browser my-container custom-bg ">
+      <header>
+        <h2>{t("lobby")} browser</h2>
+        <nav className="main-lobby-nav">
+          <ul>
+            <li>
+              <button
+                onClick={() => setActive("rooms")}
+                className={cc("bubbly", { active: activeSection === "rooms" })}
+              >
+                <img width={32} height={32} src={`assets/ui/room.svg`} />
+                {t("available_rooms")}
+              </button>
+            </li>
+            <li>
+              <button onClick={() => setActive("game_rooms")}
+                className={cc("bubbly", { active: activeSection === "game_rooms" })}>
+                <img width={32} height={32} src={`assets/ui/spectate.svg`} />
+                {t("spectate_games")}
+              </button>
+            </li>
+            <li>
+              <button onClick={() => setActive("leaderboard")} className={cc("bubbly", { active: activeSection === "leaderboard" })}>
+                <img width={32} height={32} src={`assets/ui/leaderboard.svg`} />
+                {t("leaderboard")}
+              </button>
+            </li>
+            {tournaments.length > 0 && <li>
+              <button
+                onClick={() => setActive("tournament")}
+                className={cc("bubbly", { active: activeSection === "tournament" })}
+              >
+                <img width={32} height={32} src={`assets/ui/tournament.svg`} />
+                {t("tournament")}
+              </button>
+            </li>}
+          </ul>
+        </nav>
+        <p className="online-count">500 players online</p>
+      </header>
+      {activeSection === "rooms" && <RoomMenu />}
+      {activeSection === "game_rooms" && <GameRoomsMenu />}
+      {activeSection === "leaderboard" && <LeaderboardMenu />}
+      {activeSection === "tournament" && <TournamentMenu />}
+    </div>
+    <section className="side-panel my-container custom-bg">
+      <LobbyMenu />
+    </section>
+  </>
 }
 
 export async function joinLobbyRoom(
@@ -242,12 +232,6 @@ export async function joinLobbyRoom(
             "lobby",
             { idToken: token }
           )
-          room.state.messages.onAdd((m) => {
-            dispatch(pushMessage(m))
-          })
-          room.state.messages.onRemove((m) => {
-            dispatch(removeMessage(m))
-          })
 
           room.state.tournaments.onAdd((tournament) => {
             dispatch(addTournament(tournament))
@@ -344,81 +328,8 @@ export async function joinLobbyRoom(
             dispatch(removeTournament(tournament))
           })
 
-          room.state.users.onAdd((u) => {
-            dispatch(addUser(u))
-
-            if (u.id == user.uid) {
-              u.pokemonCollection.onAdd((p) => {
-                const pokemonConfig = p as PokemonConfig
-                dispatch(addPokemonConfig(pokemonConfig))
-                const fields: NonFunctionPropNames<PokemonConfig>[] = [
-                  "dust",
-                  "emotions",
-                  "id",
-                  "selectedEmotion",
-                  "selectedShiny",
-                  "shinyEmotions"
-                ]
-
-                fields.forEach((field) => {
-                  pokemonConfig.listen(
-                    field,
-                    (value, previousValue) => {
-                      if (previousValue !== undefined) {
-                        dispatch(
-                          changePokemonConfig({
-                            id: pokemonConfig.id,
-                            field: field,
-                            value: value
-                          })
-                        )
-                      }
-                    },
-                    false
-                  )
-                })
-              }, false)
-              dispatch(setUser(u))
-              setSearchedUser(u)
-
-              u.listen("language", (value) => {
-                if (value) {
-                  dispatch(setLanguage(value))
-                  i18n.changeLanguage(value)
-                }
-              })
-            }
-            const fields: NonFunctionPropNames<LobbyUser>[] = [
-              "id",
-              "name",
-              "avatar",
-              "elo",
-              "wins",
-              "exp",
-              "level",
-              "donor",
-              "honors",
-              "history",
-              "booster",
-              "titles",
-              "title",
-              "role",
-              "anonymous"
-            ]
-
-            fields.forEach((field) => {
-              u.listen(field, (value) => {
-                dispatch(changeUser({ id: u.id, field: field, value: value }))
-              })
-            })
-          })
-
           room.state.listen("nextSpecialGame", (specialGame) => {
             dispatch(setNextSpecialGame(specialGame))
-          })
-
-          room.state.users.onRemove((u) => {
-            dispatch(removeUser(u.id))
           })
 
           room.onMessage(Transfer.REQUEST_LEADERBOARD, (l) => {
@@ -495,6 +406,48 @@ export async function joinLobbyRoom(
           dispatch(requestLeaderboard())
           dispatch(requestBotLeaderboard())
           dispatch(requestLevelLeaderboard())
+
+          /*
+          u.pokemonCollection.onAdd((p) => {
+          const pokemonConfig = p as PokemonConfig
+          dispatch(addPokemonConfig(pokemonConfig))
+          const fields: NonFunctionPropNames<PokemonConfig>[] = [
+            "dust",
+            "emotions",
+            "id",
+            "selectedEmotion",
+            "selectedShiny",
+            "shinyEmotions"
+          ]
+
+          fields.forEach((field) => {
+            pokemonConfig.listen(
+              field,
+              (value, previousValue) => {
+                if (previousValue !== undefined) {
+                  dispatch(
+                    changePokemonConfig({
+                      id: pokemonConfig.id,
+                      field: field,
+                      value: value
+                    })
+                  )
+                }
+              },
+              false
+            )
+          })
+        }, false)
+        setSearchedUser(u)
+
+        u.listen("language", (value) => {
+          if (value) {
+            dispatch(setLanguage(value))
+            i18n.changeLanguage(value)
+          }
+        })*/
+
+
 
           resolve(room)
         } catch (error) {

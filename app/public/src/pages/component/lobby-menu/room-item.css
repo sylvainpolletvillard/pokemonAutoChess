@@ -1,0 +1,15 @@
+.room-item td {
+  word-break: break-word;
+}
+
+.room-item .icon {
+  width: 2em;
+  height: 2em;
+  &.noelo, &.scribble, &.quickplay {
+    border-radius: 50%;
+  }
+}
+
+.room-item .rank.icon {
+  width: 50px;
+}

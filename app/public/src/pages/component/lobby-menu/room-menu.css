@@ -1,0 +1,20 @@
+.lobby-browser table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: rgba(0,0,0,0.2);
+  text-align: left;
+}
+
+.lobby-browser tbody {
+  max-height: calc(100% - 8em);
+  overflow: auto;
+}
+
+.lobby-browser tbody tr:nth-child(odd) {
+  background-color: rgba(0,0,0,0.1);
+}
+
+.lobby-browser th,
+.lobby-browser td {
+  padding: 0.5em;
+}

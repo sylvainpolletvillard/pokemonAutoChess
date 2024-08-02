@@ -18,21 +18,28 @@ export default function GameRoomItem(props: {
   const title = `${props.room.metadata?.ownerName ? "Owner: " + props.room.metadata?.ownerName : ""}\n${props.room.metadata?.playersInfo?.join("\n")}`
 
   return (
-    <div className="room-item my-box">
-      <span className="room-name" title={title}>
+    <tr className="room-item">
+      <td>{props.room.metadata?.gameMode}</td>
+      <td className="room-name" title={title}>
         {props.room.metadata?.name}
-      </span>
-      <span>
-        {playerIds.length} {t("player")}
-        {playerIds.length !== 1 ? "s" : ""}, {t("stage")}{" "}
+      </td>
+      <td>
+        {playerIds.length} {t("player", { count: playerIds.length })}
+      </td>
+      <td>{t("stage")}{" "}
         {props.room.metadata?.stageLevel}
-      </span>
-      <button
-        className={cc("bubbly", spectate ? "blue" : "green")}
-        onClick={() => props.onJoin(spectate)}
-      >
-        {spectate ? t("spectate") : t("reconnect")}
-      </button>
-    </div>
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <button
+          className={cc("bubbly", spectate ? "blue" : "green")}
+          onClick={() => props.onJoin(spectate)}
+        >
+          {spectate ? t("spectate") : t("reconnect")}
+        </button>
+      </td>
+    </tr>
   )
 }

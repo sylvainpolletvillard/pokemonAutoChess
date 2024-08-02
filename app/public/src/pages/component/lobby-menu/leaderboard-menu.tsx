@@ -7,9 +7,9 @@ import { setTabIndex } from "../../../stores/LobbyStore"
 import BotLeaderboard from "./bot-leaderboard"
 import LevelLeaderboard from "./level-leaderboard"
 import PlayerLeaderboard from "./player-leaderboard"
-import "./tab-menu.css"
+import "./leaderboard-menu.css"
 
-export default function TabMenu() {
+export default function LeaderboardMenu() {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -17,7 +17,7 @@ export default function TabMenu() {
 
   return (
     <Tabs
-      className="my-container user-menu custom-bg hidden-scrollable"
+      className="leaderboard-menu hidden-scrollable"
       selectedIndex={tabIndex}
       onSelect={(i: number) => {
         dispatch(setTabIndex(i))
