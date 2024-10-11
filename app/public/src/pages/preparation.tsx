@@ -270,6 +270,16 @@ export default function Preparation() {
     playSound(SOUNDS.LEAVE_ROOM)
   }, [room])
 
+  const leavePreparationRoom = async () => {
+    if (room?.connection.isOpen) {
+      await room.leave(true)
+    }
+    localStore.delete(LocalStoreKeys.RECONNECTION_PREPARATION)
+    dispatch(resetPreparation())
+    navigate("/lobby")
+    playSound(SOUNDS.LEAVE_ROOM)
+  }
+
   return (
     <div className="preparation-page">
       <MainSidebar
