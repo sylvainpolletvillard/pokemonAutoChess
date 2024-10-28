@@ -3,6 +3,8 @@ import { compress } from "@assetpack/core/image"
 //import { audio } from "@assetpack/core/ffmpeg"
 import { json } from "@assetpack/core/json"
 import { texturePacker } from "@assetpack/core/texture-packer"
+import { cacheBuster } from "@assetpack/core/cache-buster"
+import { texturePackerCacheBuster } from "@assetpack/core/texture-packer"
 //import { texturePacker } from "./plugin-texturepacker-fork/dist/es/index.js"
 import fs from "fs-extra"
 
@@ -45,6 +47,8 @@ export default {
     }),
     compress(),
     json(),
+    cacheBuster(),
+    texturePackerCacheBuster(),
     texturePackAtlas()
   ]
 }
@@ -83,7 +87,11 @@ function texturePackAtlas() {
           let packName = packPath.split("/").pop()
 
           if (packPath in atlas.packs === false) {
-            atlas.packs[packPath] = { name: packName }
+            const hash = "???" //TODO: find out how to get the hash from texturePackerCacheBuster
+            atlas.packs[packPath] = {
+              name: packName,
+              path: packName + "-" + hash
+            }
           }
 
           // declare automatically anims if it matches 000.png, 001.png etc.
