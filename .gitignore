@@ -25,6 +25,7 @@ edit/sheets/*
 edit/dist/*
 edit/credits.json
 edit/durations.json
+edit/assetpack/.assetpack/*
 /app/public/dist/server/app/models/precomputed/*.json
 tests/samples/*
 lib
