@@ -1,8 +1,11 @@
+import { BOTS_ENABLED } from "../types/Config"
+
 export type Gadget = {
   name: string
   description: string
   icon: string
   levelRequired: number
+  disabled?: boolean
 }
 
 const TRAINER_CARD: Gadget = {
@@ -23,6 +26,13 @@ const TEAM_PLANNER: Gadget = {
   name: "gadget.team_planner",
   description: "gadget.team_planner_desc",
   icon: "team-builder",
+  levelRequired: 2
+}
+
+const JUKEBOX: Gadget = {
+  name: "gadget.jukebox",
+  description: "gadget.jukebox_desc",
+  icon: "compact-disc",
   levelRequired: 10
 }
 
@@ -30,20 +40,14 @@ const BOT_BUILDER: Gadget = {
   name: "gadget.bot_builder",
   description: "gadget.bot_builder_desc",
   icon: "bot",
-  levelRequired: 20
-}
-
-const JUKEBOX: Gadget = {
-  name: "gadget.jukebox",
-  description: "gadget.jukebox_desc",
-  icon: "compact-disc",
-  levelRequired: 30
+  levelRequired: 20,
+  disabled: !BOTS_ENABLED
 }
 
 export const GADGETS = {
   TRAINER_CARD,
   BAG,
   TEAM_PLANNER,
-  BOT_BUILDER,
-  JUKEBOX
+  JUKEBOX,
+  BOT_BUILDER
 } as const

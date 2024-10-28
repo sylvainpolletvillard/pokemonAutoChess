@@ -5,7 +5,7 @@ type DebouncedFunction<T extends (...args: any) => any> = (
 // fn will be executed if there has been no more calls since delay
 export function debounce<T extends (...args: any) => any>(
   fn: T,
-  delayInMs = 300,
+  delayInMs = 300
 ): DebouncedFunction<T> {
   let timeoutId: ReturnType<typeof setTimeout>
   return function (this: any, ...args: any[]) {
@@ -16,23 +16,28 @@ export function debounce<T extends (...args: any) => any>(
 
 type ThrottledFunction<T extends (...args: any) => any> = (
   ...args: Parameters<T>
-) => ReturnType<T>
+) => Promise<ReturnType<T>>
 
-// fn will be executed if there has not been any previous call during a delay
+// fn will be executed if there has not been any previous call during a delay or if a previous call is not still executing
 export function throttle<T extends (...args: any) => any>(
   fn: T,
-  delayInMs: number,
+  delayInMs: number
 ): ThrottledFunction<T> {
   let inThrottle: boolean
   let lastResult: ReturnType<T>
 
-  return function (this: any, ...args: any[]): ReturnType<T> {
+  return async function (this: any, ...args: any[]): Promise<ReturnType<T>> {
     const context = this
 
     if (!inThrottle) {
       inThrottle = true
-      setTimeout(() => (inThrottle = false), delayInMs)
-      lastResult = fn.apply(context, args)
+      // the function could be async and could take longer than the delay to execute
+      const mightBePromise: ReturnType<T> = fn.apply(context, args)
+      setTimeout(async function () {
+        await mightBePromise
+        inThrottle = false
+      }, delayInMs)
+      lastResult = await mightBePromise
     }
 
     return lastResult

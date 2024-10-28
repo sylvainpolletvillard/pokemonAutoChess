@@ -2,6 +2,8 @@ import React from "react"
 import { useTranslation } from "react-i18next"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE_AND_CATEGORY } from "../../../../../models/precomputed/precomputed-types-and-categories"
+import { PVEStages } from "../../../../../models/pve-stages"
+import { IPlayer } from "../../../../../types"
 import {
   RarityColor,
   RarityCost,
@@ -10,6 +12,8 @@ import {
 import { Pkm, PkmFamily } from "../../../../../types/enum/Pokemon"
 import { Synergy, SynergyEffects } from "../../../../../types/enum/Synergy"
 import { IPokemonData } from "../../../../../types/interfaces/PokemonData"
+import { roundToNDigits } from "../../../../../utils/number"
+import { values } from "../../../../../utils/schemas"
 import { useAppSelector } from "../../../hooks"
 import { getPortraitSrc } from "../../../utils"
 import { addIconsToDescription } from "../../utils/descriptions"
@@ -25,7 +29,11 @@ export default function SynergyDetailComponent(props: {
   const additionalPokemons = useAppSelector(
     (state) => state.game.additionalPokemons
   )
-  if (Object.prototype.hasOwnProperty.call(SynergyTriggers, props.type) === false) return null
+  const stageLevel = useAppSelector((state) => state.game.stageLevel)
+  const currentPlayer = useAppSelector((state) =>
+    state.game.players.find((p) => p.id === state.game.currentPlayerId)
+  )
+
   const levelReached = SynergyTriggers[props.type]
     .filter((n) => n <= props.value)
     .at(-1)
@@ -72,13 +80,27 @@ export default function SynergyDetailComponent(props: {
     )
     .map((p) => getPokemonData(p as Pkm))
 
+  let additionalInfo = ''
+
+  if (props.type === Synergy.WILD && currentPlayer) {
+    const isPVE = stageLevel in PVEStages
+    const wildChance = values(currentPlayer.board)
+      .filter((p) => p.types.has(Synergy.WILD))
+      .reduce((total, p) => total + p.stars * (1 + p.luck / 100), 0) + (isPVE ? 5 : 0)
+    additionalInfo = t('synergy_description.WILD_ADDITIONAL', { wildChance: roundToNDigits(wildChance, 1) })
+  }
+
+  if (props.type === Synergy.BABY && currentPlayer) {
+    additionalInfo = t('synergy_description.BABY_CHANCE_STACKED', { eggChance: roundToNDigits(currentPlayer.eggChance * 100, 1) })
+  }
+
   return (
-    <div style={{ maxWidth: "480px" }}>
+    <div style={{ maxWidth: "560px" }}>
       <div style={{ display: "flex", alignItems: "center" }}>
         <SynergyIcon type={props.type} size="40px" />
         <h3 style={{ margin: 0 }}>{t(`synergy.${props.type}`)}</h3>
       </div>
-      <p>{addIconsToDescription(t(`synergy_description.${props.type}`))}</p>
+      <p style={{ whiteSpace: "pre-wrap" }}>{addIconsToDescription(t(`synergy_description.${props.type}`, { additionalInfo }))}</p>
 
       {SynergyEffects[props.type].map((d, i) => {
         return (
@@ -101,7 +123,7 @@ export default function SynergyDetailComponent(props: {
               padding: "5px"
             }}
           >
-            <h4 style={{ fontSize: "1.2em" }}>
+            <h4 style={{ fontSize: "1.2em", marginBottom: 0 }}>
               ({SynergyTriggers[props.type][i]}) {t(`effect.${d}`)}
             </h4>
             <EffectDescriptionComponent effect={d} />
@@ -110,45 +132,46 @@ export default function SynergyDetailComponent(props: {
       })}
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {regulars.map((p) => (
-          <PokemonPortrait p={p} key={p.name} />
+          <PokemonPortrait p={p} key={p.name} player={currentPlayer} />
         ))}
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", marginTop: "0.5em" }}>
         {additionals.map((p) => (
-          <PokemonPortrait p={p} key={p.name} />
+          <PokemonPortrait p={p} key={p.name} player={currentPlayer} />
         ))}
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", marginTop: "0.5em" }}>
         {uniques.map((p) => (
-          <PokemonPortrait p={p} key={p.name} />
+          <PokemonPortrait p={p} key={p.name} player={currentPlayer} />
         ))}
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", marginTop: "0.5em" }}>
         {legendaries.map((p) => (
-          <PokemonPortrait p={p} key={p.name} />
+          <PokemonPortrait p={p} key={p.name} player={currentPlayer} />
         ))}
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", marginTop: "0.5em" }}>
         {specials.map((p) => (
-          <PokemonPortrait p={p} key={p.name} />
+          <PokemonPortrait p={p} key={p.name} player={currentPlayer} />
         ))}
       </div>
     </div>
   )
 }
-function PokemonPortrait(props: { p: IPokemonData }) {
+
+function PokemonPortrait(props: { p: IPokemonData, player?: IPlayer }) {
+  const isOnTeam = (p: Pkm) => props.player != null && values(props.player.board).some((x) => PkmFamily[x.name] === p)
   return (
     <div
       className={cc("pokemon-portrait", {
         additional: props.p.additional,
-        regional: props.p.regional
+        regional: props.p.regional,
+        acquired: isOnTeam(props.p.name)
       })}
       key={props.p.name}
+      style={{ color: RarityColor[props.p.rarity], border: "3px solid " + RarityColor[props.p.rarity] }}
     >
-      <img
-        style={{ border: "3px solid " + RarityColor[props.p.rarity] }}
-        src={getPortraitSrc(props.p.index)}
-      />
+      <img src={getPortraitSrc(props.p.index)} />
     </div>
   )
 }

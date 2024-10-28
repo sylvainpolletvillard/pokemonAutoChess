@@ -31,7 +31,7 @@ export default function WikiTypes() {
             </Tab>
           )
         })}
-        <Tab key="title-all">{t("ALL")}</Tab>
+        <Tab key="title-all">{t("all")}</Tab>
       </TabList>
 
       {(Object.keys(Synergy) as Synergy[]).map((r) => {
@@ -75,11 +75,11 @@ export function WikiType(props: { type: Synergy }) {
   }
 
   return (
-    <div style={{ padding: "1em" }}>
+    <div style={{ padding: "0 1em" }}>
       <h2>
         <SynergyIcon type={props.type} /> {t(`synergy.${props.type}`)}
       </h2>
-      <p>{addIconsToDescription(t(`synergy_description.${props.type}`))}</p>
+      <p>{addIconsToDescription(t(`synergy_description.${props.type}`, { additionalInfo: "" }))}</p>
       {SynergyEffects[props.type].map((effect, i) => {
         return (
           <div

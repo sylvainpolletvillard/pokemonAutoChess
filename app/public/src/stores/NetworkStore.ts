@@ -13,11 +13,13 @@ import {
   Title,
   Transfer
 } from "../../../types"
+import { EloRank } from "../../../types/Config"
 import { BotDifficulty } from "../../../types/enum/Game"
 import { Item } from "../../../types/enum/Item"
 import { Language } from "../../../types/enum/Language"
 import { PkmProposition } from "../../../types/enum/Pokemon"
 import { logger } from "../../../utils/logger"
+import { getAvatarString } from "../utils"
 
 export interface INetwork {
   client: Client
@@ -28,6 +30,7 @@ export interface INetwork {
   uid: string
   displayName: string
   profile: IUserMetadata | undefined
+  error: string | null
 }
 
 const endpoint = `${window.location.protocol.replace("http", "ws")}//${
@@ -43,7 +46,8 @@ const initalState: INetwork = {
   after: undefined,
   uid: "",
   displayName: "",
-  profile: undefined
+  profile: undefined,
+  error: null
 }
 
 export const networkSlice = createSlice({
@@ -53,61 +57,61 @@ export const networkSlice = createSlice({
     logIn: (state, action: PayloadAction<User>) => {
       if (action.payload) {
         state.uid = action.payload.uid
-        state.displayName = action.payload.displayName
-          ? action.payload.displayName
-          : ""
+        state.displayName = action.payload.displayName ?? "Anonymous"
       }
     },
     logOut: (state) => {
       state.client = new Client(endpoint)
       state.uid = ""
-      state.displayName = ""
-      state.preparation?.connection.close()
+      state.preparation?.connection.isOpen && state.preparation?.leave(true)
       state.preparation = undefined
-      state.lobby?.connection.close()
+      state.lobby?.connection.isOpen && state.lobby?.leave(true)
       state.lobby = undefined
-      state.game?.connection.close()
+      state.game?.connection.isOpen && state.game?.leave(true)
       state.game = undefined
-      state.after?.connection.close()
+      state.after?.connection.isOpen && state.after?.leave(true)
       state.after = undefined
     },
     setProfile: (state, action: PayloadAction<IUserMetadata>) => {
       state.profile = action.payload
+      state.profile.pokemonCollection = new Map(
+        Object.entries(action.payload.pokemonCollection)
+      )
     },
     joinLobby: (state, action: PayloadAction<Room<ICustomLobbyState>>) => {
       state.lobby = action.payload
-      state.preparation?.connection.close()
+      state.preparation?.connection.isOpen && state.preparation?.leave(true)
       state.preparation = undefined
-      state.game?.connection.close()
+      state.game?.connection.close() // still allow to reconnect if left by mistake
       state.game = undefined
-      state.after?.connection.close()
+      state.after?.connection.isOpen && state.after?.leave(true)
       state.after = undefined
     },
     joinPreparation: (state, action: PayloadAction<Room<PreparationState>>) => {
       state.preparation = action.payload
-      state.lobby?.connection.close()
+      state.lobby?.connection.isOpen && state.lobby?.leave(true)
       state.lobby = undefined
-      state.game?.connection.close()
+      state.game?.connection.close() // still allow to reconnect if left by mistake
       state.game = undefined
-      state.after?.connection.close()
+      state.after?.connection.isOpen && state.after?.leave(true)
       state.after = undefined
     },
     joinGame: (state, action: PayloadAction<Room<GameState>>) => {
       Object.assign(state, { game: action.payload })
-      state.preparation?.connection.close()
+      state.preparation?.connection.isOpen && state.preparation?.leave(true)
       state.preparation = undefined
-      state.lobby?.connection.close()
+      state.lobby?.connection.isOpen && state.lobby?.leave(true)
       state.lobby = undefined
-      state.after?.connection.close()
+      state.after?.connection.isOpen && state.after?.leave(true)
       state.after = undefined
     },
     joinAfter: (state, action: PayloadAction<Room<AfterGameState>>) => {
       state.after = action.payload
-      state.game?.connection.close()
+      state.game?.connection.close() // still allow to reconnect if left by mistake
       state.game = undefined
-      state.lobby?.connection.close()
+      state.lobby?.connection.isOpen && state.lobby?.leave(true)
       state.lobby = undefined
-      state.preparation?.connection.close()
+      state.preparation?.connection.isOpen && state.preparation?.leave(true)
       state.preparation = undefined
     },
     sendMessage: (state, action: PayloadAction<string>) => {
@@ -130,34 +134,20 @@ export const networkSlice = createSlice({
       state.lobby?.send(Transfer.SEARCH, { name: action.payload })
     },
     changeName: (state, action: PayloadAction<string>) => {
+      if (state.profile) state.profile.displayName = action.payload
       state.lobby?.send(Transfer.CHANGE_NAME, { name: action.payload })
     },
     changeAvatar: (
       state,
       action: PayloadAction<{ index: string; emotion: Emotion; shiny: boolean }>
     ) => {
+      if (state.profile)
+        state.profile.avatar = getAvatarString(
+          action.payload.index,
+          action.payload.shiny,
+          action.payload.emotion
+        )
       state.lobby?.send(Transfer.CHANGE_AVATAR, action.payload)
-    },
-    requestBotList: (
-      state,
-      action: PayloadAction<{ withSteps: boolean } | undefined>
-    ) => {
-      state.lobby?.send(Transfer.REQUEST_BOT_LIST, action.payload)
-    },
-    createBot: (state, action: PayloadAction<IBot>) => {
-      state.lobby?.send(Transfer.BOT_CREATION, { bot: action.payload })
-    },
-    requestBotData: (state, action: PayloadAction<string>) => {
-      state.lobby?.send(Transfer.REQUEST_BOT_DATA, action.payload)
-    },
-    requestLeaderboard: (state) => {
-      state.lobby?.send(Transfer.REQUEST_LEADERBOARD)
-    },
-    requestBotLeaderboard: (state) => {
-      state.lobby?.send(Transfer.REQUEST_BOT_LEADERBOARD)
-    },
-    requestLevelLeaderboard: (state) => {
-      state.lobby?.send(Transfer.REQUEST_LEVEL_LEADERBOARD)
     },
     addBot: (state, action: PayloadAction<BotDifficulty | IBot>) => {
       state.preparation?.send(Transfer.ADD_BOT, action.payload)
@@ -165,16 +155,13 @@ export const networkSlice = createSlice({
     removeBot: (state, action: PayloadAction<string>) => {
       state.preparation?.send(Transfer.REMOVE_BOT, action.payload)
     },
-    listBots: (state) => {
-      state.preparation?.send(Transfer.REQUEST_BOT_LIST)
-    },
     toggleReady: (state, action: PayloadAction<boolean | undefined>) => {
       state.preparation?.send(Transfer.TOGGLE_READY, action.payload)
     },
     toggleEloRoom: (state, action: PayloadAction<boolean>) => {
       state.preparation?.send(Transfer.TOGGLE_NO_ELO, action.payload)
     },
-    lockClick: (state) => {
+    lockShop: (state) => {
       state.game?.send(Transfer.LOCK)
     },
     levelClick: (state) => {
@@ -200,10 +187,28 @@ export const networkSlice = createSlice({
     changeRoomPassword: (state, action: PayloadAction<string | null>) => {
       state.preparation?.send(Transfer.CHANGE_ROOM_PASSWORD, action.payload)
     },
+    changeRoomMinMaxRanks: (
+      state,
+      action: PayloadAction<{
+        minRank: EloRank | null
+        maxRank: EloRank | null
+      }>
+    ) => {
+      state.preparation?.send(Transfer.CHANGE_ROOM_RANKS, action.payload)
+    },
     changeSelectedEmotion: (
       state,
       action: PayloadAction<{ index: string; emotion: Emotion; shiny: boolean }>
     ) => {
+      if (state.profile) {
+        const pokemonConfig = state.profile.pokemonCollection.get(
+          action.payload.index
+        )
+        if (pokemonConfig) {
+          pokemonConfig.selectedEmotion = action.payload.emotion
+          pokemonConfig.selectedShiny = action.payload.shiny
+        }
+      }
       state.lobby?.send(Transfer.CHANGE_SELECTED_EMOTION, action.payload)
     },
     buyEmotion: (
@@ -224,7 +229,8 @@ export const networkSlice = createSlice({
     searchById: (state, action: PayloadAction<string>) => {
       state.lobby?.send(Transfer.SEARCH_BY_ID, action.payload)
     },
-    setTitle: (state, action: PayloadAction<string>) => {
+    setTitle: (state, action: PayloadAction<Title>) => {
+      if (state.profile) state.profile.title = action.payload
       state.lobby?.send(Transfer.SET_TITLE, action.payload)
     },
     removeTournament: (state, action: PayloadAction<{ id: string }>) => {
@@ -244,6 +250,9 @@ export const networkSlice = createSlice({
       action: PayloadAction<{ uid: string; numberOfBoosters: number }>
     ) => {
       state.lobby?.send(Transfer.GIVE_BOOSTER, action.payload)
+    },
+    heapSnapshot: (state) => {
+      state.lobby?.send(Transfer.HEAP_SNAPSHOT)
     },
     giveRole: (state, action: PayloadAction<{ uid: string; role: Role }>) => {
       state.lobby?.send(Transfer.SET_ROLE, action.payload)
@@ -275,31 +284,26 @@ export const networkSlice = createSlice({
     selectLanguage: (state, action: PayloadAction<Language>) => {
       state.lobby?.send(Transfer.SELECT_LANGUAGE, action.payload)
     },
-    makeServerAnnouncement: (
-      state,
-      action: PayloadAction<{ message: string }>
-    ) => {
-      state.lobby?.send(Transfer.SERVER_ANNOUNCEMENT, action.payload)
-    },
     createTournament: (
       state,
       action: PayloadAction<{ name: string; startDate: string }>
     ) => {
       state.lobby?.send(Transfer.NEW_TOURNAMENT, action.payload)
+    },
+    setErrorAlertMessage: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload
     }
   }
 })
 
 export const {
+  heapSnapshot,
   selectLanguage,
   unban,
   deleteBotDatabase,
   addBotDatabase,
   ban,
   pokemonPropositionClick,
-  requestLeaderboard,
-  requestBotLeaderboard,
-  requestLevelLeaderboard,
   giveTitle,
   giveRole,
   removeMessage,
@@ -314,6 +318,7 @@ export const {
   buyBooster,
   changeRoomName,
   changeRoomPassword,
+  changeRoomMinMaxRanks,
   gameStartRequest,
   logIn,
   logOut,
@@ -326,24 +331,20 @@ export const {
   joinAfter,
   changeName,
   changeAvatar,
-  requestBotList,
-  createBot,
-  requestBotData,
   addBot,
   removeBot,
-  listBots,
   toggleReady,
   toggleEloRoom,
   itemClick,
   shopClick,
   levelClick,
-  lockClick,
+  lockShop,
   searchById,
   setTitle,
   kick,
   deleteRoom,
-  makeServerAnnouncement,
-  createTournament
+  createTournament,
+  setErrorAlertMessage
 } = networkSlice.actions
 
 export default networkSlice.reducer

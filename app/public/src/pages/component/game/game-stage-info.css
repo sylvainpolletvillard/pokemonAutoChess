@@ -19,6 +19,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 600;
 }
 
 #game-stage-info .stage-information {
@@ -127,4 +128,5 @@
 #detail-map p {
   white-space: pre-line;
   margin: 0 0.25em;
+  line-height: 40px;
 }

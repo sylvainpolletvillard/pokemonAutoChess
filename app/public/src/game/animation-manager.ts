@@ -1,4 +1,7 @@
+import { IPokemonEntity } from "../../../types"
 import { AnimationComplete, AnimationType } from "../../../types/Animation"
+import { PROJECTILE_SPEED } from "../../../types/Config"
+import delays from "../../../types/delays.json"
 import {
   Orientation,
   OrientationFlip,
@@ -8,11 +11,12 @@ import {
 } from "../../../types/enum/Game"
 import { Berries } from "../../../types/enum/Item"
 import { AnimationConfig, Pkm, PkmIndex } from "../../../types/enum/Pokemon"
+import { distanceC } from "../../../utils/distance"
 import { logger } from "../../../utils/logger"
-import { fpsToDuration } from "../../../utils/number"
-import durations from "../../dist/client/assets/pokemons/durations.json"
-import indexList from "../../dist/client/assets/pokemons/indexList.json"
+import { fpsToDuration, max } from "../../../utils/number"
 import atlas from "../assets/atlas.json"
+import durations from "../assets/pokemons/durations.json"
+import indexList from "../assets/pokemons/indexList.json"
 import PokemonSprite from "./components/pokemon"
 
 const FPS_EFFECTS = 20
@@ -248,7 +252,8 @@ export default class AnimationManager {
   animatePokemon(
     entity: PokemonSprite,
     action: PokemonActionState,
-    flip: boolean
+    flip: boolean,
+    loop: boolean = true
   ) {
     const animation = this.convertPokemonActionStateToAnimationType(
       action,
@@ -260,16 +265,17 @@ export default class AnimationManager {
       action === PokemonActionState.HURT ||
       action === PokemonActionState.EMOTE
 
-    const shouldLoop =
-      action === PokemonActionState.HOP ||
-      action === PokemonActionState.HURT ||
-      action === PokemonActionState.WALK
+    const timeScale =
+      action === PokemonActionState.ATTACK
+        ? getAttackAnimTimeScale(entity.index, entity.atkSpeed)
+        : 1
 
     try {
       this.play(entity, animation, {
         flip,
         lock: shouldLock,
-        repeat: shouldLoop ? -1 : 0
+        repeat: loop ? -1 : 0,
+        timeScale
       })
     } catch (err) {
       logger.warn(`Can't play animation ${animation} for ${entity?.name}`, err)
@@ -279,7 +285,12 @@ export default class AnimationManager {
   play(
     entity: PokemonSprite,
     animation: AnimationType,
-    config: { flip?: boolean; repeat?: number; lock?: boolean } = {}
+    config: {
+      flip?: boolean
+      repeat?: number
+      lock?: boolean
+      timeScale?: number
+    } = {}
   ) {
     if (entity.animationLocked || !entity.sprite?.anims) return
 
@@ -301,10 +312,51 @@ export default class AnimationManager {
     const animKey = `${textureIndex}/${tint}/${animation}/${SpriteType.ANIM}/${orientationCorrected}`
     const shadowKey = `${textureIndex}/${tint}/${animation}/${SpriteType.SHADOW}/${orientationCorrected}`
 
-    entity.sprite.anims.play({ key: animKey, repeat: config.repeat })
-    entity.shadow.anims.play({ key: shadowKey, repeat: config.repeat })
+    if (
+      entity.sprite.anims.currentAnim?.key === animKey &&
+      entity.sprite.anims.currentAnim?.repeat === -1
+    )
+      return
+
+    entity.sprite.anims.play({
+      key: animKey,
+      repeat: config.repeat,
+      timeScale: config.timeScale
+    })
+    entity.shadow.anims.play({
+      key: shadowKey,
+      repeat: config.repeat,
+      timeScale: config.timeScale
+    })
     if (config.lock) {
       entity.animationLocked = true
     }
   }
+}
+
+export function getAttackTimings(pokemon: IPokemonEntity): {
+  delayBeforeShoot: number
+  travelTime: number
+  attackDuration: number
+} {
+  const attackDuration = 1000 / pokemon.atkSpeed
+  const d = delays[pokemon.index]?.d || 18 // number of frames before hit
+  const t = delays[pokemon.index]?.t || 36 // total number of frames in the animation
+
+  const delayBeforeShoot = max(attackDuration / 2)((attackDuration * d) / t)
+  const distance = distanceC(
+    pokemon.targetX,
+    pokemon.targetY,
+    pokemon.positionX,
+    pokemon.positionY
+  )
+  const travelTime = (distance * 1000) / PROJECTILE_SPEED
+  return { delayBeforeShoot, travelTime, attackDuration }
+}
+
+export function getAttackAnimTimeScale(pokemonIndex: string, atkSpeed: number) {
+  const t = delays[pokemonIndex]?.t || 36 // total number of frames in the animation
+
+  const timeScale = (t * atkSpeed) / FPS_POKEMON_ANIMS
+  return timeScale
 }

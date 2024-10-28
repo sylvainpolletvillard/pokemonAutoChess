@@ -8,7 +8,7 @@ import { GameMode } from "../../types/enum/Game"
 export interface IPreparationState {
   users: MapSchema<GameUser>
   messages: ArraySchema<Message>
-  gameStarted: boolean
+  gameStartedAt: string | null
   ownerId: string
   ownerName: string
   name: string
@@ -22,13 +22,14 @@ export default class PreparationState
 {
   @type([Message]) messages = new ArraySchema<Message>()
   @type({ map: GameUser }) users = new MapSchema<GameUser>()
-  @type("boolean") gameStarted: boolean
+  @type("string") gameStartedAt: string | null
   @type("string") ownerId: string
   @type("string") ownerName: string
   @type("string") name: string
   @type("string") password: string | null
   @type("string") minRank: EloRank | null
-  @type("string") gameMode: GameMode = GameMode.NORMAL
+  @type("string") maxRank: EloRank | null
+  @type("string") gameMode: GameMode = GameMode.CUSTOM_LOBBY
   @type("boolean") noElo: boolean
   @type(["string"]) whitelist: string[]
   @type(["string"]) blacklist: string[]
@@ -37,20 +38,23 @@ export default class PreparationState
     ownerId?: string
     roomName: string
     minRank?: EloRank
+    maxRank?: EloRank
     noElo?: boolean
+    password?: string
     gameMode: GameMode
     whitelist?: string[]
     blacklist?: string[]
   }) {
     super()
     this.ownerId =
-      params.gameMode === GameMode.NORMAL ? params.ownerId ?? "" : ""
+      params.gameMode === GameMode.CUSTOM_LOBBY ? (params.ownerId ?? "") : ""
     this.name = params.roomName
-    this.gameStarted = false
+    this.gameStartedAt = null
     this.ownerName = ""
-    this.password = null
+    this.password = params.password ?? null
     this.noElo = params.noElo ?? false
     this.minRank = params.minRank ?? null
+    this.maxRank = params.maxRank ?? null
     this.gameMode = params.gameMode
     this.whitelist = params.whitelist ?? []
     this.blacklist = params.blacklist ?? []

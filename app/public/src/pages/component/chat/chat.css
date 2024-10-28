@@ -3,10 +3,11 @@
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: stretch;
+  flex: 1;
+  overflow-y: auto;
 }
 
-#root .user-chat h1 {
-  color: white;
+.user-chat h2 {
   text-align: center;
 }
 

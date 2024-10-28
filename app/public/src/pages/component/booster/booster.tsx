@@ -11,11 +11,8 @@ import "./booster.css"
 export default function Booster() {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { user, boosterContent } = useAppSelector((state) => ({
-    user: state.lobby.user,
-    boosterContent: state.lobby.boosterContent
-  }))
-
+  const user = useAppSelector((state) => state.network.profile)
+  const boosterContent = useAppSelector((state) => state.lobby.boosterContent)
   const numberOfBooster = user ? user.booster : 0
 
   // reset current boosters on close
@@ -28,37 +25,35 @@ export default function Booster() {
 
   return (
     <div id="boosters-page">
-      <div className="my-container custom-bg">
-        <p className="help">
-          {numberOfBooster === 0 ? t("boosters_hint") : t("open_boosters_hint")}
-        </p>
+      <p className="help">
+        {numberOfBooster === 0 ? t("boosters_hint") : t("open_boosters_hint")}
+      </p>
 
-        <div className="boosters-content">
-          {boosterContent.map((pkm, i) => (
-            <BoosterCard
-              key={"booster" + i}
-              pkm={pkm}
-              shards={pkm.shiny ? DUST_PER_SHINY : DUST_PER_BOOSTER}
-            />
-          ))}
-        </div>
+      <div className="boosters-content">
+        {boosterContent.map((pkm, i) => (
+          <BoosterCard
+            key={"booster" + i}
+            pkm={pkm}
+            shards={pkm.shiny ? DUST_PER_SHINY : DUST_PER_BOOSTER}
+          />
+        ))}
+      </div>
 
-        <div className="actions">
-          <button
-            onClick={() => {
-              if (numberOfBooster > 0) {
-                dispatch(setBoosterContent([]))
-                dispatch(openBooster())
-              }
-            }}
-            className={cc("bubbly", { blue: numberOfBooster > 0 })}
-            disabled={numberOfBooster <= 0}
-          >
-            {t("open_booster")}
-          </button>
-          <span className="booster-count">{numberOfBooster}</span>
-          <img src="/assets/ui/booster.png" alt="booster" />
-        </div>
+      <div className="actions">
+        <button
+          onClick={() => {
+            if (numberOfBooster > 0) {
+              dispatch(setBoosterContent([]))
+              dispatch(openBooster())
+            }
+          }}
+          className={cc("bubbly", { blue: numberOfBooster > 0 })}
+          disabled={numberOfBooster <= 0}
+        >
+          {t("open_booster")}
+        </button>
+        <span className="booster-count">{numberOfBooster}</span>
+        <img src="/assets/ui/booster.png" alt="booster" />
       </div>
     </div>
   )

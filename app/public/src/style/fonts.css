@@ -1,9 +1,24 @@
 @font-face {
-  font-family: brandonGrotesque;
-  src: url("assets/ui/brandon-grotesque-black.otf") format("opentype");
+  font-family: Jost;
+  src: url("assets/ui/Jost-VF.ttf") format("truetype");
 }
 
-body {
-  font-family: brandonGrotesque !important;
-  font-size: 18px;
+html {
+  font-family: Jost, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+html[lang="vi"] {
+  font-family: system-ui;
+}
+
+p,
+label,
+dt {
+  font-weight: normal;
+}
+
+button {
+  font-weight: 600;
 }

@@ -7,6 +7,8 @@ import { PokemonEntity } from "./pokemon-entity"
 import PokemonState from "./pokemon-state"
 
 export class IdleState extends PokemonState {
+  name = "idle"
+
   update(
     pokemon: PokemonEntity,
     dt: number,
@@ -17,10 +19,12 @@ export class IdleState extends PokemonState {
     super.update(pokemon, dt, board, weather, player)
 
     if (pokemon.status.tree) {
-      if (pokemon.pp >= pokemon.maxPP) {
+      if (pokemon.pp >= pokemon.maxPP && pokemon.canMove) {
         pokemon.status.tree = false
         pokemon.toMovingState()
       }
+    } else if (pokemon.status.bideCooldown > 0) {
+      pokemon.status.bideCooldown -= dt
     } else if (pokemon.canMove) {
       pokemon.toMovingState()
     }
@@ -41,8 +45,10 @@ export class IdleState extends PokemonState {
       pokemon.action = PokemonActionState.IDLE
     } else if (pokemon.status.resurecting) {
       pokemon.action = PokemonActionState.HURT
-    } else {
+    } else if (pokemon.status.sleep || pokemon.status.freeze) {
       pokemon.action = PokemonActionState.SLEEP
+    } else {
+      pokemon.action = PokemonActionState.IDLE
     }
     pokemon.cooldown = 0
   }

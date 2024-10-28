@@ -9,7 +9,7 @@ import { getBuyPrice } from "../../../../../models/shop"
 import { RarityColor } from "../../../../../types/Config"
 import { Pkm, PkmFamily } from "../../../../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
-import { useAppSelector } from "../../../hooks"
+import { selectCurrentPlayer, useAppSelector } from "../../../hooks"
 import { getPortraitSrc } from "../../../utils"
 import { getGameScene } from "../../game"
 import { cc } from "../../utils/jsx"
@@ -24,7 +24,8 @@ export default function GamePokemonPortrait(props: {
   pokemon: Pokemon | Pkm | undefined
   click?: React.MouseEventHandler<HTMLDivElement>
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>
-  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>,
+  inPlanner?: boolean
 }) {
   const pokemon = useMemo(
     () =>
@@ -42,9 +43,7 @@ export default function GamePokemonPortrait(props: {
   const currentPlayerId: string = useAppSelector(
     (state) => state.game.currentPlayerId
   )
-  const currentPlayer = useAppSelector((state) =>
-    state.game.players.find((p) => p.id === currentPlayerId)
-  )
+  const currentPlayer = useAppSelector(selectCurrentPlayer)
 
   const board = useAppSelector(
     (state) => state.game.players.find((p) => p.id === uid)?.board
@@ -134,7 +133,8 @@ export default function GamePokemonPortrait(props: {
     <div
       className={cc("my-box", "clickable", "game-pokemon-portrait", {
         shimmer: shouldShimmer,
-        disabled: !canBuy && props.origin === "shop"
+        disabled: !canBuy && props.origin === "shop",
+        planned: props.inPlanner ?? false
       })}
       style={{
         backgroundColor: rarityColor,
@@ -181,13 +181,20 @@ export default function GamePokemonPortrait(props: {
           />
         </div>
       )}
+      {props.inPlanner && (!willEvolve || !pokemonEvolution) && (
+        <img
+          src="/assets/ui/planned.png"
+          alt=""
+          className="game-pokemon-portrait-planned-icon"
+        />
+      )}
       {props.origin === "shop" && (
         <div className="game-pokemon-portrait-cost">
           <Money value={cost} />
         </div>
       )}
       <ul className="game-pokemon-portrait-types">
-        {Array.from(pokemon.types.values()).map((type) => {
+        {Array.from(pokemonInPortrait.types.values()).map((type) => {
           return (
             <li key={type}>
               <SynergyIcon type={type} />

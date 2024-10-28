@@ -1,13 +1,12 @@
 import { Dispatcher } from "@colyseus/command"
 import { Client, Room, updateLobby } from "colyseus"
 import admin from "firebase-admin"
-import { components } from "../api-v1/openapi"
-import { GameUser } from "../models/colyseus-models/game-user"
 import BannedUser from "../models/mongo-models/banned-user"
 import { IBot } from "../models/mongo-models/bot-v2"
 import UserMetadata from "../models/mongo-models/user-metadata"
 import { IPreparationMetadata, Transfer } from "../types"
 import { EloRank, MAX_PLAYERS_PER_GAME } from "../types/Config"
+import { CloseCodes } from "../types/enum/CloseCodes"
 import { BotDifficulty, GameMode } from "../types/enum/Game"
 import { logger } from "../utils/logger"
 import { values } from "../utils/schemas"
@@ -18,9 +17,9 @@ import {
   OnJoinCommand,
   OnKickPlayerCommand,
   OnLeaveCommand,
-  OnListBotsCommand,
   OnNewMessageCommand,
   OnRemoveBotCommand,
+  OnRoomChangeRankCommand,
   OnRoomNameCommand,
   OnRoomPasswordCommand,
   OnToggleEloCommand,
@@ -61,24 +60,33 @@ export default class PreparationRoom extends Room<PreparationState> {
     updateLobby(this)
   }
 
-  async setGameStarted(gameStarted: boolean) {
+  async setMinMaxRanks(minRank: EloRank, maxRank: EloRank) {
     await this.setMetadata(<IPreparationMetadata>{
-      gameStarted: gameStarted
+      minRank: minRank,
+      maxRank: maxRank
     })
+    updateLobby(this)
+  }
+
+  async setGameStarted(gameStartedAt: string) {
+    await this.setMetadata(<IPreparationMetadata>{ gameStartedAt })
   }
 
   onCreate(options: {
     ownerId?: string
     roomName: string
     minRank?: EloRank
+    maxRank?: EloRank
     gameMode: GameMode
     noElo?: boolean
+    password?: string
     autoStartDelayInSeconds?: number
     whitelist?: string[]
     blacklist?: string[]
     tournamentId?: string
     bracketId?: string
   }) {
+    logger.info("create Preparation ", this.roomId)
     // logger.debug(options);
     //logger.info(`create ${options.roomName}`)
 
@@ -88,21 +96,24 @@ export default class PreparationRoom extends Room<PreparationState> {
     // logger.debug(defaultRoomName);
     this.setState(new PreparationState(options))
     this.setMetadata(<IPreparationMetadata>{
+      name: options.roomName.slice(0, 30),
       ownerName:
         options.gameMode === GameMode.QUICKPLAY ? null : options.ownerId,
       minRank: options.minRank ?? null,
+      maxRank: options.maxRank ?? null,
       noElo: options.noElo ?? false,
       gameMode: options.gameMode,
       whitelist: options.whitelist ?? [],
       blacklist: options.blacklist ?? [],
+      playersInfo: [],
       tournamentId: options.tournamentId ?? null,
-      bracketId: options.bracketId ?? null
+      bracketId: options.bracketId ?? null,
+      gameStartedAt: null,
+      password: options.password ?? null,
+      type: "preparation"
     })
     this.maxClients = 8
-    if (
-      options.gameMode !== GameMode.NORMAL &&
-      options.gameMode !== GameMode.QUICKPLAY
-    ) {
+    if (options.gameMode === GameMode.TOURNAMENT) {
       this.autoDispose = false
     }
 
@@ -116,14 +127,13 @@ export default class PreparationRoom extends Room<PreparationState> {
               tournamentId: this.metadata?.tournamentId,
               bracketId: this.metadata?.bracketId,
               players: values(this.state.users).map((p) => ({
-                id: p.id,
+                id: p.uid,
                 rank: 1
               }))
             })
           }
 
-          this.broadcast(Transfer.KICK)
-          this.disconnect()
+          this.disconnect(CloseCodes.ROOM_EMPTY)
         } else {
           this.dispatcher.dispatch(new OnGameStartRequestCommand())
         }
@@ -167,9 +177,8 @@ export default class PreparationRoom extends Room<PreparationState> {
       )
     }
 
-    this.setName(options.roomName)
-
     this.onMessage(Transfer.KICK, (client, message) => {
+      logger.info(Transfer.KICK, this.roomName)
       try {
         this.dispatcher.dispatch(new OnKickPlayerCommand(), { client, message })
       } catch (error) {
@@ -178,6 +187,7 @@ export default class PreparationRoom extends Room<PreparationState> {
     })
 
     this.onMessage(Transfer.DELETE_ROOM, (client) => {
+      logger.info(Transfer.DELETE_ROOM, this.roomName)
       try {
         this.dispatcher.dispatch(new OnDeleteRoomCommand(), { client })
       } catch (error) {
@@ -186,6 +196,7 @@ export default class PreparationRoom extends Room<PreparationState> {
     })
 
     this.onMessage(Transfer.CHANGE_ROOM_NAME, (client, message) => {
+      logger.info(Transfer.CHANGE_ROOM_NAME, this.roomName)
       try {
         this.dispatcher.dispatch(new OnRoomNameCommand(), { client, message })
       } catch (error) {
@@ -194,6 +205,7 @@ export default class PreparationRoom extends Room<PreparationState> {
     })
 
     this.onMessage(Transfer.CHANGE_ROOM_PASSWORD, (client, message) => {
+      logger.info(Transfer.CHANGE_ROOM_PASSWORD, this.roomName)
       try {
         this.dispatcher.dispatch(new OnRoomPasswordCommand(), {
           client,
@@ -204,7 +216,24 @@ export default class PreparationRoom extends Room<PreparationState> {
       }
     })
 
+    this.onMessage(
+      Transfer.CHANGE_ROOM_RANKS,
+      (client, { minRank, maxRank }) => {
+        logger.info(Transfer.CHANGE_ROOM_RANKS, this.roomName, minRank, maxRank)
+        try {
+          this.dispatcher.dispatch(new OnRoomChangeRankCommand(), {
+            client,
+            minRank,
+            maxRank
+          })
+        } catch (error) {
+          logger.error(error)
+        }
+      }
+    )
+
     this.onMessage(Transfer.TOGGLE_NO_ELO, (client, message) => {
+      logger.info(Transfer.TOGGLE_NO_ELO, this.roomName)
       try {
         this.dispatcher.dispatch(new OnToggleEloCommand(), { client, message })
       } catch (error) {
@@ -213,6 +242,7 @@ export default class PreparationRoom extends Room<PreparationState> {
     })
 
     this.onMessage(Transfer.GAME_START_REQUEST, (client) => {
+      logger.info(Transfer.GAME_START_REQUEST, this.roomName)
       try {
         this.dispatcher.dispatch(new OnGameStartRequestCommand(), { client })
       } catch (error) {
@@ -221,6 +251,7 @@ export default class PreparationRoom extends Room<PreparationState> {
     })
 
     this.onMessage(Transfer.TOGGLE_READY, (client, ready?: boolean) => {
+      logger.info(Transfer.TOGGLE_READY, this.roomName)
       try {
         this.dispatcher.dispatch(new OnToggleReadyCommand(), { client, ready })
       } catch (error) {
@@ -229,22 +260,33 @@ export default class PreparationRoom extends Room<PreparationState> {
     })
 
     this.onMessage(Transfer.NEW_MESSAGE, (client, message) => {
-      this.dispatcher.dispatch(new OnNewMessageCommand(), { client, message })
+      logger.info(Transfer.NEW_MESSAGE, this.roomName)
+      try {
+        this.dispatcher.dispatch(new OnNewMessageCommand(), { client, message })
+      } catch (error) {
+        logger.error(error)
+      }
     })
 
     this.onMessage(
       Transfer.REMOVE_MESSAGE,
       (client, message: { id: string }) => {
-        this.dispatcher.dispatch(new RemoveMessageCommand(), {
-          client,
-          messageId: message.id
-        })
+        logger.info(Transfer.REMOVE_MESSAGE, this.roomName)
+        try {
+          this.dispatcher.dispatch(new RemoveMessageCommand(), {
+            client,
+            messageId: message.id
+          })
+        } catch (error) {
+          logger.error(error)
+        }
       }
     )
 
     this.onMessage(
       Transfer.ADD_BOT,
       (client: Client, botType: IBot | BotDifficulty) => {
+        logger.info(Transfer.ADD_BOT, this.roomName)
         try {
           const user = this.state.users.get(client.auth.uid)
           if (user) {
@@ -259,6 +301,7 @@ export default class PreparationRoom extends Room<PreparationState> {
       }
     )
     this.onMessage(Transfer.REMOVE_BOT, (client: Client, t: string) => {
+      logger.info(Transfer.REMOVE_BOT, this.roomName)
       try {
         const user = this.state.users.get(client.auth.uid)
         if (user) {
@@ -271,26 +314,12 @@ export default class PreparationRoom extends Room<PreparationState> {
         logger.error(error)
       }
     })
-    this.onMessage(Transfer.REQUEST_BOT_LIST, (client: Client) => {
-      try {
-        const user = this.state.users.get(client.auth.uid)
 
-        this.dispatcher.dispatch(new OnListBotsCommand(), {
-          user: user
-        })
-      } catch (error) {
-        logger.error(error)
-      }
-    })
+    this.onServerAnnouncement = this.onServerAnnouncement.bind(this)
+    this.presence.subscribe("server-announcement", this.onServerAnnouncement)
 
-    this.presence.subscribe("server-announcement", (message: string) => {
-      this.state.addMessage({
-        author: "Server Announcement",
-        authorId: "server",
-        payload: message,
-        avatar: "0294/Joyous"
-      })
-    })
+    this.onGameStart = this.onGameStart.bind(this)
+    this.presence.subscribe("game-started", this.onGameStart)
   }
 
   async onAuth(client: Client, options: any, request: any) {
@@ -306,9 +335,9 @@ export default class PreparationRoom extends Room<PreparationState> {
       const numberOfHumanPlayers = values(this.state.users).filter(
         (u) => !u.isBot
       ).length
-      if (numberOfHumanPlayers >= MAX_PLAYERS_PER_GAME) {
+      if (numberOfHumanPlayers >= MAX_PLAYERS_PER_GAME && !isAlreadyInRoom) {
         throw "Room is full"
-      } else if (this.state.gameStarted) {
+      } else if (this.state.gameStartedAt != null) {
         throw "Game already started"
       } else if (!user.displayName) {
         throw "No display name"
@@ -316,8 +345,6 @@ export default class PreparationRoom extends Room<PreparationState> {
         throw "User banned"
       } else if (this.metadata.blacklist.includes(user.uid)) {
         throw "User previously kicked"
-      } else if (isAlreadyInRoom) {
-        throw "User already in room"
       } else {
         return user
       }
@@ -345,8 +372,8 @@ export default class PreparationRoom extends Room<PreparationState> {
       if (consented) {
         throw new Error("consented leave")
       }
-      // allow disconnected client to reconnect into this room until 3 seconds
-      await this.allowReconnection(client, 3)
+      // allow disconnected client to reconnect into this room until 10 seconds
+      await this.allowReconnection(client, 10)
     } catch (e) {
       if (client && client.auth && client.auth.displayName) {
         /*logger.info(
@@ -358,27 +385,38 @@ export default class PreparationRoom extends Room<PreparationState> {
   }
 
   onDispose() {
-    //logger.info("Dispose preparation room")
+    logger.info("Dispose Preparation", this.roomId)
     this.dispatcher.stop()
-    this.presence.unsubscribe("server-announcement")
+    this.presence.unsubscribe("server-announcement", this.onServerAnnouncement)
+    this.presence.unsubscribe("game-started", this.onGameStart)
   }
 
-  status() {
-    const players = new Array<components["schemas"]["Player"]>()
-    this.state.users.forEach((user: GameUser) => {
-      if (!user.isBot) {
-        players.push({
-          id: user.id,
-          avatar: user.avatar,
-          name: user.name,
-          elo: user.elo
-        })
-      }
+  onServerAnnouncement(message: string) {
+    this.state.addMessage({
+      author: "Server Announcement",
+      authorId: "server",
+      payload: message,
+      avatar: "0294/Joyous"
     })
-    return {
-      players: players,
-      name: this.state.name,
-      id: this.roomId
+  }
+
+  onGameStart({
+    gameId,
+    preparationId
+  }: { gameId: string; preparationId: string }) {
+    if (this.roomId === preparationId) {
+      this.lock()
+      this.setGameStarted(new Date().toISOString())
+      //logger.debug("game start", game.roomId)
+      this.broadcast(Transfer.GAME_START, gameId)
     }
+  }
+
+  updatePlayersInfo() {
+    this.setMetadata({
+      playersInfo: [...this.state.users.values()].map(
+        (u) => `${u.name} [${u.elo}]`
+      )
+    })
   }
 }

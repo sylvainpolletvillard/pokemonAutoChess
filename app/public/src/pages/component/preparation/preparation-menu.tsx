@@ -3,22 +3,22 @@ import firebase from "firebase/compat/app"
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { IGameUser } from "../../../../../models/colyseus-models/game-user"
-import { IBot } from "../../../../../models/mongo-models/bot-v2"
 import PreparationState from "../../../../../rooms/states/preparation-state"
 import { Role } from "../../../../../types"
-import { MAX_PLAYERS_PER_GAME } from "../../../../../types/Config"
+import { BOTS_ENABLED, EloRank, EloRankThreshold, MAX_PLAYERS_PER_GAME } from "../../../../../types/Config"
 import { BotDifficulty, GameMode } from "../../../../../types/enum/Game"
+import { formatMinMaxRanks } from "../../../../../utils/elo"
 import { throttle } from "../../../../../utils/function"
 import { max } from "../../../../../utils/number"
 import { setTitleNotificationIcon } from "../../../../../utils/window"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import {
   addBot,
+  changeRoomMinMaxRanks,
   changeRoomName,
   changeRoomPassword,
   deleteRoom,
   gameStartRequest,
-  listBots,
   toggleEloRoom,
   toggleReady
 } from "../../../stores/NetworkStore"
@@ -33,18 +33,15 @@ export default function PreparationMenu() {
   const [inputValue, setInputValue] = useState<string>("")
   const users: IGameUser[] = useAppSelector((state) => state.preparation.users)
   const user = useAppSelector((state) => state.preparation.user)
-  const ownerName: string = useAppSelector(
-    (state) => state.preparation.ownerName
-  )
   const name: string = useAppSelector((state) => state.preparation.name)
   const ownerId: string = useAppSelector((state) => state.preparation.ownerId)
   const password: string | null = useAppSelector(
     (state) => state.preparation.password
   )
   const noElo: boolean = useAppSelector((state) => state.preparation.noElo)
-  const botsList: IBot[] | null = useAppSelector(
-    (state) => state.preparation.botsList
-  )
+  const minRank = useAppSelector((state) => state.preparation.minRank)
+  const maxRank = useAppSelector((state) => state.preparation.maxRank)
+  const [showBotSelectModal, setShowBotSelectModal] = useState(false)
   const uid: string = useAppSelector((state) => state.network.uid)
   const isOwner: boolean = useAppSelector(
     (state) => state.preparation.ownerId === state.network.uid
@@ -58,7 +55,7 @@ export default function PreparationMenu() {
     BotDifficulty.MEDIUM
   )
 
-  const isReady = users.find((user) => user.id === uid)?.ready
+  const isReady = users.find((user) => user.uid === uid)?.ready
   const nbUsersReady = users.filter((user) => user.ready).length
   const allUsersReady = users.every((user) => user.ready) && nbUsersReady > 1
 
@@ -81,7 +78,13 @@ export default function PreparationMenu() {
     } else {
       setTitleNotificationIcon("🟠")
     }
-  }, [nbUsersReady, users.length])
+  }, [nbUsersReady, users.length, allUsersReady])
+
+  useEffect(() => {
+    if (gameMode !== GameMode.CUSTOM_LOBBY && room?.connection.isOpen) {
+      dispatch(toggleReady(true)) // automatically set users ready in non-classic game mode
+    }
+  }, [gameMode, dispatch, room?.connection.isOpen])
 
   const humans = users.filter((u) => !u.isBot)
   const isElligibleForELO =
@@ -92,7 +95,11 @@ export default function PreparationMenu() {
 
   function makePrivate() {
     if (password === null) {
-      const newPassword = prompt(t("enter_password"))
+      // generate a random password made of 4 characters
+      const newPassword = Math.random()
+        .toString(36)
+        .substring(2, 6)
+        .toUpperCase()
       dispatch(changeRoomPassword(newPassword))
     } else {
       dispatch(changeRoomPassword(null))
@@ -122,6 +129,20 @@ export default function PreparationMenu() {
       {t("delete_room")}
     </button>
   )
+
+  const changeMinRank = (newMinRank: EloRank) => {
+    dispatch(changeRoomMinMaxRanks({
+      minRank: newMinRank,
+      maxRank: maxRank
+    }))
+  }
+
+  const changeMaxRank = (newMaxRank: EloRank) => {
+    dispatch(changeRoomMinMaxRanks({
+      minRank: minRank,
+      maxRank: newMaxRank
+    }))
+  }
 
   const headerMessage = (
     <>
@@ -171,13 +192,13 @@ export default function PreparationMenu() {
         <p>{t("not_elligible_elo_hint")}</p>
       ) : null}
 
-      {gameMode === GameMode.NORMAL && users.length === 1 && (
-        <p>{t("add_bot_or_wait_hint")}</p>
+      {gameMode === GameMode.CUSTOM_LOBBY && users.length === 1 && (
+        <p>{BOTS_ENABLED ? t("add_bot_or_wait_hint") : t("wait_for_players_hint")}</p>
       )}
     </>
   )
 
-  const roomPrivateButton = gameMode === GameMode.NORMAL &&
+  const roomPrivateButton = gameMode === GameMode.CUSTOM_LOBBY &&
     (isOwner || isAdmin) && (
       <button
         className="bubbly blue"
@@ -190,7 +211,7 @@ export default function PreparationMenu() {
       </button>
     )
 
-  const roomEloButton = gameMode === GameMode.NORMAL &&
+  const roomEloButton = gameMode === GameMode.CUSTOM_LOBBY &&
     (isOwner || isAdmin) && (
       <button
         className="bubbly blue"
@@ -201,8 +222,15 @@ export default function PreparationMenu() {
       </button>
     )
 
-  const roomNameInput = gameMode === GameMode.NORMAL &&
-    (isOwner || isModerator || isAdmin) &&
+  const minMaxRanks = gameMode === GameMode.CUSTOM_LOBBY && isOwner && !noElo && (
+    <>
+      <RankSelect label={t("minimum_rank")} value={minRank ?? EloRank.BEGINNER} onChange={changeMinRank} />
+      <RankSelect label={t("maximum_rank")} value={maxRank ?? EloRank.MASTERBALL} onChange={changeMaxRank} />
+    </>
+  )
+
+  const roomNameInput = gameMode === GameMode.CUSTOM_LOBBY &&
+    (isModerator || isAdmin) &&
     user &&
     !user.anonymous && (
       <div className="my-input-group">
@@ -225,13 +253,13 @@ export default function PreparationMenu() {
       </div>
     )
 
-  const botControls = gameMode === GameMode.NORMAL && (isOwner || isAdmin) && (
+  const botControls = gameMode === GameMode.CUSTOM_LOBBY && (isOwner || isAdmin) && (
     <div className="my-input-group">
       <button
         className="bubbly blue"
         onClick={() => {
           if (botDifficulty === BotDifficulty.CUSTOM) {
-            dispatch(listBots())
+            setShowBotSelectModal(true)
           } else {
             dispatch(addBot(botDifficulty))
           }
@@ -255,19 +283,13 @@ export default function PreparationMenu() {
     </div>
   )
 
-  const roomInfo = gameMode === GameMode.NORMAL && (
+  const roomInfo = gameMode === GameMode.CUSTOM_LOBBY && (
     <p className="room-info">
-      {t("room_leader")}: {ownerName}{" "}
-      {password && (
-        <>
-          {" - "}
-          {t("room_password")}: {password}
-        </>
-      )}
+      {password && <>{t("room_password")}: <b>{password}</b></>}
     </p>
   )
 
-  const readyButton = gameMode === GameMode.NORMAL && users.length > 0 && (
+  const readyButton = (gameMode === GameMode.CUSTOM_LOBBY || !isReady) && users.length > 0 && (
     <button
       className={cc("bubbly", "ready-button", isReady ? "green" : "orange")}
       onClick={() => {
@@ -295,7 +317,7 @@ export default function PreparationMenu() {
     <div className="preparation-menu my-container is-centered custom-bg">
       <header>
         <h1>
-          {name}: {users.length}/{nbExpectedPlayers}
+          {formatMinMaxRanks(minRank, maxRank)} {name}: {users.length}/{nbExpectedPlayers}
         </h1>
         {headerMessage}
       </header>
@@ -304,7 +326,7 @@ export default function PreparationMenu() {
         {users.map((u) => {
           return (
             <PreparationMenuUser
-              key={u.id}
+              key={u.uid}
               user={u}
               isOwner={isOwner}
               ownerId={ownerId}
@@ -314,26 +336,44 @@ export default function PreparationMenu() {
       </div>
 
       <div className="actions">
-        {botControls}
+        {roomNameInput}
         <div className="spacer"></div>
         {deleteRoomButton}
       </div>
 
+      {(BOTS_ENABLED || isAdmin) && <div className="actions">
+        {botControls}
+      </div>}
+
       <div className="actions">
-        {roomNameInput}
-        <div className="spacer"></div>
-        {roomPrivateButton}
         {roomEloButton}
+        {minMaxRanks}
+        <div className="spacer" />
       </div>
 
       <div className="actions">
+        {roomPrivateButton}
         {roomInfo}
         <div className="spacer" />
         {readyButton}
         {startGameButton}
       </div>
 
-      {isOwner && botsList != null && <BotSelectModal bots={botsList} />}
+      {isOwner && showBotSelectModal && <BotSelectModal botsSelected={users.filter((u) => u.isBot).map(u => u.uid)} close={() => setShowBotSelectModal(false)} />}
     </div>
   )
+}
+
+export function RankSelect(props: { label: string; value: EloRank; onChange: (rank: EloRank) => void }) {
+  const { t } = useTranslation()
+  return <label>
+    {props.label}
+    <select value={props.value} onChange={e => props.onChange(e.target.value as EloRank)} style={{ marginLeft: '0.5em' }}>
+      {Object.values(EloRank).map((rank) => (
+        <option key={rank} value={rank}>
+          {t("elorank." + rank)} ({EloRankThreshold[rank]})
+        </option>
+      ))}
+    </select>
+  </label>
 }

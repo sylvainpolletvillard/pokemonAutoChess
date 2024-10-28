@@ -2,7 +2,7 @@ import { IPokemonEntity } from "../types"
 import { Effect } from "../types/enum/Effect"
 import { Orientation } from "../types/enum/Game"
 import { Passive } from "../types/enum/Passive"
-import { distanceC } from "../utils/distance"
+import { distanceC, distanceM } from "../utils/distance"
 import { logger } from "../utils/logger"
 import { OrientationArray, OrientationVector } from "../utils/orientation"
 import { pickRandomIn } from "../utils/random"
@@ -164,6 +164,29 @@ export default class Board {
     return cells
   }
 
+  getOuterRangeCells(
+    cellX: number,
+    cellY: number,
+    range = 1,
+    includesCenter = false
+  ) {
+    const cells = new Array<Cell>()
+
+    // Loop through all cells in the range
+    for (let y = cellY - range; y <= cellY + range; y++) {
+      for (let x = cellX - range; x <= cellX + range; x++) {
+        // Skip the center if not included
+        if (x == cellX && y == cellY && !includesCenter) continue
+        // Ensure coordinates are within grid bounds
+        if (y >= 0 && y < this.rows && x >= 0 && x < this.columns) {
+          cells.push({ x, y, value: this.cells[this.columns * y + x] })
+        }
+      }
+    }
+
+    return cells
+  }
+
   getCellsInFront(
     pokemon: PokemonEntity,
     target: PokemonEntity,
@@ -242,6 +265,19 @@ export default class Board {
       }
     }
     return cells
+  }
+
+  getAllPokemonCoordinates(): { x: number; y: number }[] {
+    const pokemonCoordinates: { x: number; y: number }[] = []
+
+    this.forEach((x: number, y: number, value: PokemonEntity | undefined) => {
+      if (value !== undefined) {
+        // Add coordinates of all Pokémon to the list
+        pokemonCoordinates.push({ x, y })
+      }
+    })
+
+    return pokemonCoordinates
   }
 
   getCellsBetween(x0: number, y0: number, x1: number, y1: number) {
@@ -330,5 +366,42 @@ export default class Board {
     if (y >= 0 && y < this.rows && x >= 0 && x < this.columns) {
       return this.effects[this.columns * y + x]
     }
+  }
+
+  getFarthestTargetCoordinateAvailablePlace(
+    pokemon: IPokemonEntity,
+    targetAlly: boolean = false
+  ):
+    | { x: number; y: number; distance: number; target: PokemonEntity }
+    | undefined {
+    const candidateCells = new Array<{
+      distance: number
+      target: PokemonEntity
+      x: number
+      y: number
+    }>()
+
+    this.forEach((x: number, y: number, value: PokemonEntity | undefined) => {
+      if (value && value.isTargettableBy(pokemon, !targetAlly, targetAlly)) {
+        candidateCells.push(
+          ...this.getAdjacentCells(x, y)
+            .filter((cell) => this.getValue(cell.x, cell.y) === undefined)
+            .map((cell) => ({
+              x: cell.x,
+              y: cell.y,
+              distance: distanceM(
+                pokemon.positionX,
+                pokemon.positionY,
+                cell.x,
+                cell.y
+              ),
+              target: value
+            }))
+        )
+      }
+    })
+
+    candidateCells.sort((a, b) => b.distance - a.distance)
+    return candidateCells[0]
   }
 }

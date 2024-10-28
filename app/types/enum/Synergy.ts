@@ -48,7 +48,11 @@ export const SynergyEffects: { [key in Synergy]: Effect[] } = Object.freeze({
     Effect.DESOLATE_LAND
   ],
   [Synergy.WATER]: [Effect.RAIN_DANCE, Effect.DRIZZLE, Effect.PRIMORDIAL_SEA],
-  [Synergy.ELECTRIC]: [Effect.RISING_VOLTAGE, Effect.OVERDRIVE],
+  [Synergy.ELECTRIC]: [
+    Effect.RISING_VOLTAGE,
+    Effect.OVERDRIVE,
+    Effect.POWER_SURGE
+  ],
   [Synergy.FIGHTING]: [
     Effect.GUTS,
     Effect.STURDY,
@@ -76,7 +80,12 @@ export const SynergyEffects: { [key in Synergy]: Effect[] } = Object.freeze({
     Effect.DRAGON_DANCE
   ],
   [Synergy.FIELD]: [Effect.BULK_UP, Effect.RAGE, Effect.ANGER_POINT],
-  [Synergy.MONSTER]: [Effect.PURSUIT, Effect.BRUTAL_SWING, Effect.POWER_TRIP],
+  [Synergy.MONSTER]: [
+    Effect.PURSUIT,
+    Effect.BRUTAL_SWING,
+    Effect.POWER_TRIP,
+    Effect.MERCILESS
+  ],
   [Synergy.HUMAN]: [Effect.MEDITATE, Effect.FOCUS_ENERGY, Effect.CALM_MIND],
   [Synergy.AQUATIC]: [Effect.SWIFT_SWIM, Effect.HYDRATION, Effect.WATER_VEIL],
   [Synergy.BUG]: [

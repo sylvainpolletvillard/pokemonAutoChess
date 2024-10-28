@@ -20,6 +20,7 @@ import {
 import { GamePhaseState } from "../../../../types/enum/Game"
 import { Item, ItemRecipe } from "../../../../types/enum/Item"
 import { Pkm } from "../../../../types/enum/Pokemon"
+import { SpecialGameRule } from "../../../../types/enum/SpecialGameRule"
 import { logger } from "../../../../utils/logger"
 import { values } from "../../../../utils/schemas"
 import { clearTitleNotificationIcon } from "../../../../utils/window"
@@ -40,7 +41,7 @@ import UnownManager from "../components/unown-manager"
 import WeatherManager from "../components/weather-manager"
 
 export default class GameScene extends Scene {
-  tilemaps: Map<DungeonPMDO, DesignTiled>
+  tilemaps: Map<DungeonPMDO, DesignTiled> = new Map<DungeonPMDO, DesignTiled>()
   room: Room<GameState> | undefined
   uid: string | undefined
   map: Phaser.Tilemaps.Tilemap | undefined
@@ -52,7 +53,7 @@ export default class GameScene extends Scene {
   weatherManager: WeatherManager | undefined
   unownManager?: UnownManager
   music: Phaser.Sound.WebAudioSound | undefined
-  pokemonHovered: PokemonSprite | undefined
+  pokemonHovered: PokemonSprite | null = null
   pokemonDragged: PokemonSprite | null = null
   shopIndexHovered: number | null = null
   itemDragged: ItemContainer | null = null
@@ -60,11 +61,11 @@ export default class GameScene extends Scene {
   sellZone: SellZone | undefined
   zones: Phaser.GameObjects.Zone[] = []
   lastDragDropPokemon: PokemonSprite | undefined
-  lastPokemonDetail: PokemonSprite | null
-  minigameManager: MinigameManager
-  loadingManager: LoadingManager
-  started: boolean
-  spectate: boolean
+  lastPokemonDetail: PokemonSprite | null = null
+  minigameManager: MinigameManager | null = null
+  loadingManager: LoadingManager | null = null
+  started: boolean = false
+  spectate: boolean = false
 
   constructor() {
     super({
@@ -111,7 +112,7 @@ export default class GameScene extends Scene {
       ) as Player
 
       this.setMap(player.map)
-      this.initializeDragAndDrop()
+      this.setupMouseEvents()
       this.battleGroup = this.add.group()
       this.animationManager = new AnimationManager(this)
       this.minigameManager = new MinigameManager(
@@ -181,25 +182,50 @@ export default class GameScene extends Scene {
       }
     )
 
+    this.input.keyboard!.on("keydown-" + preferences.keybindings.lock, () => {
+      this.room?.send(Transfer.LOCK)
+    })
+
     this.input.keyboard!.on("keydown-" + preferences.keybindings.buy_xp, () => {
       this.buyExperience()
     })
 
-    this.input.keyboard!.on("keydown-" + preferences.keybindings.sell, () => {
-      if (this.pokemonHovered) {
-        this.sellPokemon(this.pokemonHovered)
-      } else if (this.shopIndexHovered !== null) {
+    this.input.keyboard!.on("keydown-" + preferences.keybindings.sell, (e) => {
+      if (this.pokemonDragged != null) return
+      if (this.shopIndexHovered !== null) {
         this.removeFromShop(this.shopIndexHovered)
+        this.shopIndexHovered = null
+      } else if (
+        this.pokemonHovered &&
+        this.pokemonHovered.sprite
+          .getBounds()
+          .contains(
+            this.game.input.activePointer.x,
+            this.game.input.activePointer.y
+          )
+      ) {
+        this.sellPokemon(this.pokemonHovered)
+        this.pokemonHovered = null
+      }
+    })
+
+    this.input.keyboard!.on("keydown-" + preferences.keybindings.switch, () => {
+      if (this.pokemonHovered) {
+        this.switchBetweenBenchAndBoard(this.pokemonHovered)
       }
     })
   }
 
   refreshShop() {
     const player = this.room?.state.players.get(this.uid!)
+    const rollCostType =
+      this.room?.state.specialGameRule === SpecialGameRule.DESPERATE_MOVES
+        ? "life"
+        : "money"
     if (
       player &&
       player.alive &&
-      player.money >= 1 &&
+      (player[rollCostType] >= 1 || player.shopFreeRolls > 0) &&
       player === this.board?.player
     ) {
       this.room?.send(Transfer.REFRESH)
@@ -220,12 +246,17 @@ export default class GameScene extends Scene {
     this.room?.send(Transfer.REMOVE_FROM_SHOP, index)
   }
 
+  switchBetweenBenchAndBoard(pokemon: PokemonSprite) {
+    if (!pokemon) return
+    this.room?.send(Transfer.SWITCH_BENCH_AND_BOARD, pokemon.id)
+  }
+
   updatePhase(newPhase: GamePhaseState, previousPhase: GamePhaseState) {
     this.weatherManager?.clearWeather()
     this.resetDragState()
 
     if (previousPhase === GamePhaseState.MINIGAME) {
-      this.minigameManager.dispose()
+      this.minigameManager?.dispose()
     }
 
     if (newPhase === GamePhaseState.FIGHT) {
@@ -246,7 +277,7 @@ export default class GameScene extends Scene {
           .then((tilemap: DesignTiled) => {
             this.tilemaps.set(mapName, tilemap)
             tilemap.tilesets.forEach((t) => {
-              logger.debug(`loading tileset ${mapName + "/" + t.name}`)
+              //logger.debug(`loading tileset ${mapName + "/" + t.name}`)
               this.load.image(
                 mapName + "/" + t.name,
                 "/assets/tilesets/" + mapName + "/" + t.image
@@ -303,7 +334,7 @@ export default class GameScene extends Scene {
     this.input.setDragState(this.input.pointer1, 0)
   }
 
-  initializeDragAndDrop() {
+  setupMouseEvents() {
     this.sellZone = new SellZone(this)
     this.dropSpots = []
 
@@ -360,22 +391,8 @@ export default class GameScene extends Scene {
     this.input.on(
       Phaser.Input.Events.GAMEOBJECT_OVER,
       (pointer, gameObject: Phaser.GameObjects.GameObject) => {
-        const outline = <OutlinePlugin>this.plugins.get("rexOutline")
         if (gameObject instanceof PokemonSprite && gameObject.draggable) {
-          const previouslyHovered = this.pokemonHovered
-          this.pokemonHovered = gameObject
-          if (previouslyHovered && previouslyHovered !== gameObject) {
-            outline.remove(previouslyHovered.sprite)
-          }
-
-          const thickness = Math.round(
-            1 + Math.log(gameObject.def + gameObject.speDef)
-          )
-          this.pokemonHovered = gameObject
-          outline.add(gameObject.sprite, {
-            thickness,
-            outlineColor: 0xffffff
-          })
+          this.setHovered(gameObject)
         }
       }
     )
@@ -383,10 +400,9 @@ export default class GameScene extends Scene {
     this.input.on(
       Phaser.Input.Events.GAMEOBJECT_OUT,
       (pointer, gameObject: Phaser.GameObjects.GameObject) => {
-        const outline = <OutlinePlugin>this.plugins.get("rexOutline")
         if (this.pokemonHovered === gameObject) {
-          outline.remove(this.pokemonHovered.sprite)
-          this.pokemonHovered = undefined
+          this.clearHovered(this.pokemonHovered)
+          this.pokemonHovered = null
         }
       }
     )
@@ -614,19 +630,24 @@ export default class GameScene extends Scene {
       this
     )
   }
-}
 
-// if (item && item.name && item != gameObject) {
-//   Object.keys(ItemRecipe).forEach((recipeName)=>{
-//     const recipe = ItemRecipe[recipeName];
-//     if ((recipe[0] == item.name && recipe[1] == gameObject.name) || (recipe[1] == item.name && recipe[0] == gameObject.name)) {
-//       item.detailDisabled = true;
-//       item.detail.setScale(0, 0);
-//       gameObject.sprite.setTexture('item', recipeName);
-//       gameObject.remove(gameObject.detail, true);
-//       gameObject.detail = new ItemDetail(this, 30, -100, recipeName);
-//       gameObject.detail.setScale(1, 1);
-//       gameObject.add(gameObject.detail);
-//     }
-//   });
-// }
+  setHovered(gameObject: PokemonSprite) {
+    const outline = <OutlinePlugin>this.plugins.get("rexOutline")
+    if (this.pokemonHovered != null) this.clearHovered(this.pokemonHovered)
+    this.pokemonHovered = gameObject
+
+    const thickness = Math.round(
+      1 + Math.log(gameObject.def + gameObject.speDef)
+    )
+    this.pokemonHovered = gameObject
+    outline.add(gameObject.sprite, {
+      thickness,
+      outlineColor: 0xffffff
+    })
+  }
+
+  clearHovered(gameObject: PokemonSprite) {
+    const outline = <OutlinePlugin>this.plugins.get("rexOutline")
+    outline.remove(gameObject.sprite)
+  }
+}

@@ -1,5 +1,5 @@
-import { Room } from "colyseus.js"
 import { type NonFunctionPropNames } from "@colyseus/schema/lib/types/HelperTypes"
+import { Room } from "colyseus.js"
 import Phaser from "phaser"
 import MoveToPlugin from "phaser3-rex-plugins/plugins/moveto-plugin.js"
 import OutlinePlugin from "phaser3-rex-plugins/plugins/outlinepipeline-plugin.js"
@@ -24,7 +24,6 @@ import {
   IPlayer,
   IPokemon,
   IPokemonEntity,
-  ISimplePlayer,
   Transfer
 } from "../../../types"
 import { Ability } from "../../../types/enum/Ability"
@@ -35,18 +34,17 @@ import {
   PokemonActionState,
   Rarity
 } from "../../../types/enum/Game"
-import { Synergy } from "../../../types/enum/Synergy"
 import { Weather } from "../../../types/enum/Weather"
 import { logger } from "../../../utils/logger"
 import { clamp, max } from "../../../utils/number"
-import { getPath, transformCoordinate } from "../pages/utils/utils"
-import { preferences } from "../preferences"
+import { SOUNDS, playSound } from "../pages/utils/audio"
+import { transformCoordinate } from "../pages/utils/utils"
+import { loadPreferences, preferences } from "../preferences"
 import store from "../stores"
 import { changePlayer, setPlayer, setSimulation } from "../stores/GameStore"
 import { getPortraitSrc } from "../utils"
 import { BoardMode } from "./components/board-manager"
 import GameScene from "./scenes/game-scene"
-import { playSound, SOUNDS } from "../pages/utils/audio"
 
 class GameContainer {
   room: Room<GameState>
@@ -72,7 +70,7 @@ class GameContainer {
   initializeSimulation(simulation: Simulation) {
     if (
       simulation.bluePlayerId === this.player?.id ||
-      simulation.redPlayerId === this.player?.id
+      (simulation.redPlayerId === this.player?.id && !simulation.isGhostBattle)
     ) {
       this.setSimulation(simulation)
     }
@@ -111,6 +109,7 @@ class GameContainer {
       "curseFate",
       "electricField",
       "fairyField",
+      "fatigue",
       "flinch",
       "freeze",
       "grassField",
@@ -130,6 +129,7 @@ class GameContainer {
       "synchro",
       "wound",
       "enraged",
+      "locked",
       "magicBounce"
     ]
 
@@ -149,6 +149,7 @@ class GameContainer {
         "critChance",
         "critPower",
         "ap",
+        "luck",
         "atkSpeed",
         "life",
         "hp",
@@ -162,6 +163,7 @@ class GameContainer {
         "targetY",
         "team",
         "index",
+        "shiny",
         "skill",
         "stars",
         "types"
@@ -174,7 +176,7 @@ class GameContainer {
             pokemon,
             field,
             value,
-            previousValue
+            previousValue || value
           )
         })
       })
@@ -230,7 +232,7 @@ class GameContainer {
     if (this.game != null) return // prevent initializing twice
     // Create Phaser game
     const config = {
-      type: Phaser.AUTO,
+      type: +(loadPreferences().renderer ?? Phaser.AUTO),
       width: 1950,
       height: 1000,
       parent: this.div,
@@ -373,17 +375,24 @@ class GameContainer {
 
     const listenForPokemonChanges = (pokemon: Pokemon) => {
       pokemon.onChange(() => {
-        const fields: NonFunctionPropNames<Pokemon>[] = [
+        const fields: NonFunctionPropNames<IPokemon>[] = [
           "positionX",
           "positionY",
           "action",
-          "types",
-          "hp"
+          "hp",
+          "atk",
+          "ap",
+          "shiny"
         ]
         fields.forEach((field) => {
           pokemon.listen(field, (value, previousValue) => {
             if (field && player.id === this.spectatedPlayerId) {
-              this.gameScene?.board?.changePokemon(pokemon, field, value)
+              this.gameScene?.board?.changePokemon(
+                pokemon,
+                field,
+                value as IPokemon[typeof field],
+                previousValue as IPokemon[typeof field]
+              )
             }
           })
         })
@@ -631,43 +640,6 @@ class GameContainer {
 
   onDragDropItem(event: CustomEvent<IDragDropItemMessage>) {
     this.room.send(Transfer.DRAG_DROP_ITEM, event.detail)
-  }
-
-  transformToSimplePlayer(player: IPlayer): ISimplePlayer {
-    const simplePlayer = {
-      elo: player.elo,
-      name: player.name,
-      id: player.id,
-      rank: player.rank,
-      avatar: player.avatar,
-      title: player.title,
-      role: player.role,
-      pokemons: new Array<IPokemonRecord>(),
-      synergies: new Array<{ name: Synergy; value: number }>()
-    }
-
-    const allSynergies = new Array<{ name: Synergy; value: number }>()
-    player.synergies.forEach((v, k) => {
-      allSynergies.push({ name: k as Synergy, value: v })
-    })
-
-    allSynergies.sort((a, b) => b.value - a.value)
-
-    simplePlayer.synergies = allSynergies.slice(0, 5)
-
-    if (player.board && player.board.size > 0) {
-      player.board.forEach((pokemon) => {
-        if (pokemon.positionY != 0) {
-          simplePlayer.pokemons.push({
-            avatar: getPath(pokemon),
-            items: pokemon.items.toArray(),
-            name: pokemon.name
-          })
-        }
-      })
-    }
-
-    return simplePlayer
   }
 }
 

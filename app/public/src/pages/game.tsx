@@ -1,32 +1,38 @@
-import { Client, Room } from "colyseus.js"
 import { type NonFunctionPropNames } from "@colyseus/schema/lib/types/HelperTypes"
+import { Client, Room } from "colyseus.js"
 import firebase from "firebase/compat/app"
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Navigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { getFreeSpaceOnBench } from "../../../utils/board"
+import { IPokemonRecord } from "../../../models/colyseus-models/game-record"
 import { IUserMetadata } from "../../../models/mongo-models/user-metadata"
 import AfterGameState from "../../../rooms/states/after-game-state"
 import GameState from "../../../rooms/states/game-state"
 import {
+  IAfterGamePlayer,
   IBoardEvent,
   IDps,
   IDragDropCombineMessage,
   IDragDropItemMessage,
   IDragDropMessage,
+  IExperienceManager,
   IPlayer,
-  ISimplePlayer,
   Role,
   Transfer
 } from "../../../types"
 import { RequiredStageLevelForXpElligibility } from "../../../types/Config"
+import { DungeonDetails } from "../../../types/enum/Dungeon"
+import { Team } from "../../../types/enum/Game"
 import { Pkm } from "../../../types/enum/Pokemon"
+import { Synergy } from "../../../types/enum/Synergy"
+import { getFreeSpaceOnBench } from "../../../utils/board"
 import { logger } from "../../../utils/logger"
 import { addWanderingPokemon } from "../game/components/pokemon"
 import GameContainer from "../game/game-container"
 import GameScene from "../game/scenes/game-scene"
-import { useAppDispatch, useAppSelector } from "../hooks"
+import { selectCurrentPlayer, useAppDispatch, useAppSelector } from "../hooks"
+import store from "../stores"
 import {
   addDpsMeter,
   addPlayer,
@@ -36,28 +42,19 @@ import {
   removeDpsMeter,
   removePlayer,
   setAdditionalPokemons,
-  setBoardSize,
-  setCurrentPlayerAvatar,
-  setCurrentPlayerMoney,
-  setCurrentPlayerName,
-  setCurrentPlayerTitle,
-  setExperienceManager,
+  updateExperienceManager,
   setInterest,
   setItemsProposition,
   setLife,
   setLoadingProgress,
   setMoney,
   setNoELO,
-  setOpponentAvatar,
-  setOpponentId,
-  setOpponentName,
-  setOpponentTitle,
   setPhase,
-  setPlayerExperienceManager,
   setPokemonCollection,
   setPokemonProposition,
   setRoundTime,
   setShop,
+  setShopFreeRolls,
   setShopLocked,
   setStageLevel,
   setStreak,
@@ -66,9 +63,9 @@ import {
 } from "../stores/GameStore"
 import { joinGame, logIn, setProfile } from "../stores/NetworkStore"
 import GameDpsMeter from "./component/game/game-dps-meter"
+import GameFinalRank from "./component/game/game-final-rank"
 import GameItemsProposition from "./component/game/game-items-proposition"
 import GameLoadingScreen from "./component/game/game-loading-screen"
-import GameFinalRank from "./component/game/game-final-rank"
 import GamePlayers from "./component/game/game-players"
 import GamePokemonsProposition from "./component/game/game-pokemons-proposition"
 import GameShop from "./component/game/game-shop"
@@ -76,12 +73,9 @@ import GameStageInfo from "./component/game/game-stage-info"
 import GameSynergies from "./component/game/game-synergies"
 import GameToasts from "./component/game/game-toasts"
 import { MainSidebar } from "./component/main-sidebar/main-sidebar"
-import { LocalStoreKeys, localStore } from "./utils/store"
-import { FIREBASE_CONFIG } from "./utils/utils"
-import { DungeonDetails } from "../../../types/enum/Dungeon"
 import { playMusic, preloadMusic } from "./utils/audio"
-import store from "../stores"
-import { Team } from "../../../types/enum/Game"
+import { LocalStoreKeys, localStore } from "./utils/store"
+import { FIREBASE_CONFIG, getPortraitPath } from "./utils/utils"
 
 let gameContainer: GameContainer
 
@@ -90,12 +84,15 @@ export function getGameContainer(): GameContainer {
 }
 
 export function getGameScene(): GameScene | undefined {
-  return gameContainer?.game?.scene?.getScene<GameScene>("gameScene")
+  return gameContainer?.game?.scene?.getScene<GameScene>("gameScene") as
+    | GameScene
+    | undefined
 }
 
 export default function Game() {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const client: Client = useAppSelector((state) => state.network.client)
   const room: Room<GameState> | undefined = useAppSelector(
     (state) => state.network.game
@@ -104,9 +101,7 @@ export default function Game() {
   const currentPlayerId: string = useAppSelector(
     (state) => state.game.currentPlayerId
   )
-  const currentPlayer = useAppSelector((state) =>
-    state.game.players.find((p) => p.id === state.game.currentPlayerId)
-  )
+  const currentPlayer = useAppSelector(selectCurrentPlayer)
   const spectate = currentPlayerId !== uid || !currentPlayer?.alive
 
   const initialized = useRef<boolean>(false)
@@ -116,8 +111,6 @@ export default function Game() {
   const [connectError, setConnectError] = useState<string>("")
   const [finalRank, setFinalRank] = useState<number>(0)
   const [finalRankVisible, setFinalRankVisible] = useState<boolean>(false)
-  const [toAfter, setToAfter] = useState<boolean>(false)
-  const [toAuth, setToAuth] = useState<boolean>(false)
   const container = useRef<HTMLDivElement>(null)
 
   const MAX_ATTEMPS_RECONNECT = 3
@@ -128,8 +121,8 @@ export default function Game() {
         `connectToGame attempt ${attempts} / ${MAX_ATTEMPS_RECONNECT}`
       )
       const cachedReconnectionToken = localStore.get(
-        LocalStoreKeys.RECONNECTION_TOKEN
-      )
+        LocalStoreKeys.RECONNECTION_GAME
+      )?.reconnectionToken
       if (cachedReconnectionToken) {
         connecting.current = true
         const statusMessage = document.querySelector("#status-message")
@@ -142,8 +135,11 @@ export default function Game() {
           .then((room: Room) => {
             // store game token for 1 hour
             localStore.set(
-              LocalStoreKeys.RECONNECTION_TOKEN,
-              room.reconnectionToken,
+              LocalStoreKeys.RECONNECTION_GAME,
+              {
+                reconnectionToken: room.reconnectionToken,
+                roomId: room.roomId
+              },
               60 * 60
             )
             dispatch(joinGame(room))
@@ -165,18 +161,39 @@ export default function Game() {
             }
           })
       } else {
-        setToAuth(true) // no reconnection token
+        navigate("/") // no reconnection token, login again
       }
     },
     [client, dispatch]
   )
 
   function playerClick(id: string) {
-    room?.send(Transfer.SPECTATE, id)
+    const scene = getGameScene()
+    if (scene?.spectate) {
+      // if spectating game we switch directly without notifying the server to not show spectators avatars
+      if (room?.state?.players) {
+        const spectatedPlayer = room?.state?.players.get(id)
+        const gameContainer = getGameContainer()
+        if (spectatedPlayer) {
+          gameContainer.setPlayer(spectatedPlayer)
+
+          const simulation = room.state.simulations.get(
+            spectatedPlayer.simulationId
+          )
+          if (simulation) {
+            gameContainer.setSimulation(simulation)
+          }
+        }
+
+        gameContainer.gameScene?.board?.updateScoutingAvatars()
+      }
+    } else {
+      room?.send(Transfer.SPECTATE, id)
+    }
   }
 
   const leave = useCallback(async () => {
-    const savedPlayers = new Array<ISimplePlayer>()
+    const afterPlayers = new Array<IAfterGamePlayer>()
 
     const token = await firebase.auth().currentUser?.getIdToken()
 
@@ -187,9 +204,44 @@ export default function Game() {
     const nbPlayers = room?.state.players.size ?? 0
 
     if (nbPlayers > 0) {
-      room?.state.players.forEach((player) =>
-        savedPlayers.push(gameContainer.transformToSimplePlayer(player))
-      )
+      room?.state.players.forEach((p) => {
+        const afterPlayer: IAfterGamePlayer = {
+          elo: p.elo,
+          name: p.name,
+          id: p.id,
+          rank: p.rank,
+          avatar: p.avatar,
+          title: p.title,
+          role: p.role,
+          pokemons: new Array<IPokemonRecord>(),
+          synergies: new Array<{ name: Synergy; value: number }>(),
+          moneyEarned: p.totalMoneyEarned,
+          playerDamageDealt: p.totalPlayerDamageDealt,
+          rerollCount: p.rerollCount
+        }
+
+        const allSynergies = new Array<{ name: Synergy; value: number }>()
+        p.synergies.forEach((v, k) => {
+          allSynergies.push({ name: k as Synergy, value: v })
+        })
+
+        allSynergies.sort((a, b) => b.value - a.value)
+        afterPlayer.synergies = allSynergies.slice(0, 5)
+
+        if (p.board && p.board.size > 0) {
+          p.board.forEach((pokemon) => {
+            if (pokemon.positionY != 0) {
+              afterPlayer.pokemons.push({
+                avatar: getPortraitPath(pokemon),
+                items: pokemon.items.toArray(),
+                name: pokemon.name
+              })
+            }
+          })
+        }
+
+        afterPlayers.push(afterPlayer)
+      })
     }
 
     const elligibleToXP =
@@ -198,25 +250,46 @@ export default function Game() {
     const elligibleToELO =
       elligibleToXP &&
       !room?.state.noElo &&
-      savedPlayers.filter((p) => p.role !== Role.BOT).length >= 4
+      afterPlayers.filter((p) => p.role !== Role.BOT).length >= 4
 
     const r: Room<AfterGameState> = await client.create("after-game", {
-      players: savedPlayers,
+      players: afterPlayers,
       idToken: token,
       elligibleToXP,
       elligibleToELO
     })
-    localStore.set(LocalStoreKeys.RECONNECTION_TOKEN, r.reconnectionToken, 30)
-    r.connection.close()
+    localStore.set(
+      LocalStoreKeys.RECONNECTION_AFTER_GAME,
+      { reconnectionToken: r.reconnectionToken, roomId: r.roomId },
+      30
+    )
+    if (r.connection.isOpen) {
+      await r.leave(false)
+    }
     dispatch(leaveGame())
-    setToAfter(true)
-
-    try {
-      await room?.leave()
-    } catch (error) {
-      logger.warn("Room already closed")
+    navigate("/after")
+    if (room?.connection.isOpen) {
+      room.leave()
     }
   }, [client, dispatch, room])
+
+  useEffect(() => {
+    // create a history entry to prevent back button switching page immediately, and leave game properly instead
+    window.history.pushState(null, "", window.location.href)
+    const confirmLeave = () => {
+      if (confirm("Do you want to leave game ?")) {
+        leave()
+      } else {
+        // push again another entry to prevent back button from switching page, effectively canceling the back action
+        window.history.pushState(null, "", window.location.href)
+      }
+    }
+    // when pressing back button, properly leave game
+    window.addEventListener("popstate", confirmLeave)
+    return () => {
+      window.removeEventListener("popstate", confirmLeave)
+    }
+  }, [])
 
   useEffect(() => {
     const connect = () => {
@@ -285,9 +358,12 @@ export default function Game() {
       })
       room.onMessage(Transfer.SHOW_EMOTE, (message) => {
         const g = getGameScene()
-        if (g && g.minigameManager.pokemons.size > 0) {
+        if (
+          g?.minigameManager?.pokemons?.size &&
+          g.minigameManager.pokemons.size > 0
+        ) {
           // early return here to prevent showing animation twice
-          return g.minigameManager.showEmote(message.id, message?.emote)
+          return g.minigameManager?.showEmote(message.id, message?.emote)
         }
 
         if (g && g.board) {
@@ -363,6 +439,18 @@ export default function Game() {
         }
       })
 
+      room.onMessage(
+        Transfer.CLEAR_BOARD,
+        (event: { simulationId: string }) => {
+          if (gameContainer.game) {
+            const g = getGameScene()
+            if (g?.battle?.simulation?.id === event.simulationId) {
+              g.battle.clearBoardEvents()
+            }
+          }
+        }
+      )
+
       room.onMessage(Transfer.SIMULATION_STOP, () => {
         if (gameContainer.game) {
           const g = getGameScene()
@@ -401,7 +489,7 @@ export default function Game() {
       })
 
       room.state.additionalPokemons.onAdd(() => {
-        dispatch(setAdditionalPokemons(room.state.additionalPokemons))
+        dispatch(setAdditionalPokemons([...room.state.additionalPokemons]))
       })
 
       room.state.simulations.onRemove(() => {
@@ -464,6 +552,7 @@ export default function Game() {
           dispatch(setInterest(player.interest))
           dispatch(setStreak(player.streak))
           dispatch(setShopLocked(player.shopLocked))
+          dispatch(setShopFreeRolls(player.shopFreeRolls))
           dispatch(setPokemonCollection(player.pokemonCollection))
 
           player.listen("interest", (value) => {
@@ -475,6 +564,9 @@ export default function Game() {
           player.listen("shopLocked", (value) => {
             dispatch(setShopLocked(value))
           })
+          player.listen("shopFreeRolls", (value) => {
+            dispatch(setShopFreeRolls(value))
+          })
           player.listen("money", (value) => {
             dispatch(setMoney(value))
           })
@@ -482,22 +574,6 @@ export default function Game() {
             dispatch(setStreak(value))
           })
         }
-
-        player.listen("opponentId", (value) => {
-          dispatch(setOpponentId({ id: player.id, value: value }))
-        })
-        player.listen("opponentName", (value) => {
-          dispatch(setOpponentName({ id: player.id, value: value }))
-        })
-        player.listen("opponentAvatar", (value) => {
-          dispatch(setOpponentAvatar({ id: player.id, value: value }))
-        })
-        player.listen("opponentTitle", (value) => {
-          dispatch(setOpponentTitle({ id: player.id, value: value }))
-        })
-        player.listen("boardSize", (value) => {
-          dispatch(setBoardSize({ id: player.id, value: value }))
-        })
         player.listen("life", (value, previousValue) => {
           dispatch(setLife({ id: player.id, value: value }))
           if (
@@ -509,28 +585,25 @@ export default function Game() {
             setFinalRankVisible(true)
           }
         })
-        player.listen("money", (value) => {
-          dispatch(setCurrentPlayerMoney({ id: player.id, value: value }))
-        })
-        player.listen("experienceManager", (value) => {
+        player.listen("experienceManager", (experienceManager) => {
           if (player.id === uid) {
-            dispatch(setExperienceManager(value))
-          }
-          dispatch(
-            setPlayerExperienceManager({
-              id: player.id,
-              value: value
+            dispatch(updateExperienceManager(experienceManager))
+            const fields: NonFunctionPropNames<IExperienceManager>[] = [
+              "experience",
+              "expNeeded",
+              "level"
+            ]
+            fields.forEach((field) => {
+              experienceManager.listen(field, (value) => {
+                dispatch(
+                  updateExperienceManager({
+                    ...experienceManager,
+                    [field]: value
+                  } as IExperienceManager)
+                )
+              })
             })
-          )
-        })
-        player.listen("avatar", (value) => {
-          dispatch(setCurrentPlayerAvatar({ id: player.id, value: value }))
-        })
-        player.listen("name", (value) => {
-          dispatch(setCurrentPlayerName({ id: player.id, value: value }))
-        })
-        player.listen("title", (value) => {
-          dispatch(setCurrentPlayerTitle({ id: player.id, value: value }))
+          }
         })
         player.listen("loadingProgress", (value) => {
           dispatch(setLoadingProgress({ id: player.id, value: value }))
@@ -576,11 +649,25 @@ export default function Game() {
         })
 
         const fields: NonFunctionPropNames<IPlayer>[] = [
+          "name",
+          "avatar",
+          "boardSize",
+          "experienceManager",
           "money",
           "history",
           "life",
+          "opponentId",
+          "opponentName",
+          "opponentAvatar",
+          "opponentTitle",
           "rank",
-          "regionalPokemons"
+          "regionalPokemons",
+          "streak",
+          "title",
+          "rerollCount",
+          "totalMoneyEarned",
+          "totalPlayerDamageDealt",
+          "eggChance"
         ]
 
         fields.forEach((field) => {
@@ -608,12 +695,16 @@ export default function Game() {
 
         player.pokemonsProposition.onAdd(() => {
           if (player.id == uid) {
-            dispatch(setPokemonProposition(player.pokemonsProposition))
+            dispatch(
+              setPokemonProposition(player.pokemonsProposition.map((p) => p))
+            )
           }
         })
         player.pokemonsProposition.onRemove(() => {
           if (player.id == uid) {
-            dispatch(setPokemonProposition(player.pokemonsProposition))
+            dispatch(
+              setPokemonProposition(player.pokemonsProposition.map((p) => p))
+            )
           }
         })
       })
@@ -638,14 +729,6 @@ export default function Game() {
     connectToGame,
     leave
   ])
-
-  if (toAuth) {
-    return <Navigate to={"/"} />
-  }
-
-  if (toAfter) {
-    return <Navigate to="/after" />
-  }
 
   return (
     <main id="game-wrapper">
@@ -674,3 +757,4 @@ export default function Game() {
     </main>
   )
 }
+

@@ -14,27 +14,34 @@ export function TitleTab() {
   const [showUnlocked, setShowUnlocked] = useState<boolean>(true)
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const user = useAppSelector((state) => state.lobby.user)
+  const user = useAppSelector((state) => state.network.profile)
   const [titles, setTitles] = useState<ITitleStatistic[]>([])
 
   useEffect(() => {
     fetchTitles().then((res) => {
+      Object.keys(Title).forEach((title) => {
+        if (!res.some((t) => t.name === title)) {
+          res.push({ name: title as Title, rarity: 0 })
+        }
+      })
       setTitles(res)
     })
   }, [])
 
   return user && titles ? (
     <div>
-      <p>
-        {user.titles.length} / {Object.keys(Title).length}{" "}
-        {t("titles_unlocked")}
-      </p>
-      <Checkbox
-        checked={showUnlocked}
-        onToggle={setShowUnlocked}
-        label={t("toggle_locked")}
-        isDark
-      />
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Checkbox
+          checked={showUnlocked}
+          onToggle={setShowUnlocked}
+          label={t("toggle_locked")}
+          isDark
+        />
+        <p>
+          {user.titles.length} / {Object.keys(Title).length}{" "}
+          {t("titles_unlocked")}
+        </p>
+      </div>
       <ul className="titles">
         {titles
           .filter((title) => showUnlocked || user.titles.includes(title.name))
@@ -43,9 +50,8 @@ export function TitleTab() {
             <li
               key={k.name}
               style={{
-                background: `linear-gradient(to right, var(--color-bg-primary) 0% ${
-                  k.rarity * 100
-                }%, var(--color-bg-secondary) ${k.rarity * 100}% 100%)`
+                background: `linear-gradient(to right, var(--color-bg-primary) 0% ${k.rarity * 100
+                  }%, var(--color-bg-secondary) ${k.rarity * 100}% 100%)`
               }}
               className={cc("clickable", "my-box", {
                 unlocked: user.titles.includes(k.name),

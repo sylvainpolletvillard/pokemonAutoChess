@@ -7,20 +7,21 @@ import { GADGETS } from "../../../../../core/gadgets"
 import { Role } from "../../../../../types"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { setSearchedUser } from "../../../stores/LobbyStore"
+import { toggleFullScreen } from "../../utils/fullscreen"
 import { cc } from "../../utils/jsx"
 import Booster from "../booster/booster"
 import TeamBuilderModal from "../bot-builder/team-builder-modal"
 import PokemonCollection from "../collection/pokemon-collection"
-import GameOptionsModal from "../options/game-options-modal"
 import Jukebox from "../jukebox/jukebox"
 import MetaReport from "../meta-report/meta-report"
-import { BasicModal } from "../modal/modal"
+import { Modal } from "../modal/modal"
+import GameOptionsModal from "../options/game-options-modal"
 import Patchnotes from "../patchnotes/patchnotes"
 import { usePatchVersion } from "../patchnotes/usePatchVersion"
 import Profile from "../profile/profile"
-import { ServerAnnouncementForm } from "../server-announcement/server-announcement-form"
 import { TournamentsAdmin } from "../tournaments-admin/tournaments-admin"
 import Wiki from "../wiki/wiki"
+import ServersList from "../servers/servers-list"
 
 import "./main-sidebar.css"
 
@@ -44,7 +45,6 @@ export function MainSidebar(props: MainSidebarProps) {
   const sidebarRef = useRef<HTMLHtmlElement>(null)
 
   const { t } = useTranslation()
-  const user = useAppSelector((state) => state.lobby.user)
   const profile = useAppSelector((state) => state.network.profile)
   const profileLevel = profile?.level ?? 0
 
@@ -73,7 +73,7 @@ export function MainSidebar(props: MainSidebarProps) {
         ref.removeEventListener("mouseleave", collapseSidebar)
       }
     }
-  }, [collapsed])
+  }, [])
 
   return (
     <Sidebar collapsed={collapsed} className="sidebar" ref={sidebarRef}>
@@ -145,7 +145,7 @@ export function MainSidebar(props: MainSidebarProps) {
           className="green"
           handleClick={changeModal}
         >
-          {t("wiki")}
+          {t("wiki_label")}
         </NavLink>
         <NavLink
           svg="meta"
@@ -166,15 +166,13 @@ export function MainSidebar(props: MainSidebarProps) {
           </NavLink>
         )}
 
-        {page !== "game" &&
-          user?.anonymous === false &&
-          profileLevel >= GADGETS.BOT_BUILDER.levelRequired && (
-            <NavLink svg="bot" onClick={() => navigate("/bot-builder")}>
-              {t("bot_builder")}
-            </NavLink>
-          )}
+        {page !== "game" && ((!GADGETS.BOT_BUILDER.disabled && profileLevel >= GADGETS.BOT_BUILDER.levelRequired) || profile?.role === Role.ADMIN) && (
+          <NavLink svg="bot" onClick={() => navigate("/bot-builder")}>
+            {t("bot_builder")}
+          </NavLink>
+        )}
 
-        {page !== "game" && user?.role === Role.ADMIN && (
+        {page !== "game" && profile?.role === Role.ADMIN && (
           <>
             <NavLink
               svg="pokemon-sprite"
@@ -184,13 +182,6 @@ export function MainSidebar(props: MainSidebarProps) {
             </NavLink>
             <NavLink svg="map" onClick={() => navigate("/map-viewer")}>
               Map Viewer
-            </NavLink>
-            <NavLink
-              svg="megaphone"
-              location="announcement"
-              handleClick={changeModal}
-            >
-              Announcement
             </NavLink>
             <NavLink
               svg="tournament"
@@ -216,24 +207,22 @@ export function MainSidebar(props: MainSidebarProps) {
           {t("options")}
         </NavLink>
 
+        {page === "game" && document.fullscreenEnabled && <NavLink
+          svg="fullscreen"
+          onClick={toggleFullScreen}
+        >
+          {t("toggle_fullscreen")}
+        </NavLink>}
+
         <div className="spacer"></div>
 
         {page !== "game" && (
           <NavLink
-            svg="donate"
-            className="tipeee"
-            onClick={() =>
-              window.open("https://en.tipeee.com/pokemon-auto-chess", "_blank")
-            }
+            svg="players"
+            className="community-servers"
+            location="servers" handleClick={changeModal}
           >
-            {t("donate")}
-            <img
-              src="assets/ui/tipeee.svg"
-              style={{
-                height: "1.25em",
-                display: "inline-block"
-              }}
-            />
+            {t("community_servers")}
           </NavLink>
         )}
 
@@ -241,7 +230,7 @@ export function MainSidebar(props: MainSidebarProps) {
           <NavLink
             svg="discord"
             className="discord"
-            onClick={() => window.open("https://discord.gg/6JMS7tr", "_blank")}
+            onClick={() => window.open(process.env.DISCORD_SERVER, "_blank")}
           >
             Discord
           </NavLink>
@@ -327,6 +316,7 @@ export type Modals =
   | "jukebox"
   | "announcement"
   | "tournaments"
+  | "servers"
 
 function Modals({
   modal,
@@ -337,12 +327,12 @@ function Modals({
   setModal: (nextModal?: Modals) => void
   page: Page
 }) {
+  const { t } = useTranslation()
   const searchedUser = useAppSelector((state) => state.lobby.searchedUser)
 
   const dispatch = useAppDispatch()
 
   const closeModal = useCallback(() => setModal(undefined), [setModal])
-  const { t } = useTranslation()
 
   useEffect(() => {
     if (searchedUser && modal !== "profile") {
@@ -352,40 +342,57 @@ function Modals({
 
   return (
     <>
-      <BasicModal
-        handleClose={closeModal}
+      <Modal
+        onClose={closeModal}
         show={modal === "news"}
-        body={<Patchnotes />}
-      />
-      <BasicModal
-        handleClose={() => {
+        header={t("patch_notes")}
+        className="patchnotes"
+      >
+        <Patchnotes />
+      </Modal>
+      <Modal
+        onClose={() => {
           closeModal()
           dispatch(setSearchedUser(undefined))
         }}
         show={modal === "profile"}
-        body={<Profile />}
-      />
-      <BasicModal
-        handleClose={closeModal}
+        header={t("profile")}
+      >
+        <Profile />
+      </Modal>
+      <Modal
+        onClose={closeModal}
         show={modal === "collection"}
-        body={<PokemonCollection />}
-        centered={false}
-      />
-      <BasicModal
-        handleClose={closeModal}
+        header={t("collection")}
+        className="anchor-top"
+      >
+        <PokemonCollection />
+      </Modal>
+      <Modal
+        onClose={closeModal}
         show={modal === "booster"}
-        body={<Booster />}
-      />
-      <BasicModal
-        handleClose={closeModal}
+        className="custom-bg"
+      >
+        <Booster />
+      </Modal>
+      <Modal
+        onClose={closeModal}
         show={modal === "wiki"}
-        body={<Wiki inGame={page === "game"} />}
-      />
-      <BasicModal
-        show={modal === "meta"}
-        handleClose={closeModal}
-        body={<MetaReport />}
-      />
+        className="wiki-modal"
+        header={t("wiki_label")}
+      >
+        <Wiki inGame={page === "game"} />
+      </Modal>
+      <Modal show={modal === "meta"} header={t("meta")} onClose={closeModal}>
+        <MetaReport />
+      </Modal>
+      <Modal
+        onClose={closeModal}
+        show={modal === "servers"}
+        className="servers-modal"
+        header={t("community_servers")}>
+        <ServersList />
+      </Modal>
       <TeamBuilderModal
         show={modal === "team-builder"}
         handleClose={closeModal}
@@ -395,16 +402,13 @@ function Modals({
         page={page}
         hideModal={closeModal}
       />
-      <BasicModal
-        handleClose={closeModal}
-        show={modal === "announcement"}
-        body={<ServerAnnouncementForm />}
-      />
-      <BasicModal
-        handleClose={closeModal}
+      <Modal
+        onClose={closeModal}
         show={modal === "tournaments"}
-        body={<TournamentsAdmin />}
-      />
+        header="Tournaments"
+      >
+        <TournamentsAdmin />
+      </Modal>
       <Jukebox show={modal === "jukebox"} handleClose={closeModal} />
     </>
   )

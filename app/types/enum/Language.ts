@@ -9,5 +9,8 @@ export enum Language {
   nl = "nl",
   bg = "bg",
   ko = "ko",
-  pl = "pl"
+  pl = "pl",
+  vi = "vi",
+  th = "th",
+  zh = "zh"
 }

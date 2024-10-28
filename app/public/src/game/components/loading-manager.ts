@@ -11,7 +11,7 @@ import GameScene from "../scenes/game-scene"
 
 export default class LoadingManager {
   scene: Phaser.Scene
-  loadingBar: GameObjects.Container
+  loadingBar: GameObjects.Container | null = null
   statusMessage: string
 
   constructor(scene: Phaser.Scene) {
@@ -33,6 +33,7 @@ export default class LoadingManager {
 
   async preload() {
     const scene = this.scene
+    scene.load.xhr.timeout = 5000 // help avoiding failed loading of assets when server is overloaded
     scene.load.scenePlugin(
       "animatedTiles",
       AnimatedTiles,

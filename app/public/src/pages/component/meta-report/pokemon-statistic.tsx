@@ -2,7 +2,7 @@ import React from "react"
 import { useTranslation } from "react-i18next"
 import { IPokemonsStatistic } from "../../../../../models/mongo-models/pokemons-statistic"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
-import {PRECOMPUTED_POKEMONS_PER_RARITY } from "../../../../../models/precomputed/precomputed-rarity"
+import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../../../../../models/precomputed/precomputed-rarity"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../../../../../models/precomputed/precomputed-types"
 import { Rarity } from "../../../../../types/enum/Game"
 import {
@@ -19,6 +19,7 @@ export default function PokemonStatistic(props: {
   rankingBy: string
   synergy: Synergy | "all"
   rarity: Rarity | "all"
+  selectedPkm: string
 }) {
   const { t } = useTranslation()
 
@@ -31,17 +32,16 @@ export default function PokemonStatistic(props: {
   const families = new Map<Pkm, FamilyStats>()
   const duos = Object.values(PkmDuos)
 
-  const filteredPokemons = props.pokemons
-    .filter((v) =>
-      props.synergy === "all"
+  const filteredPokemons = props.pokemons.filter(
+    (v) =>
+      (props.synergy === "all"
         ? v
-        : PRECOMPUTED_POKEMONS_PER_TYPE[props.synergy].includes(v.name)
-    )
-    .filter((v) =>
-      props.rarity === "all"
+        : PRECOMPUTED_POKEMONS_PER_TYPE[props.synergy].includes(v.name)) &&
+      (props.rarity === "all"
         ? v
-        : PRECOMPUTED_POKEMONS_PER_RARITY[props.rarity].includes(v.name)
-    )
+        : PRECOMPUTED_POKEMONS_PER_RARITY[props.rarity].includes(v.name)) &&
+      (props.selectedPkm === "" || v.name === props.selectedPkm)
+  )
 
   filteredPokemons.forEach((pokemon) => {
     let familyName = PkmFamily[pokemon.name]
@@ -74,8 +74,8 @@ export default function PokemonStatistic(props: {
     props.rankingBy === "count"
       ? b[1].totalCount! - a[1].totalCount!
       : props.rankingBy === "item_count"
-      ? b[1].averageItemHeld! - a[1].averageItemHeld!
-      : (a[1].averageRank ?? 9) - (b[1].averageRank ?? 9)
+        ? b[1].averageItemHeld! - a[1].averageItemHeld!
+        : (a[1].averageRank ?? 9) - (b[1].averageRank ?? 9)
   )
 
   if (filteredPokemons.length === 0) {
@@ -105,18 +105,19 @@ export default function PokemonStatistic(props: {
             ))}
           </ul>
 
-          <span style={{ fontSize: "150%" }}>
-            {t("average_place")}{" "}
-            {family.averageRank ? family.averageRank.toFixed(1) : "???"}
+          <span>
+            <label>{t("average_place")}:</label><br />
+            <span style={{ fontSize: "140%" }}>{family.averageRank ? family.averageRank.toFixed(1) : "???"}</span>
           </span>
 
-          <span style={{ fontSize: "150%" }}>
-            <label>{t("count")}:</label> {family.totalCount}
+          <span>
+            <label>{t("count")}:</label><br />
+            <span style={{ fontSize: "140%" }}>{family.totalCount}</span>
           </span>
 
-          <span style={{ fontSize: "150%" }}>
-            {family.averageItemHeld?.toFixed(2)}
-            <label>{t("held_items")}</label>
+          <span>
+            <label>{t("held_items")}:</label><br />
+            <span style={{ fontSize: "140%" }}>{family.averageItemHeld?.toFixed(2)}</span>
           </span>
 
           <ul
@@ -131,7 +132,7 @@ export default function PokemonStatistic(props: {
                 key={pokemon.name}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "40px 6ch 12ch 12ch 256px"
+                  gridTemplateColumns: "40px 6ch 1fr 1.5fr 2fr"
                 }}
               >
                 <img

@@ -1,6 +1,7 @@
 import Player from "../models/colyseus-models/player"
 import { IPokemonEntity, Transfer } from "../types"
-import { FIGHTING_PHASE_DURATION, ARMOR_FACTOR } from "../types/Config"
+import { ARMOR_FACTOR, FIGHTING_PHASE_DURATION } from "../types/Config"
+import { Ability } from "../types/enum/Ability"
 import { Effect } from "../types/enum/Effect"
 import {
   AttackType,
@@ -10,27 +11,219 @@ import {
 } from "../types/enum/Game"
 import { Item } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
+import { Pkm, PkmIndex } from "../types/enum/Pokemon"
 import { Synergy, SynergyEffects } from "../types/enum/Synergy"
 import { Weather } from "../types/enum/Weather"
+import { count } from "../utils/array"
 import { distanceC, distanceM } from "../utils/distance"
 import { logger } from "../utils/logger"
 import { max, min } from "../utils/number"
-import { pickRandomIn } from "../utils/random"
-import Board from "./board"
+import { chance, pickRandomIn } from "../utils/random"
+import Board, { Cell } from "./board"
 import { PokemonEntity } from "./pokemon-entity"
 
-export default class PokemonState {
+export default abstract class PokemonState {
+  name: string = ""
+
+  attack(pokemon: PokemonEntity, board: Board, target: PokemonEntity) {
+    if (target.life > 0) {
+      let damage = pokemon.atk
+      let physicalDamage = 0
+      let specialDamage = 0
+      let trueDamage = 0
+      let totalTakenDamage = 0
+
+      if (chance(pokemon.critChance / 100, pokemon)) {
+        if (target.items.has(Item.ROCKY_HELMET) === false) {
+          let opponentCritPower = pokemon.critPower
+          if (target.effects.has(Effect.BATTLE_ARMOR)) {
+            opponentCritPower -= 0.3
+          } else if (target.effects.has(Effect.MOUTAIN_RESISTANCE)) {
+            opponentCritPower -= 0.5
+          } else if (target.effects.has(Effect.DIAMOND_STORM)) {
+            opponentCritPower -= 0.7
+          }
+          const nbBlackAugurite = target.player
+            ? count(target.player.items, Item.BLACK_AUGURITE)
+            : 0
+          opponentCritPower -= 0.1 * nbBlackAugurite
+          damage = min(0)(Math.round(damage * opponentCritPower))
+        }
+        pokemon.onCriticalAttack({ target, board, damage })
+      }
+
+      if (pokemon.items.has(Item.PUNCHING_GLOVE)) {
+        damage = Math.round(damage + target.hp * 0.08)
+      }
+
+      if (pokemon.attackType === AttackType.SPECIAL) {
+        damage = Math.ceil(damage * (1 + pokemon.ap / 100))
+      }
+
+      if (pokemon.passive === Passive.SPOT_PANDA && target.status.confusion) {
+        damage = Math.ceil(damage * (1 + pokemon.ap / 100))
+      }
+
+      if (pokemon.status.stoneEdge) {
+        damage += Math.round(pokemon.def * (1 + pokemon.ap / 100))
+      }
+
+      let trueDamagePart = 0
+      if (pokemon.effects.has(Effect.STEEL_SURGE)) {
+        trueDamagePart += 0.33
+      } else if (pokemon.effects.has(Effect.STEEL_SPIKE)) {
+        trueDamagePart += 0.66
+      } else if (pokemon.effects.has(Effect.CORKSCREW_CRASH)) {
+        trueDamagePart += 1.0
+      } else if (pokemon.effects.has(Effect.MAX_MELTDOWN)) {
+        trueDamagePart += 1.2
+      }
+      if (pokemon.items.has(Item.RED_ORB) && target) {
+        trueDamagePart += 0.25
+      }
+      if (pokemon.effects.has(Effect.LOCK_ON) && target) {
+        trueDamagePart += 2.0 * (1 + pokemon.ap / 100)
+        pokemon.effects.delete(Effect.LOCK_ON)
+      }
+
+      let additionalSpecialDamagePart = 0
+      if (pokemon.effects.has(Effect.AROMATIC_MIST)) {
+        additionalSpecialDamagePart += 0.15
+      } else if (pokemon.effects.has(Effect.FAIRY_WIND)) {
+        additionalSpecialDamagePart += 0.3
+      } else if (pokemon.effects.has(Effect.STRANGE_STEAM)) {
+        additionalSpecialDamagePart += 0.5
+      } else if (pokemon.effects.has(Effect.MOON_FORCE)) {
+        additionalSpecialDamagePart += 0.7
+      }
+
+      let isAttackSuccessful = true
+      let dodgeChance = target.dodge
+      if (pokemon.effects.has(Effect.GAS)) {
+        dodgeChance += 0.5
+      }
+      dodgeChance = max(0.9)(dodgeChance)
+
+      if (
+        chance(dodgeChance, target) &&
+        !pokemon.items.has(Item.XRAY_VISION) &&
+        !pokemon.effects.has(Effect.LOCK_ON) &&
+        !target.status.paralysis &&
+        !target.status.sleep &&
+        !target.status.freeze
+      ) {
+        isAttackSuccessful = false
+        damage = 0
+        target.count.dodgeCount += 1
+      }
+      if (target.status.protect || target.status.skydiving) {
+        isAttackSuccessful = false
+        damage = 0
+      }
+
+      if (trueDamagePart > 0) {
+        // Apply true damage part
+        trueDamage = Math.ceil(damage * trueDamagePart)
+        damage = min(0)(damage * (1 - trueDamagePart))
+
+        const { takenDamage } = target.handleDamage({
+          damage: trueDamage,
+          board,
+          attackType: AttackType.TRUE,
+          attacker: pokemon,
+          shouldTargetGainMana: true
+        })
+        totalTakenDamage += takenDamage
+      }
+
+      if (pokemon.attackType === AttackType.SPECIAL) {
+        specialDamage = damage
+      } else {
+        physicalDamage = damage
+      }
+
+      if (additionalSpecialDamagePart > 0) {
+        specialDamage += Math.ceil(damage * additionalSpecialDamagePart)
+      }
+
+      if (pokemon.passive === Passive.SPOT_PANDA && target.status.confusion) {
+        specialDamage += 1 * damage * (1 + pokemon.ap / 100)
+      }
+
+      if (physicalDamage > 0) {
+        // Apply attack physical damage
+        const { takenDamage } = target.handleDamage({
+          damage: physicalDamage,
+          board,
+          attackType: AttackType.PHYSICAL,
+          attacker: pokemon,
+          shouldTargetGainMana: true
+        })
+        totalTakenDamage += takenDamage
+      }
+
+      if (specialDamage > 0) {
+        // Apply special damage
+        const { takenDamage } = target.handleDamage({
+          damage: specialDamage,
+          board,
+          attackType: AttackType.SPECIAL,
+          attacker: pokemon,
+          shouldTargetGainMana: true
+        })
+        totalTakenDamage += takenDamage
+      }
+
+      const totalDamage = physicalDamage + specialDamage + trueDamage
+      pokemon.onAttack({
+        target,
+        board,
+        physicalDamage,
+        specialDamage,
+        trueDamage,
+        totalDamage
+      })
+      if (isAttackSuccessful) {
+        pokemon.onHit({
+          target,
+          board,
+          totalTakenDamage,
+          physicalDamage,
+          specialDamage,
+          trueDamage
+        })
+      }
+    }
+  }
+
   handleHeal(
-    pokemon: IPokemonEntity,
+    pokemon: PokemonEntity,
     heal: number,
-    caster: IPokemonEntity,
+    caster: PokemonEntity,
     apBoost: number,
     crit: boolean
   ): void {
+    if (pokemon.status.wound) {
+      if (
+        pokemon.simulation.weather === Weather.BLOODMOON &&
+        pokemon.player &&
+        pokemon.player.items.includes(Item.BLOOD_STONE)
+      ) {
+        const nbBloodStones = count(pokemon.player.items, Item.BLOOD_STONE)
+        if (nbBloodStones > 0) {
+          pokemon.addShield(
+            Math.round(0.3 * nbBloodStones * heal),
+            pokemon,
+            apBoost,
+            crit
+          )
+        }
+      }
+      return
+    }
     if (
       pokemon.life > 0 &&
       pokemon.life < pokemon.hp &&
-      !pokemon.status.wound &&
       !pokemon.status.protect
     ) {
       if (apBoost > 0) {
@@ -81,6 +274,7 @@ export default class PokemonState {
       if (apBoost > 0) shield *= 1 + (caster.ap * apBoost) / 100
       if (crit) shield *= caster.critPower
       if (pokemon.status.enraged) shield *= 0.5
+      if (pokemon.items.has(Item.SILK_SCARF)) shield *= 1.3
 
       shield = Math.round(shield)
       pokemon.shield += shield
@@ -125,11 +319,15 @@ export default class PokemonState {
       return { death: false, takenDamage: 0 }
     }
 
+    if (pokemon.life <= 0 || pokemon.status.resurecting) {
+      return { death: false, takenDamage: 0 }
+    }
+
     if (attacker && attacker.status.enraged) {
       damage *= 2
     }
 
-    if (pokemon.life == 0) {
+    if (pokemon.life === 0) {
       death = true
     } else if (pokemon.status.protect || pokemon.status.skydiving) {
       death = false
@@ -173,6 +371,14 @@ export default class PokemonState {
         damage = Math.ceil(damage * 1.2)
       }
 
+      if (
+        pokemon.status.freeze &&
+        attacker &&
+        attacker.effects.has(Effect.SHEER_COLD)
+      ) {
+        damage = Math.ceil(damage * 1.3)
+      }
+
       const def = pokemon.status.armorReduction
         ? Math.round(pokemon.def / 2)
         : pokemon.def
@@ -202,7 +408,7 @@ export default class PokemonState {
           pokemon.effects.has(Effect.JUSTIFIED)
         ) {
           const damageBlocked = pokemon.effects.has(Effect.JUSTIFIED)
-            ? 15
+            ? 13
             : pokemon.effects.has(Effect.DEFIANT)
               ? 10
               : pokemon.effects.has(Effect.STURDY)
@@ -224,6 +430,10 @@ export default class PokemonState {
         pokemon.physicalDamageReduced += min(0)(damage - reducedDamage)
       } else if (attackType === AttackType.SPECIAL) {
         pokemon.specialDamageReduced += min(0)(damage - reducedDamage)
+
+        if (attacker && attacker.items.has(Item.POKEMONOMICON)) {
+          pokemon.status.triggerBurn(3000, pokemon, attacker)
+        }
       }
 
       if (isNaN(reducedDamage)) {
@@ -241,19 +451,26 @@ export default class PokemonState {
 
       let residualDamage = reducedDamage
 
-      if (pokemon.shield > 0 && !pokemon.status.flinch) {
-        let damageOnShield = reducedDamage
-        if (attacker && attacker.items.has(Item.FIRE_GEM)) {
+      if (pokemon.shield > 0) {
+        let damageOnShield
+        if (pokemon.status.flinch) {
+          damageOnShield = reducedDamage * 0.5
+          residualDamage = reducedDamage * 0.5
+        } else {
+          damageOnShield = reducedDamage
+          residualDamage = 0
+        }
+        if (attacker && attacker.items.has(Item.PROTECTIVE_PADS)) {
           damageOnShield *= 2 // double damage on shield
         }
         if (damageOnShield > pokemon.shield) {
+          residualDamage += damageOnShield - pokemon.shield
           damageOnShield = pokemon.shield
         }
 
         pokemon.shieldDamageTaken += damageOnShield
         takenDamage += damageOnShield
         pokemon.shield -= damageOnShield
-        residualDamage = min(0)(reducedDamage - damageOnShield)
       }
 
       takenDamage += Math.min(residualDamage, pokemon.life)
@@ -345,6 +562,10 @@ export default class PokemonState {
         } else {
           death = true
         }
+
+        if (pokemon.passive === Passive.PRIMEAPE) {
+          pokemon.refToBoardPokemon.atk += 1
+        }
       }
 
       if (death) {
@@ -402,6 +623,11 @@ export default class PokemonState {
     return { death, takenDamage }
   }
 
+  updateCommands(pokemon: PokemonEntity, dt: number) {
+    pokemon.commands.forEach((command) => command.update(dt))
+    pokemon.commands = pokemon.commands.filter((command) => !command.executed)
+  }
+
   update(
     pokemon: PokemonEntity,
     dt: number,
@@ -409,17 +635,14 @@ export default class PokemonState {
     weather: Weather,
     player: Player | undefined
   ) {
+    this.updateCommands(pokemon, dt)
     pokemon.status.updateAllStatus(dt, pokemon, board)
 
     if (
-      pokemon.status.resurecting &&
-      pokemon.action !== PokemonActionState.HURT
-    ) {
-      pokemon.toIdleState()
-    }
-    if (
-      (pokemon.status.freeze || pokemon.status.sleep) &&
-      pokemon.action !== PokemonActionState.SLEEP
+      (pokemon.status.resurecting ||
+        pokemon.status.freeze ||
+        pokemon.status.sleep) &&
+      pokemon.state.name !== "idle"
     ) {
       pokemon.toIdleState()
     }
@@ -457,7 +680,7 @@ export default class PokemonState {
           pokemon.count.growGroundCount === 5 &&
           player
         ) {
-          player.money += 3
+          player.addMoney(3, true, pokemon)
           pokemon.count.moneyCount += 3
         }
       }
@@ -473,7 +696,7 @@ export default class PokemonState {
           ? 30
           : pokemon.effects.has(Effect.GROWTH)
             ? 15
-            : 8
+            : 7
         if (
           pokemon.effects.has(Effect.HYDRATATION) &&
           pokemon.simulation.weather === Weather.RAIN
@@ -500,7 +723,12 @@ export default class PokemonState {
       pokemon.sandstormDamageTimer -= dt
       if (pokemon.sandstormDamageTimer <= 0 && !pokemon.simulation.finished) {
         pokemon.sandstormDamageTimer = 1000
-        const sandstormDamage = 5
+        let sandstormDamage = 5
+        const nbSmoothRocks = player ? count(player.items, Item.SMOOTH_ROCK) : 0
+        if (nbSmoothRocks > 0) {
+          sandstormDamage -= nbSmoothRocks
+          pokemon.addAttackSpeed(nbSmoothRocks, pokemon, 0, false)
+        }
         pokemon.handleDamage({
           damage: sandstormDamage,
           board,
@@ -512,7 +740,7 @@ export default class PokemonState {
     }
 
     if (pokemon.oneSecondCooldown <= 0) {
-      this.updateEachSecond(pokemon, board, weather, player)
+      this.updateEachSecond(pokemon, board)
       pokemon.oneSecondCooldown = 1000
     } else {
       pokemon.oneSecondCooldown = min(0)(pokemon.oneSecondCooldown - dt)
@@ -539,24 +767,25 @@ export default class PokemonState {
     }
   }
 
-  updateEachSecond(
-    pokemon: PokemonEntity,
-    board: Board,
-    weather: Weather,
-    player: Player | undefined
-  ) {
+  updateEachSecond(pokemon: PokemonEntity, board: Board) {
     pokemon.addPP(10, pokemon, 0, false)
     if (pokemon.effects.has(Effect.RAIN_DANCE)) {
       pokemon.addPP(4, pokemon, 0, false)
     }
     if (pokemon.effects.has(Effect.DRIZZLE)) {
-      pokemon.addPP(8, pokemon, 0, false)
+      pokemon.addPP(7, pokemon, 0, false)
     }
     if (pokemon.effects.has(Effect.PRIMORDIAL_SEA)) {
-      pokemon.addPP(12, pokemon, 0, false)
+      pokemon.addPP(10, pokemon, 0, false)
     }
     if (pokemon.simulation.weather === Weather.RAIN) {
       pokemon.addPP(3, pokemon, 0, false)
+      const nbDampRocks = pokemon.player
+        ? count(pokemon.player.items, Item.DAMP_ROCK)
+        : 0
+      if (nbDampRocks > 0) {
+        pokemon.addPP(2 * nbDampRocks, pokemon, 0, false)
+      }
     }
 
     if (pokemon.passive === Passive.ILLUMISE_VOLBEAT) {
@@ -572,7 +801,7 @@ export default class PokemonState {
       pokemon.effects.has(Effect.ETERNAL_LIGHT) ||
       pokemon.effects.has(Effect.MAX_ILLUMINATION)
     ) {
-      pokemon.addPP(10, pokemon, 0, false)
+      pokemon.addPP(8, pokemon, 0, false)
     }
 
     if (pokemon.items.has(Item.METRONOME)) {
@@ -631,6 +860,25 @@ export default class PokemonState {
       pokemon.status.triggerFreeze(1000, pokemon)
       pokemon.effects.delete(Effect.HAIL)
     }
+
+    if (pokemon.effects.has(Effect.ZEN_MODE)) {
+      const crit =
+        pokemon.items.has(Item.REAPER_CLOTH) &&
+        chance(pokemon.critChance / 100, pokemon)
+      pokemon.handleHeal(10, pokemon, 1, crit)
+      if (pokemon.life >= pokemon.hp) {
+        pokemon.index = PkmIndex[Pkm.DARMANITAN]
+        pokemon.name = Pkm.DARMANITAN
+        pokemon.passive = Passive.DARMANITAN
+        pokemon.skill = Ability.HEADBUTT
+        pokemon.pp = 0
+        pokemon.status.tree = false
+        pokemon.toMovingState()
+        pokemon.addAttack(10, pokemon, 0, false)
+        pokemon.addDefense(-5, pokemon, 0, false)
+        pokemon.addSpecialDefense(-5, pokemon, 0, false)
+      }
+    }
   }
 
   onEnter(pokemon: PokemonEntity) {}
@@ -657,11 +905,7 @@ export default class PokemonState {
         y++
       ) {
         const value = board.getValue(x, y)
-        if (
-          value !== undefined &&
-          value.team !== pokemon.team &&
-          value.isTargettable
-        ) {
+        if (value && value.isTargettableBy(pokemon)) {
           const candidateDistance = distanceC(
             pokemon.positionX,
             pokemon.positionY,
@@ -687,7 +931,7 @@ export default class PokemonState {
   getNearestTargetAtSightCoordinates(
     pokemon: PokemonEntity,
     board: Board
-  ): { x: number; y: number } | undefined {
+  ): { x: number; y: number } | null {
     let distance = 999
     let candidatesCoordinates: { x: number; y: number }[] = new Array<{
       x: number
@@ -695,11 +939,7 @@ export default class PokemonState {
     }>()
 
     board.forEach((x: number, y: number, value: PokemonEntity | undefined) => {
-      if (
-        value !== undefined &&
-        value.team !== pokemon.team &&
-        value.isTargettable
-      ) {
+      if (value && value.isTargettableBy(pokemon)) {
         const candidateDistance = distanceM(
           pokemon.positionX,
           pokemon.positionY,
@@ -714,10 +954,11 @@ export default class PokemonState {
         }
       }
     })
+
     if (candidatesCoordinates.length > 0) {
       return pickRandomIn(candidatesCoordinates)
     } else {
-      return undefined
+      return null
     }
   }
 
@@ -729,7 +970,7 @@ export default class PokemonState {
     let maxDistance = 0
 
     board.forEach((x: number, y: number, enemy: PokemonEntity | undefined) => {
-      if (enemy && enemy.team !== pokemon.team && enemy.isTargettable) {
+      if (enemy && enemy.isTargettableBy(pokemon)) {
         const distance = distanceM(pokemon.positionX, pokemon.positionY, x, y)
         if (distance > maxDistance) {
           farthestTarget = enemy
@@ -778,96 +1019,29 @@ export default class PokemonState {
     }
   }
 
-  getFarthestTargetCoordinateAvailablePlace(
-    pokemon: PokemonEntity,
-    board: Board
-  ):
-    | { x: number; y: number; distance: number; target: PokemonEntity }
-    | undefined {
-    const candidateCells = new Array<{
-      distance: number
-      target: PokemonEntity
-      x: number
-      y: number
-    }>()
-
-    board.forEach((x: number, y: number, value: PokemonEntity | undefined) => {
-      if (
-        value !== undefined &&
-        value.team !== pokemon.team &&
-        value.isTargettable
-      ) {
-        candidateCells.push(
-          ...board
-            .getAdjacentCells(x, y)
-            .filter((cell) => board.getValue(cell.x, cell.y) === undefined)
-            .map((cell) => ({
-              x: cell.x,
-              y: cell.y,
-              distance: distanceM(
-                pokemon.positionX,
-                pokemon.positionY,
-                cell.x,
-                cell.y
-              ),
-              target: value
-            }))
-        )
-      }
-    })
-
-    candidateCells.sort((a, b) => b.distance - a.distance)
-    return candidateCells[0]
-  }
-
-  getAvailablePlaceCoordinatesInRange(
+  getNearestAvailablePlaceCoordinates(
     pokemon: PokemonEntity,
     board: Board,
-    range: number
-  ): { x: number; y: number } | undefined {
-    const candidateCells = new Array<{
-      distance: number
-      x: number
-      y: number
-    }>()
-
+    maxRange?: number | undefined
+  ): Cell | null {
+    let candidateCells: Cell[] = []
+    let minDistance = 999
     board.forEach((x: number, y: number, value: PokemonEntity | undefined) => {
       const distance = distanceM(pokemon.positionX, pokemon.positionY, x, y)
-      if (value === undefined && distance >= range) {
-        candidateCells.push({
-          x,
-          y,
-          distance
-        })
+      if (
+        value === undefined &&
+        (maxRange === undefined || distance >= maxRange)
+      ) {
+        if (distance < minDistance) {
+          candidateCells = [{ x, y, value }]
+          minDistance = distance
+        } else if (distance == minDistance) {
+          candidateCells.push({ x, y, value })
+        }
       }
     })
 
-    candidateCells.sort((a, b) => a.distance - b.distance)
-    return candidateCells[0]
-  }
-
-  getNearestTargetCoordinateAvailablePlace(
-    pokemon: PokemonEntity,
-    board: Board
-  ): { x: number; y: number } | undefined {
-    const candidateCells = new Array<{
-      distance: number
-      x: number
-      y: number
-    }>()
-
-    board.forEach((x: number, y: number, value: PokemonEntity | undefined) => {
-      if (value === undefined) {
-        candidateCells.push({
-          x,
-          y,
-          distance: distanceM(pokemon.positionX, pokemon.positionY, x, y)
-        })
-      }
-    })
-
-    candidateCells.sort((a, b) => a.distance - b.distance)
-    return candidateCells[0]
+    return pickRandomIn(candidateCells)
   }
 
   getTargetCoordinateWhenConfused(
@@ -882,9 +1056,9 @@ export default class PokemonState {
 
     board.forEach((x: number, y: number, value: PokemonEntity | undefined) => {
       if (
-        value !== undefined &&
+        value &&
         value.id !== pokemon.id &&
-        value.isTargettable
+        value.isTargettableBy(pokemon, true, true)
       ) {
         const candidateDistance = distanceM(
           pokemon.positionX,

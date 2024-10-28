@@ -1,22 +1,22 @@
+import { t } from "i18next"
 import React, { useEffect, useState, useMemo } from "react"
+import ReactDOM from "react-dom"
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
-import { RarityColor } from "../../../../../types/Config"
-import { Rarity } from "../../../../../types/enum/Game"
-import { PokemonTypeahead } from "../typeahead/pokemon-typeahead"
-import { Pkm, PkmFamily, PkmIndex } from "../../../../../types/enum/Pokemon"
+import { Tooltip } from "react-tooltip"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../../../../../models/precomputed/precomputed-rarity"
-import { getPortraitSrc } from "../../../utils"
-import WikiPokemonDetail from "./wiki-pokemon-detail"
-import { t } from "i18next"
-import { Tooltip } from "react-tooltip"
+import { RarityColor } from "../../../../../types/Config"
 import { Ability } from "../../../../../types/enum/Ability"
+import { Rarity } from "../../../../../types/enum/Game"
+import { Pkm, PkmFamily, PkmIndex } from "../../../../../types/enum/Pokemon"
 import { IPokemonData } from "../../../../../types/interfaces/PokemonData"
 import { groupBy } from "../../../../../utils/array"
+import { getPortraitSrc } from "../../../utils"
 import { cc } from "../../utils/jsx"
 import { GamePokemonDetail } from "../game/game-pokemon-detail"
-import ReactDOM from "react-dom"
+import { PokemonTypeahead } from "../typeahead/pokemon-typeahead"
+import WikiPokemonDetail from "./wiki-pokemon-detail"
 
 export default function WikiPokemons() {
   const { t } = useTranslation()
@@ -39,12 +39,8 @@ export default function WikiPokemons() {
       }}
     >
       <PokemonTypeahead
-        value={selectedPkm ?? ""}
-        onChange={(pkm) => {
-          if (pkm) {
-            setSelectedPkm(pkm)
-          }
-        }}
+        value={selectedPkm}
+        onChange={(pkm) => setSelectedPkm(pkm)}
       />
       <TabList>
         {tabs.map((r) => {
@@ -54,7 +50,7 @@ export default function WikiPokemons() {
             </Tab>
           )
         })}
-        <Tab key="title-all">{t("ALL")}</Tab>
+        <Tab key="title-all">{t("all")}</Tab>
       </TabList>
 
       {(Object.values(Rarity) as Rarity[]).map((r) => {
@@ -82,7 +78,7 @@ export function WikiPokemon(props: {
 }) {
   const pokemons = useMemo(
     () =>
-      PRECOMPUTED_POKEMONS_PER_RARITY[props.rarity]
+      (PRECOMPUTED_POKEMONS_PER_RARITY[props.rarity])
         .filter((p) => p !== Pkm.DEFAULT)
         .sort((a: Pkm, b: Pkm) => {
           return PkmFamily[a] === PkmFamily[b]
@@ -90,7 +86,7 @@ export function WikiPokemon(props: {
             : PkmIndex[PkmFamily[a]].localeCompare(PkmIndex[PkmFamily[b]])
         }),
     [props.rarity]
-  )
+  ) as Pkm[]
 
   return (
     <Tabs
@@ -136,7 +132,9 @@ export function WikiAllPokemons() {
     pokemonsPerRarity[rarity].sort((a: IPokemonData, b: IPokemonData) => {
       if (a.regional !== b.regional) return +a.regional - +b.regional
       if (a.additional !== b.additional) return +a.additional - +b.additional
-      return a.index < b.index ? -1 : 1
+      return PkmFamily[a.name] === PkmFamily[b.name]
+        ? a.stars - b.stars
+        : PkmIndex[PkmFamily[a.name]].localeCompare(PkmIndex[PkmFamily[b.name]])
     })
   }
 
@@ -172,17 +170,13 @@ export function WikiAllPokemons() {
           )
         })}
       </div>
-      {hoveredPokemon &&
-        ReactDOM.createPortal(
-          <Tooltip
-            id="pokemon-detail"
-            className="custom-theme-tooltip game-pokemon-detail-tooltip"
-            float
-          >
-            <GamePokemonDetail pokemon={hoveredPokemon} />
-          </Tooltip>,
-          document.body
-        )}
+      {hoveredPokemon && <Tooltip
+        id="pokemon-detail"
+        className="custom-theme-tooltip game-pokemon-detail-tooltip"
+        float
+      >
+        <GamePokemonDetail pokemon={hoveredPokemon} />
+      </Tooltip>}
     </>
   )
 }

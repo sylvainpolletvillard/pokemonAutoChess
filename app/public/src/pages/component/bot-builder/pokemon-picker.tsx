@@ -99,10 +99,10 @@ function PokemonPickerTab(props: {
           ] as Rarity[]
         ).map((rarity) => (
           <React.Fragment key={rarity}>
-            <dt style={{ color: RarityColor[rarity] }}>
+            <dt style={{ color: RarityColor[rarity], textTransform: "uppercase", fontWeight: "500", fontSize: "80%", alignContent: "center" }}>
               {t(`rarity.${rarity}`)}
             </dt>
-            <dd style={{ display: "flex", flexWrap: "wrap" }}>
+            <dd style={{ display: "flex", flexWrap: "wrap", gap: "1px" }}>
               {(pokemonsPerRarity[rarity] ?? []).map((p) => (
                 <div
                   className={cc("pokemon-portrait", {
@@ -132,17 +132,13 @@ function PokemonPickerTab(props: {
           </React.Fragment>
         ))}
       </dl>
-      {hoveredPokemon &&
-        ReactDOM.createPortal(
-          <Tooltip
-            id="pokemon-detail"
-            className="custom-theme-tooltip game-pokemon-detail-tooltip"
-            float
-          >
-            <GamePokemonDetail pokemon={hoveredPokemon} />
-          </Tooltip>,
-          document.body
-        )}
+      {hoveredPokemon && <Tooltip
+        id="pokemon-detail"
+        className="custom-theme-tooltip game-pokemon-detail-tooltip"
+        float
+      >
+        <GamePokemonDetail pokemon={hoveredPokemon} />
+      </Tooltip>}
     </>
   )
 }

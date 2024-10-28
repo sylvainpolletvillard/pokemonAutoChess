@@ -1,10 +1,10 @@
 import { Dispatcher } from "@colyseus/command"
 import { Client, Room } from "colyseus"
 import admin from "firebase-admin"
-import SimplePlayer from "../models/colyseus-models/simple-player"
+import AfterGamePlayer from "../models/colyseus-models/after-game-player"
 import BannedUser from "../models/mongo-models/banned-user"
 import UserMetadata from "../models/mongo-models/user-metadata"
-import { Transfer } from "../types"
+import { IAfterGamePlayer, Transfer } from "../types"
 import { logger } from "../utils/logger"
 import AfterGameState from "./states/after-game-state"
 
@@ -16,32 +16,38 @@ export default class AfterGameRoom extends Room<AfterGameState> {
   }
 
   onCreate(options: {
-    players: SimplePlayer[]
+    players: IAfterGamePlayer[]
     idToken: string
     elligibleToXP: boolean
     elligibleToELO: boolean
   }) {
-    //logger.info("create after game", this.roomId)
+    logger.info("Create AfterGame ", this.roomId)
 
     this.setState(new AfterGameState(options))
     // logger.debug('before', this.state.players);
     if (options.players) {
-      options.players.forEach((plyr: SimplePlayer) => {
-        const player = new SimplePlayer(
+      options.players.forEach((plyr: IAfterGamePlayer) => {
+        const player = new AfterGamePlayer(
           plyr.id,
           plyr.name,
           plyr.avatar,
           plyr.rank,
           plyr.pokemons,
-          plyr.exp,
           plyr.title,
           plyr.role,
           plyr.synergies,
-          plyr.elo
+          plyr.elo,
+          plyr.moneyEarned,
+          plyr.playerDamageDealt,
+          plyr.rerollCount
         )
         this.state.players.set(player.id, player)
       })
     }
+    this.clock.setTimeout(() => {
+      // dispose the room automatically after 120 second
+      this.disconnect()
+    }, 120 * 1000)
   }
 
   async onAuth(client: Client, options, request) {
@@ -85,7 +91,7 @@ export default class AfterGameRoom extends Room<AfterGameState> {
   }
 
   onDispose() {
-    //logger.info("dispose after game")
+    logger.info("dispose AfterGame ", this.roomId)
     this.dispatcher.stop()
   }
 }

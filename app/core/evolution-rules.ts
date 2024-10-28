@@ -1,13 +1,14 @@
 import Player from "../models/colyseus-models/player"
-import { Pokemon } from "../models/colyseus-models/pokemon"
+import { Pokemon, PokemonClasses } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { EvolutionTime } from "../types/Config"
 import { PokemonActionState } from "../types/enum/Game"
 import { ItemComponents, Item, ShinyItems } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
 import { Pkm } from "../types/enum/Pokemon"
+import { sum } from "../utils/array"
 import { logger } from "../utils/logger"
-import { pickRandomIn } from "../utils/random"
+import { pickRandomIn, shuffleArray } from "../utils/random"
 import { values } from "../utils/schemas"
 
 type DivergentEvolution = (
@@ -42,8 +43,8 @@ export abstract class EvolutionRule {
   }
 
   afterEvolve(pokemonEvolved: Pokemon, player: Player, stageLevel: number) {
-    player.updateSynergies()
     pokemonEvolved.onAcquired(player)
+    player.updateSynergies()
     player.board.forEach((pokemon) => {
       if (
         (pokemon.passive === Passive.COSMOG ||
@@ -52,8 +53,9 @@ export abstract class EvolutionRule {
         pokemonEvolved.passive !== Passive.COSMOEM
       ) {
         pokemon.hp += 10
-        pokemon.evolutionRule.tryEvolve(pokemon, player, stageLevel)
       }
+      // check evolutions again if it can evolve twice in a row
+      pokemon.evolutionRule.tryEvolve(pokemon, player, stageLevel)
     })
   }
 }
@@ -136,27 +138,44 @@ export class CountEvolutionRule extends EvolutionRule {
       pokemonEvolutionName,
       player
     )
+
+    // carry over the permanent stat buffs
+    const permanentBuffStats = ["hp", "atk", "def", "speDef"] as const
+    for (const stat of permanentBuffStats) {
+      const statStacked = sum(
+        pokemonsBeforeEvolution.map(
+          (p) => p[stat] - new PokemonClasses[p.name]()[stat]
+        )
+      )
+      if (statStacked > 0) {
+        pokemonEvolved[stat] += statStacked
+      }
+    }
+
     if (pokemon.onEvolve) {
       pokemon.onEvolve({ pokemonEvolved, pokemonsBeforeEvolution, player })
     }
 
-    for (let i = 0; i < 3; i++) {
-      const itemToAdd = itemsToAdd.pop()
-      if (itemToAdd) {
-        if (pokemonEvolved.items.has(itemToAdd)) {
-          player.items.push(itemToAdd)
-        } else {
-          pokemonEvolved.items.add(itemToAdd)
-        }
+    shuffleArray(itemsToAdd)
+    for (const item of itemsToAdd) {
+      if (pokemonEvolved.items.has(item) || pokemonEvolved.items.size >= 3) {
+        player.items.push(item)
+      } else {
+        pokemonEvolved.items.add(item)
       }
     }
 
-    itemsToAdd.forEach((item) => {
-      player.items.push(item)
-    })
-    itemComponentsToAdd.forEach((item) => {
-      player.items.push(item)
-    })
+    shuffleArray(itemComponentsToAdd)
+    for (const itemComponent of itemComponentsToAdd) {
+      if (
+        pokemonEvolved.items.has(itemComponent) ||
+        pokemonEvolved.items.size >= 3
+      ) {
+        player.items.push(itemComponent)
+      } else {
+        pokemonEvolved.items.add(itemComponent)
+      }
+    }
 
     if (coord) {
       // logger.debug(coord, pokemonEvolved.name)

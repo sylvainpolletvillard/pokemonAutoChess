@@ -9,7 +9,7 @@ import Board from "../board"
 import { PokemonEntity } from "../pokemon-entity"
 import PokemonState from "../pokemon-state"
 import { AbilityStrategies } from "./abilities"
-import triggerPokerus from "../../models/colyseus-models/status"
+import { min } from "../../utils/number"
 
 export class AbilityStrategy {
   copyable = true // if true, can be copied by mimic, metronome...
@@ -21,7 +21,7 @@ export class AbilityStrategy {
     crit: boolean,
     preventDefaultAnim?: boolean
   ) {
-    pokemon.pp = 0
+    pokemon.pp = min(0)(pokemon.pp - pokemon.maxPP)
     pokemon.count.ult += 1
 
     if (!preventDefaultAnim) {
@@ -66,7 +66,7 @@ export class AbilityStrategy {
     }
 
     if (pokemon.items.has(Item.STAR_DUST)) {
-      pokemon.addShield(Math.round(0.6 * pokemon.maxPP), pokemon, 0, false)
+      pokemon.addShield(Math.round(0.5 * pokemon.maxPP), pokemon, 0, false)
       pokemon.count.starDustCount++
     }
 
@@ -84,6 +84,11 @@ export class AbilityStrategy {
         true
       )
     }
+
+    if (pokemon.passive === Passive.SLOW_START && pokemon.count.ult === 1) {
+      pokemon.addAttackSpeed(30, pokemon, 0, false)
+      pokemon.addAttack(10, pokemon, 0, false)
+    }
   }
 }
 
@@ -99,21 +104,18 @@ export function soundBoost(pokemon: PokemonEntity, board: Board) {
       pokemon.positionY,
       chimecho.positionX,
       chimecho.positionY
-    ) <= 2
+    ) <= 1
   board.forEach((x: number, y: number, ally: PokemonEntity | undefined) => {
     if (ally && pokemon.team === ally.team) {
       ally.status.sleep = false
-      if (
-        pokemon.effects.has(Effect.LARGO) ||
-        pokemon.effects.has(Effect.ALLEGRO) ||
-        pokemon.effects.has(Effect.PRESTO)
-      ) {
-        ally.addAttack(chimechoBoost ? 2 : 1, pokemon, 0, false)
+      if (pokemon.effects.has(Effect.LARGO)) {
+        ally.addAttack(chimechoBoost ? 4 : 2, pokemon, 0, false)
       }
       if (
         pokemon.effects.has(Effect.ALLEGRO) ||
         pokemon.effects.has(Effect.PRESTO)
       ) {
+        ally.addAttack(chimechoBoost ? 2 : 1, pokemon, 0, false)
         ally.addAttackSpeed(chimechoBoost ? 10 : 5, pokemon, 0, false)
       }
       if (pokemon.effects.has(Effect.PRESTO)) {

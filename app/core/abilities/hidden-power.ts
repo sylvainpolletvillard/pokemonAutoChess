@@ -3,7 +3,7 @@ import { getPokemonData } from "../../models/precomputed/precomputed-pokemon-dat
 import { PRECOMPUTED_POKEMONS_PER_TYPE_AND_CATEGORY } from "../../models/precomputed/precomputed-types-and-categories"
 import { Transfer } from "../../types"
 import { Ability } from "../../types/enum/Ability"
-import { AttackType, PokemonActionState, Rarity } from "../../types/enum/Game"
+import { AttackType, Rarity } from "../../types/enum/Game"
 import { ItemComponents, Berries, Item } from "../../types/enum/Item"
 import { Pkm, getUnownsPoolPerStage } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
@@ -181,7 +181,7 @@ export class HiddenPowerGStrategy extends HiddenPowerStrategy {
   ) {
     super.process(unown, state, board, target, crit)
     if (unown.player) {
-      unown.player.money += 5
+      unown.player.addMoney(5, true, unown)
     }
   }
 }
@@ -285,11 +285,8 @@ export class HiddenPowerLStrategy extends HiddenPowerStrategy {
     super.process(unown, state, board, target, crit)
     board.forEach(
       (x: number, y: number, pokemon: PokemonEntity | undefined) => {
-        if (pokemon && unown.team === pokemon.team) {
-          if (pokemon.items.size < 3) {
-            pokemon.items.add(Item.MAX_REVIVE)
-            pokemon.simulation.applyItemEffect(pokemon, Item.MAX_REVIVE)
-          }
+        if (pokemon && unown.team !== pokemon.team) {
+          pokemon.status.triggerLocked(5000, pokemon)
         }
       }
     )
@@ -329,6 +326,7 @@ export class HiddenPowerNStrategy extends HiddenPowerStrategy {
         if (pokemon && unown.team === pokemon.team) {
           const target = board.getValue(pokemon.targetX, pokemon.targetY)
           if (target) {
+            pokemon.addShield(50, unown, 0, false)
             AbilityStrategies[Ability.EXPLOSION].process(
               pokemon,
               pokemon.state,
@@ -427,47 +425,9 @@ export class HiddenPowerRStrategy extends HiddenPowerStrategy {
     crit: boolean
   ) {
     super.process(unown, state, board, target, crit)
-    let coord = unown.simulation.getClosestAvailablePlaceOnBoardToPokemon(
-      unown,
-      unown.team
-    )
-    const geodude = unown.simulation.addPokemon(
-      PokemonFactory.createPokemonFromName(Pkm.GEODUDE, unown.player),
-      coord.x,
-      coord.y,
-      unown.team,
-      false
-    )
-    geodude.items.add(Item.ROCKY_HELMET)
-    geodude.simulation.applyItemsEffects(geodude)
-
-    coord = unown.simulation.getClosestAvailablePlaceOnBoardToPokemon(
-      unown,
-      unown.team
-    )
-    const graveler = unown.simulation.addPokemon(
-      PokemonFactory.createPokemonFromName(Pkm.GRAVELER, unown.player),
-      coord.x,
-      coord.y,
-      unown.team,
-      false
-    )
-    graveler.items.add(Item.ROCKY_HELMET)
-    graveler.simulation.applyItemsEffects(graveler)
-
-    coord = unown.simulation.getClosestAvailablePlaceOnBoardToPokemon(
-      unown,
-      unown.team
-    )
-    const golem = unown.simulation.addPokemon(
-      PokemonFactory.createPokemonFromName(Pkm.GOLEM, unown.player),
-      coord.x,
-      coord.y,
-      unown.team,
-      false
-    )
-    golem.items.add(Item.ROCKY_HELMET)
-    golem.simulation.applyItemsEffects(golem)
+    if (unown.player) {
+      unown.player.shopFreeRolls += 6
+    }
   }
 }
 

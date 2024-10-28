@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { PkmIndex } from "../../../../../types/enum/Pokemon"
+import { Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { changeAvatar } from "../../../stores/NetworkStore"
 import { getPortraitSrc } from "../../../utils"
@@ -9,10 +9,14 @@ import { PokemonTypeahead } from "../typeahead/pokemon-typeahead"
 export function AvatarTab() {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const pokemonCollection = useAppSelector(
-    (state) => state.lobby.pokemonCollection
+  const pokemonCollectionMap = useAppSelector(
+    (state) => state.network.profile?.pokemonCollection
   )
-  const [selectedPkm, setSelectedPkm] = useState<string>("")
+
+  const pokemonCollection = pokemonCollectionMap
+    ? [...pokemonCollectionMap.values()]
+    : []
+  const [selectedPkm, setSelectedPkm] = useState<Pkm | "">("")
 
   return (
     <div>
