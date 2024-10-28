@@ -100,6 +100,11 @@ function texturePackAtlas() {
               throw new Error(`No cache busted file found for pack ${packName}`)
             }
 
+            // waiting for https://github.com/pixijs/assetpack/pull/70
+            rewriteAtlasFile(
+              path.joinSafe(pipeSystem.outputPath, cachebustedFile)
+            )
+
             atlas.packs[packPath] = {
               name: packName,
               path: cachebustedFile
@@ -149,4 +154,30 @@ function texturePackAtlas() {
       )
     }
   }
+}
+
+function rewriteAtlasFile(path) {
+  const pixiJSON = fs.readJSONSync(path)
+  const phaserJSON = {
+    meta: {
+      app: "http://github.com/pixijs/assetpack",
+      version: "1.0"
+    },
+    textures: [
+      {
+        images: pixiJSON.meta.image,
+        format: pixiJSON.meta.format,
+        size: pixiJSON.meta.size,
+        scale: pixiJSON.meta.scale,
+        frames: Object.entries(pixiJSON.frames).map(
+          ([filename, frameData]) => ({
+            filename,
+            ...frameData
+          })
+        )
+      }
+    ]
+  }
+  // rewrite with the format used by Phaser
+  fs.writeJSONSync(path, phaserJSON)
 }
