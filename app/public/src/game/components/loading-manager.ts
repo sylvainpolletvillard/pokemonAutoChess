@@ -82,7 +82,7 @@ export default class LoadingManager {
     for (const pack in atlas.packs) {
       scene.load.multiatlas(
         atlas.packs[pack].name,
-        `/assets/${atlas.packs[pack].name}.json`,
+        `/assets/${atlas.packs[pack].path}`,
         `/assets/`
       )
     }

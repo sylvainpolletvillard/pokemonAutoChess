@@ -45,7 +45,9 @@ export default {
         template: "" // prevent adding @1x suffix when not generating multiple resolutions
       }
     }),
-    compress(),
+    compress({
+      webp: false
+    }),
     json(),
     cacheBuster(),
     texturePackerCacheBuster(),
@@ -87,10 +89,20 @@ function texturePackAtlas() {
           let packName = packPath.split("/").pop()
 
           if (packPath in atlas.packs === false) {
-            const hash = "???" //TODO: find out how to get the hash from texturePackerCacheBuster
+            // find file in directory starting with packName and ending with .json
+            const cachebustedFile = fs
+              .readdirSync(pipeSystem.outputPath)
+              .find(
+                (file) => file.startsWith(packName) && file.endsWith(".json")
+              )
+
+            if (!cachebustedFile) {
+              throw new Error(`No cache busted file found for pack ${packName}`)
+            }
+
             atlas.packs[packPath] = {
               name: packName,
-              path: packName + "-" + hash
+              path: cachebustedFile
             }
           }
 
