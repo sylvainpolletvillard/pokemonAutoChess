@@ -3,6 +3,7 @@ import {
   ArtificialItems,
   Berries,
   Item,
+  NonHoldableItems,
   ShinyItems,
   SpecialItems,
   WeatherRocks
@@ -36,7 +37,10 @@ export default class ItemContainer extends DraggableObject {
   ) {
     const currentPlayerUid = getGameScene()?.uid
     const itemSize = pokemonId === null ? 60 : 25
-    super(scene, x, y, itemSize, itemSize, playerId !== currentPlayerUid)
+    const isHoldable = NonHoldableItems.includes(item) === false
+    const isMine = playerId === currentPlayerUid
+
+    super(scene, x, y, itemSize, itemSize, !isMine)
     this.name = item
     this.scene = scene
     this.pokemonId = pokemonId
@@ -45,9 +49,7 @@ export default class ItemContainer extends DraggableObject {
     if (pokemonId) {
       this.circle.setFrame(this.cellIndex * 3 + 2).setScale(0.45)
     } else {
-      this.circle.setFrame(
-        this.cellIndex * 3 + (playerId === currentPlayerUid ? 0 : 2)
-      )
+      this.circle.setFrame(this.cellIndex * 3 + (isMine && isHoldable ? 0 : 2))
     }
     this.add(this.circle)
     this.sprite = new GameObjects.Image(
@@ -61,7 +63,7 @@ export default class ItemContainer extends DraggableObject {
     this.add(this.sprite)
     this.setInteractive()
     this.updateDropZone(true)
-    this.draggable = this.pokemonId === null && playerId === currentPlayerUid
+    this.draggable = this.pokemonId === null && isMine && isHoldable
   }
 
   get cellIndex() {
