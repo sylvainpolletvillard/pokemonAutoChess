@@ -349,19 +349,22 @@ export default class GameScene extends Scene {
     this.sellZone = new SellZone(this)
     this.dropSpots = []
 
-    for (let y = 0; y < 4; y++) {
+    for (let y = 0; y < 7; y++) {
       for (let x = 0; x < 8; x++) {
         const coord = transformCoordinate(x, y)
         const zone = this.add.zone(coord[0], coord[1], 96, 96)
         zone.setRectangleDropZone(96, 96)
         zone.setName("board-zone")
-        const spotSprite = this.add
-          .image(zone.x, zone.y, "cell", 0)
-          .setVisible(false)
-          .setData({ x, y })
-          .setDepth(DEPTH.DROP_ZONE)
-        zone.setData({ x, y, sprite: spotSprite })
-        this.dropSpots.push(spotSprite)
+        zone.setData({ x, y })
+        if (y < 4) {
+          const spotSprite = this.add
+            .image(zone.x, zone.y, "cell", 0)
+            .setVisible(false)
+            .setData({ x, y })
+            .setDepth(DEPTH.DROP_ZONE)
+          zone.setData({ sprite: spotSprite })
+          this.dropSpots.push(spotSprite)
+        }
       }
     }
 
@@ -546,19 +549,14 @@ export default class GameScene extends Scene {
             )
           }
           // Item -> POKEMON(board zone) = EQUIP
-          else if (
-            dropZone.name == "board-zone" &&
-            !(
-              this.room?.state.phase == GamePhaseState.FIGHT &&
-              dropZone.getData("y") != 0
-            )
-          ) {
+          else if (dropZone.name === "board-zone") {
             document.getElementById("game")?.dispatchEvent(
               new CustomEvent<IDragDropItemMessage>(Transfer.DRAG_DROP_ITEM, {
                 detail: {
                   x: dropZone.getData("x"),
                   y: dropZone.getData("y"),
-                  id: gameObject.name
+                  item: gameObject.name,
+                  simulationId: getGameContainer().simulationId
                 }
               })
             )

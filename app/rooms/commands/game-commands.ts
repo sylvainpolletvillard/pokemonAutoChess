@@ -13,7 +13,7 @@ import { canSell } from "../../core/pokemon-entity"
 import Simulation from "../../core/simulation"
 import { getLevelUpCost } from "../../models/colyseus-models/experience-manager"
 import Player from "../../models/colyseus-models/player"
-import { PokemonClasses } from "../../models/colyseus-models/pokemon"
+import { Pokemon, PokemonClasses } from "../../models/colyseus-models/pokemon"
 import { giveRandomEgg } from "../../core/eggs"
 import PokemonFactory from "../../models/pokemon-factory"
 import { PVEStages } from "../../models/pve-stages"
@@ -62,6 +62,7 @@ import {
   NonHoldableItems,
   OgerponMasks,
   ShinyItems,
+  SpecialItems,
   Sweets,
   SynergyFlavors,
   SynergyGivenByItem,
@@ -510,14 +511,42 @@ export class OnDragDropItemCommand extends Command<
     message.updateBoard = false
     message.updateItems = true
 
-    const { x, y, id: item } = detail
+    const { x, y, item, simulationId } = detail
 
     if (!player.items.includes(item)) {
       client.send(Transfer.DRAG_DROP_FAILED, message)
       return
     }
 
-    let pokemon = player.getPokemonAt(x, y)
+    let pokemon: Pokemon | undefined = player.getPokemonAt(x, y)
+    if (
+      this.state.phase === GamePhaseState.FIGHT &&
+      y > 0 &&
+      simulationId &&
+      NonHoldableItems.includes(item) === false &&
+      Berries.includes(item) === false &&
+      SpecialItems.includes(item) === false
+    ) {
+      const simulation = this.state.simulations.get(simulationId)
+      const team = simulation?.getTeam(playerId)
+      const entityY = simulation?.bluePlayerId === playerId ? y - 1 : 7 - y
+      const entity = (team ? values(team) : []).find(
+        (p) => p.positionX === x && p.positionY === entityY
+      )
+
+      if (
+        entity &&
+        entity.refToBoardPokemon &&
+        !entity.isClone &&
+        entity.items.size < 3
+      ) {
+        pokemon = entity.refToBoardPokemon as Pokemon
+        entity.addItem(item)
+      } else {
+        pokemon = undefined
+      }
+    }
+
     if (pokemon === undefined) {
       client.send(Transfer.DRAG_DROP_FAILED, message)
       return

@@ -290,14 +290,9 @@ export default class Player extends Schema implements IPlayer {
   }
 
   getPokemonAt(x: number, y: number): Pokemon | undefined {
-    let p: Pokemon | undefined = undefined
-
-    this.board.forEach((pokemon) => {
-      if (pokemon.positionX == x && pokemon.positionY == y) {
-        p = pokemon
-      }
-    })
-    return p
+    return values(this.board).find(
+      (p) => p.positionX === x && p.positionY === y
+    )
   }
 
   transformPokemon(pokemon: Pokemon, newEntry: Pkm): Pokemon {

@@ -9,7 +9,6 @@ import { PokemonEntity } from "../../../core/pokemon-entity"
 import Simulation from "../../../core/simulation"
 import Count from "../../../models/colyseus-models/count"
 import { FloatingItem } from "../../../models/colyseus-models/floating-item"
-import { IPokemonRecord } from "../../../models/colyseus-models/game-record"
 import Player from "../../../models/colyseus-models/player"
 import { Pokemon } from "../../../models/colyseus-models/pokemon"
 import { PokemonAvatarModel } from "../../../models/colyseus-models/pokemon-avatar"
@@ -495,7 +494,7 @@ class GameContainer {
   }
 
   get simulationId(): string {
-    return this.simulation?.id ? this.simulation.id : ""
+    return this.simulation?.id ?? ""
   }
 
   handleWeatherChange(simulation: Simulation, value: Weather) {

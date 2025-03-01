@@ -89,6 +89,7 @@
 
 # Gameplay
 
+- Items can now be equipped mid-fight. The holder will get their effects and stats immediately. Some limitations though: you cannot craft items with components held by a pokémon during a fight, meaning the pokémon fighting will hold the two components during the fight, and the item will be crafted only at the end of the fight. You cannot equip berries or special items mid-fight either. If the Pokémon evolves or transforms with an item, it will only activate at the end of the fight. Finally, you can only equip if the pokemon has a free item slot both when the fight started and at the moment it receives the item (important rule for consummable items or items lost/stolen during the round).
 - Added regional variants for Unique and Legendary Pokémon. The first regional variant unique is Galarian Farfetch'd, which can be found in Fighting regions. Galarian Moltres, Zapdos and Articuno are now regional variants as well
 - Regional variants are no longer found in maps with common synergies between the variant and the original Pokémon
 - When an effect is considering the strongest Pokémon, or the pokémon with the highest stat, if several Pokémon are equal, it now selects a random Pokémon among those. Before, it was based on board position. This is especially relevant for Ghost curses.

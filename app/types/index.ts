@@ -248,7 +248,8 @@ export interface IDragDropMessage {
 export interface IDragDropItemMessage {
   x: number
   y: number
-  id: Item
+  item: Item
+  simulationId?: string
 }
 
 export interface IDragDropCombineMessage {
