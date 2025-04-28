@@ -12,6 +12,7 @@ import Lobby from "./pages/lobby"
 import Preparation from "./pages/preparation"
 import { SpriteDebug } from "./pages/sprite-viewer"
 import { Gameboy } from "./pages/gameboy"
+import { Dojo } from "./pages/dojo"
 import store from "./stores/index"
 
 import "./i18n"
@@ -19,7 +20,7 @@ import "./style/index.css"
 
 // Redirect top window if running in an iframe
 if (window.top && window !== window.top) {
-  window.top.location = window.location;
+  window.top.location.href = window.location.href;
 }
 
 const container = document.getElementById("root")
@@ -43,6 +44,7 @@ root.render(
             <Route path="/bot-admin" element={<BotManagerPanel />} />
             <Route path="/sprite-viewer" element={<SpriteDebug />} />
             <Route path="/map-viewer" element={<MapViewer />} />
+            <Route path="/dojo" element={<Dojo />} />
             <Route path="/gameboy" element={<Gameboy />} />
           </Routes>
         </BrowserRouter>

@@ -39,7 +39,6 @@ import {
   changeDpsMeter,
   changePlayer,
   changeShop,
-  leaveGame,
   removeDpsMeter,
   removePlayer,
   setAdditionalPokemons,
@@ -63,7 +62,7 @@ import {
   setSpecialGameRule,
   setPodium
 } from "../stores/GameStore"
-import { joinGame, logIn, setConnectionStatus, setErrorAlertMessage, setProfile } from "../stores/NetworkStore"
+import { setConnectionStatus, setErrorAlertMessage, setProfile } from "../stores/NetworkStore"
 import { getAvatarString } from "../../../utils/avatar"
 import GameDpsMeter from "./component/game/game-dps-meter"
 import GameFinalRank from "./component/game/game-final-rank"
@@ -80,11 +79,11 @@ import { MainSidebar } from "./component/main-sidebar/main-sidebar"
 import { ConnectionStatusNotification } from "./component/system/connection-status-notification"
 import { playMusic, preloadMusic } from "./utils/audio"
 import { LocalStoreKeys, localStore } from "./utils/store"
-import { FIREBASE_CONFIG } from "./utils/utils"
 import { Passive } from "../../../types/enum/Passive"
 import { Item } from "../../../types/enum/Item"
 import { CloseCodes, CloseCodesMessages } from "../../../types/enum/CloseCodes"
 import { ConnectionStatus } from "../../../types/enum/ConnectionStatus"
+import { useGameConnection } from "../game/game-logic"
 
 let gameContainer: GameContainer
 
@@ -111,70 +110,16 @@ export default function Game() {
   const spectate = currentPlayerId !== uid || !currentPlayer?.alive
 
   const initialized = useRef<boolean>(false)
-  const connecting = useRef<boolean>(false)
-  const connected = useRef<boolean>(false)
+
   const [loaded, setLoaded] = useState<boolean>(false)
-  const [connectError, setConnectError] = useState<string>("")
+
   const [finalRank, setFinalRank] = useState<number>(0)
   enum FinalRankVisibility { HIDDEN, VISIBLE, CLOSED }
   const [finalRankVisibility, setFinalRankVisibility] = useState<FinalRankVisibility>(FinalRankVisibility.HIDDEN)
   const container = useRef<HTMLDivElement>(null)
 
-  const MAX_ATTEMPS_RECONNECT = 3
+  const { connectToGame, connecting, connected, connectError, leaveGame } = useGameConnection(client)
 
-  const connectToGame = useCallback(
-    async (attempts = 1) => {
-      logger.debug(
-        `connectToGame attempt ${attempts} / ${MAX_ATTEMPS_RECONNECT}`
-      )
-      const cachedReconnectionToken = localStore.get(
-        LocalStoreKeys.RECONNECTION_GAME
-      )?.reconnectionToken
-      if (cachedReconnectionToken) {
-        connecting.current = true
-        const statusMessage = document.querySelector("#status-message")
-        if (statusMessage) {
-          statusMessage.textContent = `Connecting to game...`
-        }
-
-        client
-          .reconnect(cachedReconnectionToken)
-          .then((room: Room) => {
-            // store game token for 1 hour
-            localStore.set(
-              LocalStoreKeys.RECONNECTION_GAME,
-              {
-                reconnectionToken: room.reconnectionToken,
-                roomId: room.roomId
-              },
-              60 * 60
-            )
-            dispatch(joinGame(room))
-            connected.current = true
-            connecting.current = false
-            dispatch(setConnectionStatus(ConnectionStatus.CONNECTED))
-          })
-          .catch((error) => {
-            if (attempts < MAX_ATTEMPS_RECONNECT) {
-              setTimeout(async () => await connectToGame(attempts + 1), 1000)
-            } else {
-              let connectError = error.message
-              if (error.code === 4212) {
-                // room disposed
-                connectError = "This game does no longer exist"
-              }
-              //TODO: handle more known error codes with informative messages
-              setConnectError(connectError)
-              dispatch(setConnectionStatus(ConnectionStatus.CONNECTION_FAILED))
-              logger.error("reconnect error", error)
-            }
-          })
-      } else {
-        navigate("/") // no reconnection token, login again
-      }
-    },
-    [client, dispatch]
-  )
 
   function playerClick(id: string) {
     const scene = getGameScene()
@@ -200,88 +145,89 @@ export default function Game() {
     }
   }
 
-  const leave = useCallback(async () => {
-    const afterPlayers = new Array<IAfterGamePlayer>()
+  const leave = useCallback(() => leaveGame(
+    async () => {
+      const afterPlayers = new Array<IAfterGamePlayer>()
 
-    const token = await firebase.auth().currentUser?.getIdToken()
+      const token = await firebase.auth().currentUser?.getIdToken()
 
-    if (gameContainer && gameContainer.game) {
-      gameContainer.game.destroy(true)
-    }
+      if (gameContainer && gameContainer.game) {
+        gameContainer.game.destroy(true)
+      }
 
-    const nbPlayers = room?.state.players.size ?? 0
+      const nbPlayers = room?.state.players.size ?? 0
 
-    if (nbPlayers > 0) {
-      room?.state.players.forEach((p) => {
-        const afterPlayer: IAfterGamePlayer = {
-          elo: p.elo,
-          name: p.name,
-          id: p.id,
-          rank: p.rank,
-          avatar: p.avatar,
-          title: p.title,
-          role: p.role,
-          pokemons: new Array<IPokemonRecord>(),
-          synergies: new Array<{ name: Synergy; value: number }>(),
-          moneyEarned: p.totalMoneyEarned,
-          playerDamageDealt: p.totalPlayerDamageDealt,
-          rerollCount: p.rerollCount
-        }
+      if (nbPlayers > 0) {
+        room?.state.players.forEach((p) => {
+          const afterPlayer: IAfterGamePlayer = {
+            elo: p.elo,
+            name: p.name,
+            id: p.id,
+            rank: p.rank,
+            avatar: p.avatar,
+            title: p.title,
+            role: p.role,
+            pokemons: new Array<IPokemonRecord>(),
+            synergies: new Array<{ name: Synergy; value: number }>(),
+            moneyEarned: p.totalMoneyEarned,
+            playerDamageDealt: p.totalPlayerDamageDealt,
+            rerollCount: p.rerollCount
+          }
 
-        const allSynergies = new Array<{ name: Synergy; value: number }>()
-        p.synergies.forEach((v, k) => {
-          allSynergies.push({ name: k as Synergy, value: v })
-        })
-
-        allSynergies.sort((a, b) => b.value - a.value)
-        afterPlayer.synergies = allSynergies.slice(0, 5)
-
-        if (p.board && p.board.size > 0) {
-          p.board.forEach((pokemon) => {
-            if (pokemon.positionY != 0 && pokemon.passive !== Passive.INANIMATE) {
-              afterPlayer.pokemons.push({
-                avatar: getAvatarString(pokemon.index, pokemon.shiny, pokemon.emotion),
-                items: pokemon.items.toArray(),
-                name: pokemon.name
-              })
-            }
+          const allSynergies = new Array<{ name: Synergy; value: number }>()
+          p.synergies.forEach((v, k) => {
+            allSynergies.push({ name: k as Synergy, value: v })
           })
-        }
 
-        afterPlayers.push(afterPlayer)
+          allSynergies.sort((a, b) => b.value - a.value)
+          afterPlayer.synergies = allSynergies.slice(0, 5)
+
+          if (p.board && p.board.size > 0) {
+            p.board.forEach((pokemon) => {
+              if (pokemon.positionY != 0 && pokemon.passive !== Passive.INANIMATE) {
+                afterPlayer.pokemons.push({
+                  avatar: getAvatarString(pokemon.index, pokemon.shiny, pokemon.emotion),
+                  items: pokemon.items.toArray(),
+                  name: pokemon.name
+                })
+              }
+            })
+          }
+
+          afterPlayers.push(afterPlayer)
+        })
+      }
+
+      const elligibleToXP =
+        nbPlayers >= 2 &&
+        (room?.state.stageLevel ?? 0) >= MinStageLevelForGameToCount
+      const elligibleToELO =
+        elligibleToXP &&
+        !room?.state.noElo &&
+        afterPlayers.filter((p) => p.role !== Role.BOT).length >= 2
+      const gameMode = room?.state.gameMode
+
+      const r: Room<AfterGameState> = await client.create("after-game", {
+        players: afterPlayers,
+        idToken: token,
+        elligibleToXP,
+        elligibleToELO,
+        gameMode
       })
-    }
+      localStore.set(
+        LocalStoreKeys.RECONNECTION_AFTER_GAME,
+        { reconnectionToken: r.reconnectionToken, roomId: r.roomId },
+        30
+      )
+      if (r.connection.isOpen) {
+        await r.leave(false)
+      }
 
-    const elligibleToXP =
-      nbPlayers >= 2 &&
-      (room?.state.stageLevel ?? 0) >= MinStageLevelForGameToCount
-    const elligibleToELO =
-      elligibleToXP &&
-      !room?.state.noElo &&
-      afterPlayers.filter((p) => p.role !== Role.BOT).length >= 2
-    const gameMode = room?.state.gameMode
-
-    const r: Room<AfterGameState> = await client.create("after-game", {
-      players: afterPlayers,
-      idToken: token,
-      elligibleToXP,
-      elligibleToELO,
-      gameMode
-    })
-    localStore.set(
-      LocalStoreKeys.RECONNECTION_AFTER_GAME,
-      { reconnectionToken: r.reconnectionToken, roomId: r.roomId },
-      30
-    )
-    if (r.connection.isOpen) {
-      await r.leave(false)
-    }
-    dispatch(leaveGame())
-    navigate("/after")
-    if (room?.connection.isOpen) {
-      room.leave()
-    }
-  }, [client, dispatch, room])
+      navigate("/after")
+      if (room?.connection.isOpen) {
+        room.leave()
+      }
+    }), [client, dispatch, room])
 
   const spectateTillTheEnd = () => {
     setFinalRankVisibility(FinalRankVisibility.CLOSED)
@@ -325,24 +271,7 @@ export default function Game() {
   }, [])
 
   useEffect(() => {
-    const connect = () => {
-      logger.debug("connecting to game")
-      if (!firebase.apps.length) {
-        firebase.initializeApp(FIREBASE_CONFIG)
-      }
-
-      firebase.auth().onAuthStateChanged(async (user) => {
-        if (user && !connecting.current) {
-          connecting.current = true
-          dispatch(logIn(user))
-          await connectToGame()
-        }
-      })
-    }
-
-    if (!connected.current) {
-      connect()
-    } else if (
+    if (
       !initialized.current &&
       room != undefined &&
       container?.current
@@ -799,7 +728,6 @@ export default function Game() {
     client,
     uid,
     currentPlayerId,
-    connectToGame,
     leave
   ])
 

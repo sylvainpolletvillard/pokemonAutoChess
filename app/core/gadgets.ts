@@ -33,6 +33,13 @@ const JUKEBOX: Gadget = {
   name: "gadget.jukebox",
   description: "gadget.jukebox_desc",
   icon: "compact-disc",
+  levelRequired: 5
+}
+
+const DOJO: Gadget = {
+  name: "gadget.dojo",
+  description: "gadget.dojo_desc",
+  icon: "key",
   levelRequired: 10
 }
 
@@ -57,5 +64,6 @@ export const GADGETS = {
   TEAM_PLANNER,
   JUKEBOX,
   BOT_BUILDER,
+  DOJO,
   GAMEBOY
 } as const

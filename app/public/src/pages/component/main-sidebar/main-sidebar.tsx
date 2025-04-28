@@ -22,9 +22,9 @@ import Profile from "../profile/profile"
 import { TournamentsAdmin } from "../tournaments-admin/tournaments-admin"
 import Wiki from "../wiki/wiki"
 import ServersList from "../servers/servers-list"
+import { createSelector } from "@reduxjs/toolkit"
 
 import "./main-sidebar.css"
-import { createSelector } from "@reduxjs/toolkit"
 
 export type Page = "main_lobby" | "preparation" | "game"
 
@@ -183,15 +183,21 @@ export function MainSidebar(props: MainSidebarProps) {
           </NavLink>
         )}
 
-        {page !== "game" && ((!GADGETS.BOT_BUILDER.disabled && profileLevel >= GADGETS.BOT_BUILDER.levelRequired) || profile?.role === Role.ADMIN) && (
-          <NavLink svg="bot" onClick={() => navigate("/bot-builder")}>
-            {t("bot_builder")}
-          </NavLink>
-        )}
-
         {page !== "game" && ((!GADGETS.GAMEBOY.disabled && profileLevel >= GADGETS.GAMEBOY.levelRequired) || profile?.role === Role.ADMIN) && (
           <NavLink svg="gameboy" onClick={() => navigate("/gameboy")}>
             {t("gadget.gameboy")}
+          </NavLink>
+        )}
+
+        {page !== "game" && ((!GADGETS.DOJO.disabled && profileLevel >= GADGETS.DOJO.levelRequired) || profile?.role === Role.ADMIN) && (
+          <NavLink svg="dojo" onClick={() => navigate("/dojo")}>
+            {t("dojo")}
+          </NavLink>
+        )}
+
+        {page !== "game" && ((!GADGETS.BOT_BUILDER.disabled && profileLevel >= GADGETS.BOT_BUILDER.levelRequired) || profile?.role === Role.ADMIN) && (
+          <NavLink svg="bot" onClick={() => navigate("/bot-builder")}>
+            {t("bot_builder")}
           </NavLink>
         )}
 
