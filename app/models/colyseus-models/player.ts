@@ -5,7 +5,7 @@ import {
 } from "../../core/evolution-rules"
 import { PokemonEntity } from "../../core/pokemon-entity"
 import { getUnitPowerScore } from "../../core/bot-logic"
-import GameState from "../../rooms/states/game-state"
+import type GameState from "../../rooms/states/game-state"
 import type { IPlayer, Role, Title } from "../../types"
 import { SynergyTriggers, UniquePool } from "../../types/Config"
 import { DungeonDetails, DungeonPMDO } from "../../types/enum/Dungeon"
@@ -162,7 +162,9 @@ export default class Player extends Schema implements IPlayer {
     this.lightX = state.lightX
     this.lightY = state.lightY
     this.map = "town"
-    if (state instanceof GameState) this.updateRegionalPool(state, true)
+    const isDojo = (state: DojoState | GameState): state is DojoState =>
+      state.type === "dojo"
+    if (!isDojo(state)) this.updateRegionalPool(state, true)
 
     if (isBot) {
       this.loadingProgress = 100
@@ -204,7 +206,7 @@ export default class Player extends Schema implements IPlayer {
         3
       )
       this.pokemonsProposition.push(...randomCommons)
-    } else if (state instanceof GameState) {
+    } else if (!isDojo(state)) {
       this.firstPartner = state.shop.getRandomPokemonFromPool(
         Rarity.COMMON,
         this

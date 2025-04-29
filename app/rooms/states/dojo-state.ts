@@ -3,6 +3,7 @@ import Player from "../../models/colyseus-models/player"
 import { IUserMetadata } from "../../models/mongo-models/user-metadata"
 
 export default class DojoState extends Schema {
+  type = "dojo"
   blue: Player
   red: Player
   lightX = 3

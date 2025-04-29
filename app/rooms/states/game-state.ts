@@ -47,6 +47,7 @@ export default class GameState extends Schema {
   @type("uint8") lightY = randomBetween(1, BOARD_HEIGHT / 2)
   @type("string") specialGameRule: SpecialGameRule | null = null
   @type("string") townEncounter: TownEncounter | null = null
+  type = "game"
   time = StageDuration[0] * 1000
   updatePhaseNeeded = false
   botManager: BotManager = new BotManager()

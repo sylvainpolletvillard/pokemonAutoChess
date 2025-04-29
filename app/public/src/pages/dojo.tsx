@@ -104,7 +104,7 @@ export function Dojo() {
     }, [map, loaded, initialized])
 
     return (
-        <main id="game-wrapper" onContextMenu={(e) => e.preventDefault()}>
+        <main id="game-wrapper" className="dojo" onContextMenu={(e) => e.preventDefault()}>
             <div id="game" ref={container}></div>
             <MainSidebar page="game" leave={leave} leaveLabel={t("leave_game")} />
             {loaded ? (
