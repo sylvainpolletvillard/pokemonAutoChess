@@ -5,7 +5,7 @@ import {
 } from "../../core/evolution-rules"
 import { PokemonEntity } from "../../core/pokemon-entity"
 import { getUnitPowerScore } from "../../core/bot-logic"
-import type GameState from "../../rooms/states/game-state"
+import GameState from "../../rooms/states/game-state"
 import type { IPlayer, Role, Title } from "../../types"
 import { SynergyTriggers, UniquePool } from "../../types/Config"
 import { DungeonDetails, DungeonPMDO } from "../../types/enum/Dungeon"
@@ -52,6 +52,7 @@ import HistoryItem from "./history-item"
 import { Pokemon, PokemonClasses } from "./pokemon"
 import { PokemonCustoms } from "./pokemon-customs"
 import Synergies, { computeSynergies } from "./synergies"
+import DojoState from "../../rooms/states/dojo-state"
 
 export default class Player extends Schema implements IPlayer {
   @type("string") id: string
@@ -135,7 +136,7 @@ export default class Player extends Schema implements IPlayer {
     pokemonCollection: Map<string, IPokemonCollectionItem>,
     title: Title | "",
     role: Role,
-    state: GameState
+    state: GameState | DojoState
   ) {
     super()
     this.id = id
@@ -161,7 +162,7 @@ export default class Player extends Schema implements IPlayer {
     this.lightX = state.lightX
     this.lightY = state.lightY
     this.map = "town"
-    this.updateRegionalPool(state, true)
+    if (state instanceof GameState) this.updateRegionalPool(state, true)
 
     if (isBot) {
       this.loadingProgress = 100
@@ -203,7 +204,7 @@ export default class Player extends Schema implements IPlayer {
         3
       )
       this.pokemonsProposition.push(...randomCommons)
-    } else {
+    } else if (state instanceof GameState) {
       this.firstPartner = state.shop.getRandomPokemonFromPool(
         Rarity.COMMON,
         this

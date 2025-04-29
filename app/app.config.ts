@@ -1,8 +1,6 @@
 import path from "path"
 import { monitor } from "@colyseus/monitor"
 import config from "@colyseus/tools"
-import { uWebSocketsTransport } from "@colyseus/uwebsockets-transport"
-import uWebSockets from "uWebSockets.js"
 import {
   Presence,
   RedisDriver,
@@ -26,6 +24,7 @@ import { PRECOMPUTED_POKEMONS_PER_TYPE } from "./models/precomputed/precomputed-
 import AfterGameRoom from "./rooms/after-game-room"
 import CustomLobbyRoom from "./rooms/custom-lobby-room"
 import GameRoom from "./rooms/game-room"
+import { DojoRoom } from "./rooms/dojo-room"
 import PreparationRoom from "./rooms/preparation-room"
 import { getBotData, getBotsList } from "./services/bots"
 import { discordService } from "./services/discord"
@@ -110,6 +109,7 @@ export default config({
     gameServer.define("lobby", CustomLobbyRoom)
     gameServer.define("preparation", PreparationRoom).enableRealtimeListing()
     gameServer.define("game", GameRoom).enableRealtimeListing()
+    gameServer.define("dojo", DojoRoom)
   },
 
   initializeExpress: (app) => {
@@ -167,49 +167,24 @@ export default config({
     app.use(express.json())
     app.use(express.static(clientSrc))
 
-    app.get("/", (req, res) => {
-      res.sendFile(viewsSrc)
-    })
-
-    app.get("/auth", (req, res) => {
-      res.sendFile(viewsSrc)
-    })
-
-    app.get("/lobby", (req, res) => {
-      res.sendFile(viewsSrc)
-    })
-
-    app.get("/preparation", (req, res) => {
-      res.sendFile(viewsSrc)
-    })
-
-    app.get("/game", (req, res) => {
-      res.sendFile(viewsSrc)
-    })
-
-    app.get("/after", (req, res) => {
-      res.sendFile(viewsSrc)
-    })
-
-    app.get("/bot-builder", (req, res) => {
-      res.sendFile(viewsSrc)
-    })
-
-    app.get("/bot-admin", (req, res) => {
-      res.sendFile(viewsSrc)
-    })
-
-    app.get("/sprite-viewer", (req, res) => {
-      res.sendFile(viewsSrc)
-    })
-
-    app.get("/map-viewer", (req, res) => {
-      res.sendFile(viewsSrc)
-    })
-
-    app.get("/gameboy", (req, res) => {
-      res.sendFile(viewsSrc)
-    })
+    for (const route of [
+      "/",
+      "/auth",
+      "/lobby",
+      "/preparation",
+      "/game",
+      "/after",
+      "/bot-builder",
+      "/bot-admin",
+      "/sprite-viewer",
+      "/map-viewer",
+      "/dojo",
+      "/gameboy"
+    ]) {
+      app.get(route, (req, res) => {
+        res.sendFile(viewsSrc)
+      })
+    }
 
     app.get("/pokemons", (req, res) => {
       res.send(Pkm)
