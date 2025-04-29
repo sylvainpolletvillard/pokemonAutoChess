@@ -1,0 +1,8 @@
+#status-message {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: white;
+  background-color: black;
+  z-index: 2;
+}

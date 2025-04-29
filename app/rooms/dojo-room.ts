@@ -29,7 +29,7 @@ export class DojoRoom extends Room<DojoState> {
       super.onAuth(client, options, context)
       const token = await admin.auth().verifyIdToken(options.idToken)
       const user = await admin.auth().getUser(token.uid)
-      logger.debug("user", user)
+      logger.debug("user auth", user.uid)
       return user
     } catch (error) {
       logger.error(error)
