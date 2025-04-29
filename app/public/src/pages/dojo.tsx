@@ -12,9 +12,12 @@ import DojoState from "../../../rooms/states/dojo-state"
 import { logger } from "../../../utils/logger"
 import { FIREBASE_CONFIG } from "./utils/utils"
 import { DojoScene } from "../game/scenes/dojo-scene"
-import { preference } from "../preferences"
+import { preference, subscribeToPreferences } from "../preferences"
 import MoveToPlugin from "phaser3-rex-plugins/plugins/moveto-plugin"
+import OutlinePlugin from "phaser3-rex-plugins/plugins/outlinepipeline-plugin.js"
+import { DEPTH } from "../game/depths"
 import "./dojo.css"
+import { clamp, max } from "../../../utils/number"
 
 export function Dojo() {
     const client: Client = useAppSelector((state) => state.network.client)
@@ -72,14 +75,19 @@ export function Dojo() {
             initialized.current = true
             dojoScene.current = new DojoScene(height, width, onProgress, onComplete)
 
-            gameRef.current = new Phaser.Game({
+            const game = new Phaser.Game({
                 type: +(preference("renderer") ?? Phaser.AUTO),
                 parent: "game",
                 pixelArt: true,
                 width,
                 height,
                 scene: [dojoScene.current],
-                backgroundColor: "#61738a",
+                scale: { mode: Phaser.Scale.FIT },
+                dom: {
+                    createContainer: true
+                },
+                disableContextMenu: true,
+                backgroundColor: "#000000",
                 plugins: {
                     global: [
                         {
@@ -90,6 +98,41 @@ export function Dojo() {
                     ]
                 }
             })
+
+            gameRef.current = game
+
+            game.domContainer.style.zIndex = DEPTH.PHASER_DOM_CONTAINER.toString()
+
+            function resize() {
+                const screenWidth = window.innerWidth - 60
+                const screenHeight = window.innerHeight
+                const screenRatio = screenWidth / screenHeight
+                const IDEAL_WIDTH = 42 * 48
+                const MIN_HEIGHT = 1050
+                const MAX_HEIGHT = 32 * 48
+                const height = clamp(IDEAL_WIDTH / screenRatio, MIN_HEIGHT, MAX_HEIGHT)
+                const width = max(50 * 48)(height * screenRatio)
+
+                if (
+                    game &&
+                    (game.scale.height !== height || game.scale.width !== width)
+                ) {
+                    game.scale.setGameSize(width, height)
+                }
+            }
+
+            game.scale.on("resize", resize, this)
+            if (game.renderer.type === Phaser.WEBGL) {
+                game.plugins.install("rexOutline", OutlinePlugin, true)
+            }
+            const unsubscribeToPreferences = subscribeToPreferences(
+                ({ antialiasing }) => {
+                    if (!game?.canvas) return
+                    game.canvas.style.imageRendering = antialiasing ? "" : "pixelated"
+                },
+                true
+            )
+            game.events.on("destroy", unsubscribeToPreferences)
 
         }
     }, [
