@@ -394,6 +394,7 @@ export enum Pkm {
   INTELEON = "INTELEON",
   IRON_BUNDLE = "IRON_BUNDLE",
   IRON_HANDS = "IRON_HANDS",
+  IRON_TREADS = "IRON_TREADS",
   IRON_VALIANT = "IRON_VALIANT",
   IVYSAUR = "IVYSAUR",
   JANGMO_O = "JANGMO_O",
@@ -2137,7 +2138,7 @@ export const PkmIndex: { [key in Pkm]: string } = {
   //[Pkm.FLUTTER_MANE]: "0987",
   //[Pkm.SLITHER_WING]: "0988",
   //[Pkm.SANDY_SHOCKS]: "0989",
-  //[Pkm.IRON_THREADS]: "0990",
+  [Pkm.IRON_TREADS]: "0990",
   [Pkm.IRON_BUNDLE]: "0991",
   [Pkm.IRON_HANDS]: "0992",
   //[Pkm.IRON_JUGULIS]: "0993",
@@ -8331,5 +8332,10 @@ export const AnimationConfig: {
     attack: AnimationType.Attack,
     ability: AnimationType.Strike,
     emote: AnimationType.Shoot
+  },
+  [Pkm.IRON_TREADS]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge
   }
 }
