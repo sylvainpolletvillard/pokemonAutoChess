@@ -81,7 +81,7 @@ export default function RoomMenu() {
   return (
     <Tabs className="my-container room-menu custom-bg hidden-scrollable">
       <h2>{t("rooms")}</h2>
-      <p style={{ position: "absolute", right: "10px", top: "10px" }}>
+      <p style={{ position: "absolute", right: "10px", top: "10px", textShadow: "2px 2px 1px black" }}>
         {t("players", { count: ccu })},{" "}
         {t("rooms", { count: preparationRooms.length })}
       </p>

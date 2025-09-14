@@ -31,7 +31,8 @@ body {
   height: 100vh;
   overflow: hidden;
   background-color: rgb(104, 130, 158);
-  background-image: linear-gradient(
+  background-image:
+    linear-gradient(
       45deg,
       rgb(80, 81, 96) 25%,
       transparent 25%,
@@ -48,7 +49,9 @@ body {
       rgb(80, 81, 96)
     );
   background-size: 240px 240px;
-  background-position: 0 0, 120px 120px;
+  background-position:
+    0 0,
+    120px 120px;
 }
 
 a {
@@ -90,11 +93,11 @@ ul {
 }
 
 kbd {
-  padding: .2rem .4rem;
+  padding: 0.2rem 0.4rem;
   font-size: 87.5%;
   color: #fff;
   background-color: #212529;
-  border-radius: .2rem;
+  border-radius: 0.2rem;
 }
 
 #root {
@@ -118,7 +121,20 @@ kbd {
   background-image: url("assets/ui/back1.jpg");
   background-size: cover;
   background-position-y: bottom;
-  background-attachment: fixed;
+  background-blend-mode: soft-light;
+}
+
+.user-menu.custom-bg {
+  background-image: url("assets/ui/back2.jpg");
+  background-blend-mode: soft-light;
+  background-position-x: center;
+}
+
+.events-menu.custom-bg,
+.chat-container.custom-bg {
+  background-image: url("assets/ui/back3.jpg");
+  background-blend-mode: soft-light;
+  background-position-x: center;
 }
 
 p:last-child {
@@ -310,8 +326,11 @@ p:last-child {
   width: 12px;
   font-size: 14px;
   color: black;
-  text-shadow: 1px 1px 1px white, -1px 1px 1px white, 1px -1px 1px white, -1px
-    -1px 1px white;
+  text-shadow:
+    1px 1px 1px white,
+    -1px 1px 1px white,
+    1px -1px 1px white,
+    -1px -1px 1px white;
 }
 
 .pokemon-portrait.acquired::before {
@@ -323,8 +342,11 @@ p:last-child {
   width: 12px;
   font-size: 14px;
   color: black;
-  text-shadow: 1px 1px 1px white, -1px 1px 1px white, 1px -1px 1px white, -1px
-    -1px 1px white;
+  text-shadow:
+    1px 1px 1px white,
+    -1px 1px 1px white,
+    1px -1px 1px white,
+    -1px -1px 1px white;
 }
 
 .pixelated {

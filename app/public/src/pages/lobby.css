@@ -85,12 +85,20 @@
   flex-direction: column;
 }
 
+.lobby .my-box {
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-secondary),
+    transparent 20%
+  );
+}
+
 .lobby .announcements {
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
   background-image: url("assets/ui/test.png");
-  background-size:  456px 912px;
+  background-size: 456px 912px;
   background-position-x: 0;
   background-position-y: 0;
 }
@@ -98,12 +106,9 @@
 .lobby h2 {
   text-align: center;
   color: white;
-  font-size: 1.5vw;
-  margin: 0.25em 0;
-}
-
-.lobby h2 {
   font-size: 1.25vw;
+  margin: 0.25em 0;
+  text-shadow: black 0px 0px 4px;
 }
 
 .main-lobby {
