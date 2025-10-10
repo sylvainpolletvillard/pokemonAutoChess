@@ -41,13 +41,27 @@ export default function AfterMenu() {
     <div className="after-menu">
       <div className="my-container is-centered">
         {playerRank && (
-          <>
+          <header>
             <div className="player-rank">
               {playerRank <= 3 && (
-                <img src={`/assets/ui/rank${playerRank}.png`} alt="" />
+                <img src={`/assets/ui/rank${playerRank}.svg`} alt="" />
               )}
               <span>{getRankLabel(playerRank)}</span>
             </div>
+            <div className="player-gains">
+              {shouldShowElo && (
+                <p className="player-elo">
+                  ELO {newElo} (
+                  {(newElo >= currentPlayer.elo ? "+" : "-") +
+                    Math.abs(newElo - currentPlayer.elo)}
+                  )
+                </p>
+              )}
+              {eligibleToXP && (
+                <p className="player-exp">EXP + {ExpPlace[playerRank - 1]}</p>
+              )}
+            </div>
+            <div className="spacer"></div>
             <p className="gamemode">
               {gameMode === GameMode.SCRIBBLE && (
                 <>
@@ -84,20 +98,7 @@ export default function AfterMenu() {
                 </>
               )}
             </p>
-            <div className="player-gains">
-              {shouldShowElo && (
-                <p className="player-elo">
-                  ELO {newElo} (
-                  {(newElo >= currentPlayer.elo ? "+" : "-") +
-                    Math.abs(newElo - currentPlayer.elo)}
-                  )
-                </p>
-              )}
-              {eligibleToXP && (
-                <p className="player-exp">EXP + {ExpPlace[playerRank - 1]}</p>
-              )}
-            </div>
-          </>
+          </header>
         )}
 
         <table>
