@@ -8,7 +8,8 @@ import { logger } from "../../app/utils/logger"
 const itemsToReplace = new Map<string, Item>([
   ["CHOICE_SCARF", Item.LOADED_DICE],
   ["LUCKY_EGG", Item.HEAVY_DUTY_BOOTS],
-  ["ROTOM_PHONE", Item.SPELL_TAG]
+  ["ROTOM_PHONE", Item.SPELL_TAG],
+  ["TINY_MUSHROOM", Item.SILVER_POWDER]
 ])
 
 async function main() {

@@ -560,7 +560,7 @@ export default class Simulation extends Schema implements ISimulation {
               teamIndex,
               true
             )
-            if (pokemonCloned.items.has(Item.TINY_MUSHROOM)) {
+            if (pokemonCloned.items.has(Item.SILVER_POWDER)) {
               const team =
                 teamIndex === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
               const clonedEntity = values(team).find(
