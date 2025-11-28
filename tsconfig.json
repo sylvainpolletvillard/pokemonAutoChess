@@ -3,7 +3,7 @@
     "outDir": "./app/public/dist/server",
     "module": "commonjs",
     "lib": ["es2023", "DOM"],
-    "target": "es2016",
+    "target": "es2020",
     "declaration": true,
     "removeComments": true,
     "noImplicitAny": false,
@@ -18,7 +18,8 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "jsx": "react-jsx",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "moduleResolution": "node"
   },
   "include": ["./app/*", "./scheduled/*", "./edit/*", "./db-commands/*"]
 }

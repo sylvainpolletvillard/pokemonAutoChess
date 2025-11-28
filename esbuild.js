@@ -1,11 +1,74 @@
 const fs = require("fs")
 const { context } = require("esbuild")
+const { transformSync } = require("@babel/core")
 const dotenv = require("dotenv")
 
 dotenv.config()
 
-const isDev = process.argv[2] === "--dev"
-const isProdBuild = process.argv[2] === "--build"
+const isDev = process.argv.includes("--dev")
+const isProdBuild = process.argv.includes("--build")
+const isVerbose = process.argv.includes("--verbose")
+
+// Custom Babel plugin for React compiler
+let reactCompilerPlugin = {
+  name: "react-compiler",
+  setup(build) {
+    let compiledCount = 0
+    let skippedCount = 0
+
+    build.onLoad({ filter: /\.(tsx|jsx)$/ }, async (args) => {
+      const source = await fs.promises.readFile(args.path, "utf8")
+      const relativePath = args.path
+        .replace(process.cwd(), "")
+        .replace(/\\/g, "/")
+
+      try {
+        // Try to compile with React compiler first
+        const result = transformSync(source, {
+          filename: args.path,
+          configFile: "./.babelrc.js",
+          sourceMaps: isDev
+        })
+
+        if (result && result.code) {
+          compiledCount++
+          if (isVerbose || isDev) {
+            console.log(`✓ React compiler optimized: ${relativePath}`)
+          }
+          return {
+            contents: result.code,
+            loader: "tsx"
+          }
+        }
+      } catch (error) {
+        skippedCount++
+        // Show warnings in development or verbose mode
+        if (
+          isVerbose ||
+          (isDev && !error.message.includes("requires explicit opt-in"))
+        ) {
+          console.warn(
+            `⚠ React compiler skipped ${relativePath}: ${error.message}`
+          )
+        }
+      }
+
+      // Fallback: return original source for esbuild's normal processing
+      return {
+        contents: source,
+        loader: "tsx"
+      }
+    })
+
+    build.onEnd(() => {
+      if (isVerbose && (compiledCount > 0 || skippedCount > 0)) {
+        console.log(`\n📊 React Compiler Summary:`)
+        console.log(`   Optimized: ${compiledCount} files`)
+        console.log(`   Skipped: ${skippedCount} files`)
+      }
+    })
+  }
+}
 
 let hashIndexPlugin = {
   name: "hash-index-plugin",
@@ -41,7 +104,7 @@ context({
   metafile: true,
   minify: isProdBuild,
   sourcemap: isProdBuild,
-  plugins: [hashIndexPlugin],
+  plugins: [reactCompilerPlugin, hashIndexPlugin],
   target: "es2016",
   define: {
     "process.env.FIREBASE_API_KEY": `"${process.env.FIREBASE_API_KEY}"`,
@@ -51,7 +114,7 @@ context({
     "process.env.FIREBASE_MESSAGING_SENDER_ID": `"${process.env.FIREBASE_MESSAGING_SENDER_ID}"`,
     "process.env.FIREBASE_APP_ID": `"${process.env.FIREBASE_APP_ID}"`,
     "process.env.DISCORD_SERVER": `"${process.env.DISCORD_SERVER}"`,
-    "process.env.MIN_HUMAN_PLAYERS": `"${process.env.MIN_HUMAN_PLAYERS}"`,
+    "process.env.MIN_HUMAN_PLAYERS": `"${process.env.MIN_HUMAN_PLAYERS}"`
   }
 })
   .then((context) => {

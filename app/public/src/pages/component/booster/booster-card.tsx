@@ -6,7 +6,7 @@ import {
   RarityColor
 } from "../../../../../config"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
-import { BoosterCard } from "../../../../../types/Booster"
+import { type IBoosterCard } from "../../../../../types/Booster"
 import { PkmIndex } from "../../../../../types/enum/Pokemon"
 import { getPortraitSrc } from "../../../../../utils/avatar"
 import { cc } from "../../utils/jsx"
@@ -14,7 +14,7 @@ import PokemonPortrait from "../pokemon-portrait"
 import "./booster-card.css"
 
 interface BoosterCardProps {
-  card: BoosterCard
+  card: IBoosterCard
   flipped: boolean
   onFlip: () => void
 }

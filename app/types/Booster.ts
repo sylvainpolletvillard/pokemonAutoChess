@@ -1,8 +1,9 @@
 import { Emotion, PkmWithCustom } from "."
 
-export type Booster = BoosterCard[]
-export type BoosterCard = PkmWithCustom & {
+export type IBoosterCard = PkmWithCustom & {
   shiny: boolean
   emotion: Emotion
   new: boolean
 }
+
+export type Booster = IBoosterCard[]
