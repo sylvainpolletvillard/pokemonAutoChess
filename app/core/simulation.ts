@@ -53,6 +53,7 @@ import { Board } from "./board"
 import { DishEffects } from "./dishes"
 import Dps from "./dps"
 import {
+  OnAbilityCastEffect,
   OnDishConsumedEffect,
   OnSimulationStartEffect,
   OnSpawnEffect
@@ -749,6 +750,23 @@ export default class Simulation extends Schema implements ISimulation {
               if (value.ap > pokemon.ap) pokemon.ap = value.ap
             }
           })
+        }
+
+        if (pokemon.items.has(Item.LINK_BOX)) {
+          const allyOnLeft = this.board.getEntityOnCell(
+            pokemon.positionX - 1,
+            pokemon.positionY
+          )
+          if (allyOnLeft) {
+            const linkedAbility = allyOnLeft.skill
+            pokemon.maxPP += Math.floor(0.75 * allyOnLeft.maxPP)
+            pokemon.effectsSet.add(
+              new OnAbilityCastEffect((pokemon, board, target, crit) => {
+                const abilityStrategy = AbilityStrategies[linkedAbility]
+                abilityStrategy.process(pokemon, board, target, crit)
+              })
+            )
+          }
         }
 
         if (pokemon.passive === Passive.LUVDISC) {

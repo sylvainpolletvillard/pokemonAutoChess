@@ -93,6 +93,7 @@ export enum Item {
   INCENSE = "INCENSE",
   EXP_SHARE = "EXP_SHARE",
   TERRAIN_EXTENDER = "TERRAIN_EXTENDER",
+  LINK_BOX = "LINK_BOX",
   POKERUS_VIAL = "POKERUS_VIAL",
   SPELL_TAG = "SPELL_TAG",
   SILK_SCARF = "SILK_SCARF",
@@ -532,7 +533,8 @@ export const Tools = [
   Item.POKERUS_VIAL,
   Item.MAX_ELIXIR,
   Item.EXP_SHARE,
-  Item.TERRAIN_EXTENDER
+  Item.TERRAIN_EXTENDER,
+  Item.LINK_BOX
 ] satisfies Item[]
 
 export type Tool = (typeof Tools)[number]
@@ -540,9 +542,9 @@ export type Tool = (typeof Tools)[number]
 export const ArtificialItems = [
   Item.METAL_COAT,
   Item.MACHO_BRACE,
-  Item.EXPLORER_KIT,
   Item.SPELL_TAG,
   Item.TINY_MUSHROOM,
+  Item.MAGMARIZER,
   Item.ELECTIRIZER,
   Item.POKERUS_VIAL,
   Item.COOKING_POT,
