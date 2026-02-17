@@ -61,6 +61,7 @@ import {
 } from "./effects/effect"
 import { WaterSpringEffect } from "./effects/passives"
 import {
+  berserkEffect,
   electricTripleAttackEffect,
   FightingKnockbackEffect,
   FireHitEffect,
@@ -1297,7 +1298,7 @@ export default class Simulation extends Schema implements ISimulation {
           pokemon.effects.add(EffectEnum.BERSERK)
           pokemon.addAttack(Math.ceil(0.4 * pokemon.baseAtk), pokemon, 0, false)
           pokemon.addSpeed(50, pokemon, 0, false)
-          pokemon.status.enrageDelay -= 5000
+          pokemon.effectsSet.add(berserkEffect)
         }
         break
 

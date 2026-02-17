@@ -2341,7 +2341,7 @@
 		"QUICK_FEET": "+30 de SPEED. [25,LK]% de probabilidades de causar WOUND durante 3 segundos.",
 		"RUN_AWAY": "+50 de SPEED",
 		"HUSTLE": "+20% de ATK y +50 de SPEED",
-		"BERSERK": "+40% de ATK y +50 de SPEED. Pasa a estar RAGE 5 segundos antes",
+		"BERSERK": "+40% de ATK y +50 de SPEED. Una vez por debajo del 20% de HP, obtienes RAGE durante 3 segundos.",
 		"FLUID": "El equipo gana 1 SPEED and 3 HP por cada sinergia activa.",
 		"SHAPELESS": "El equipo gana 3 SPEED y 6 HP por cada sinergia activa.",
 		"ETHEREAL": "El equipo gana 6 SPEED y 12 HP por cada sinergia activa.",

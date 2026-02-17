@@ -2472,7 +2472,7 @@
 		"QUICK_FEET": "+30 SPEED. [25,LK]% chance to inflict WOUND for 3 seconds.",
 		"RUN_AWAY": "+50 SPEED",
 		"HUSTLE": "+20% ATK and +50 SPEED",
-		"BERSERK": "+40% ATK and +50 SPEED. RAGE 5 seconds sooner",
+		"BERSERK": "+40% ATK and +50 SPEED. Once below 20% HP, get RAGE for 3 seconds.",
 		"FLUID": "Ally team gains 1 SPEED and 3 HP per unique active synergy",
 		"SHAPELESS": "Ally team gains 3 SPEED and 6 HP per unique active synergy",
 		"ETHEREAL": "Ally team gains 6 SPEED and 12 HP per unique active synergy",

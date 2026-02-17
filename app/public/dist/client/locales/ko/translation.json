@@ -2371,7 +2371,7 @@
 		"QUICK_FEET": "SPEED +30",
 		"RUN_AWAY": "SPEED +50",
 		"HUSTLE": "ATK +20%, SPEED +50",
-		"BERSERK": "ATK +40%, SPEED +50, 5초 일찍 RAGE상태가 됨",
+		"BERSERK": "ATK +40%, SPEED +50. HP가 20% 미만이 되면 3초 동안 RAGE를 얻습니다.",
 		"FLUID": "활성화된 시너지 한가지당 아군 전체의 SPEED 1 및 HP 3 증가",
 		"SHAPELESS": "활성화된 시너지 한가지당 아군 전체의 SPEED 3 및 HP 6 증가",
 		"ETHEREAL": "활성화된 시너지 한가지당 아군 전체의 SPEED 6 및 HP 12 증가",

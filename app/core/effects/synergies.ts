@@ -428,3 +428,12 @@ export const overgrowEffect = new OnDamageReceivedEffect(
     }
   }
 )
+
+export const berserkEffect = new OnDamageReceivedEffect(
+  ({ pokemon }: OnDamageReceivedEffectArgs) => {
+    if (pokemon.hp > 0 && pokemon.hp < 0.2 * pokemon.maxHP) {
+      pokemon.status.triggerRage(3000, pokemon)
+      pokemon.effectsSet.delete(berserkEffect)
+    }
+  }
+)

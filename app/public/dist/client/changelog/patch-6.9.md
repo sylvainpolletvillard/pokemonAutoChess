@@ -1,6 +1,7 @@
 # Changes to Synergies
 
 - Fighting 8 now only throw away melee enemies (1 range)
+- Rework wild 9: No longer enrage 5 seconds sooner. Once below 20% HP, get RAGE for 3 seconds.
 
 # Changes to Pokémon & Abilities
 

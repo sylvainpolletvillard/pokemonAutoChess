@@ -2223,7 +2223,7 @@
 		"QUICK_FEET": "+30 SPEED",
 		"RUN_AWAY": "+50 SPEED",
 		"HUSTLE": "+20% ATK und +50 SPEED",
-		"BERSERK": "+40% ATK und +50 SPEED. RAGE 5 Sekunden früher",
+		"BERSERK": "+40% ATK und +50 SPEED. Sobald die HP unter 20 % liegen, erhaltet ihr 3 Sekunden lang RAGE.",
 		"FLUID": "Verbündetes Team erhält 1 SPEED und 3 HP pro einzigartiger aktiver Synergie",
 		"SHAPELESS": "Verbündetes Team erhält 3 SPEED und 6 HP pro einzigartiger aktiver Synergie",
 		"ETHEREAL": "Verbündetes Team erhält 6 SPEED und 12 HP pro einzigartiger aktiver Synergie",
