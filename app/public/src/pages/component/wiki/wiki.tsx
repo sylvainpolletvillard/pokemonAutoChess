@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import WikiAbility from "./wiki-ability"
+import WikiAtlas from "./wiki-atlas"
 import WikiData from "./wiki-data"
 import WikiFaq from "./wiki-faq"
 import WikiGlossary from "./wiki-glossary"
@@ -38,6 +39,7 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
           <Tab key="title-stages">{t("stages")}</Tab>
           <Tab key="title-town">{t("wiki.nav.town_label")}</Tab>
           <Tab key="title-dungeon">{t("wiki.nav.dungeon_label")}</Tab>
+          <Tab key="title-atlas">{t("wiki.nav.atlas_label")}</Tab>
           <Tab key="title-glossary">{t("wiki.nav.glossary_label")}</Tab>
           <Tab key="title-data">{t("wiki.nav.data_label")}</Tab>
         </TabList>
@@ -81,6 +83,9 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
         </TabPanel>
         <TabPanel key="dungeon">
           <WikiRegions />
+        </TabPanel>
+        <TabPanel key="atlas">
+          <WikiAtlas />
         </TabPanel>
         <TabPanel key="glossary">
           <WikiGlossary />

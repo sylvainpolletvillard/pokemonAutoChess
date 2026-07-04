@@ -4642,6 +4642,7 @@
 			"weather_label": "Weather",
 			"town_label": "Town",
 			"dungeon_label": "Regions",
+			"atlas_label": "Atlas",
 			"glossary_label": "Glossary",
 			"data_label": "Data"
 		},
