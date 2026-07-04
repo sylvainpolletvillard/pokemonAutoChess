@@ -3,23 +3,24 @@ import { AtlasTree, rotToXY } from "../../../../../core/atlas"
 import type { Emera, TreeNode } from "../../../../../types/atlas"
 import { PkmIndex } from "../../../../../types/enum/Pokemon"
 import { getPortraitSrc } from "../../../../../utils/avatar"
+import { playSound, SOUNDS } from "../../utils/audio"
+import { cc } from "../../utils/jsx"
+import "./atlas.css"
 
 export function Atlas() {
-  const [allocatedNodes, setAllocatedNodes] = useState(new Set(["root"]))
+  const [allocatedNodes, setAllocatedNodes] = useState<Set<string>>(
+    new Set(["root"])
+  )
 
-  const isConnectedAndAllocatable = (nodeId) => {
-    // Logic to check if adjacent node is allocated
-    return AtlasTree.connections.some(
-      (conn) =>
-        (conn.from === nodeId && allocatedNodes.has(conn.to)) ||
-        (conn.to === nodeId && allocatedNodes.has(conn.from))
-    )
-  }
-
-  const handleNodeClick = (nodeId: string) => {
-    if (allocatedNodes.has(nodeId)) return // Already allocated
-    if (isConnectedAndAllocatable(nodeId) || nodeId === "root") {
-      setAllocatedNodes((prev) => new Set([...prev, nodeId]))
+  const handleNodeClick = (node: TreeNode) => {
+    if (allocatedNodes.has(node.id)) return // Already allocated
+    if (isConnectedAndAllocatable(node.id, allocatedNodes)) {
+      playSound(
+        node.type === "keystone" || node.type === "item"
+          ? SOUNDS.EMERA_KEYSTONE
+          : SOUNDS.EMERA
+      )
+      setAllocatedNodes((prev) => new Set([...prev, node.id]))
     }
   }
 
@@ -95,11 +96,18 @@ export function Atlas() {
         {/* 2. RENDER NODES */}
         <g id="nodes">
           {AtlasTree.nodes.map((node) => {
+            const isAllocated = allocatedNodes.has(node.id)
+            const isAllocatable = isConnectedAndAllocatable(
+              node.id,
+              allocatedNodes
+            )
+
             return (
               <AtlasNode
                 key={node.id}
                 node={node}
-                isAllocated={allocatedNodes.has(node.id)}
+                isAllocated={isAllocated}
+                isAllocatable={isAllocatable}
                 onClick={handleNodeClick}
               />
             )
@@ -110,14 +118,17 @@ export function Atlas() {
   )
 }
 
-function AtlasNode({ node, isAllocated, onClick }: any) {
+function AtlasNode({ node, isAllocated, isAllocatable, onClick }: any) {
   const size = NodeSizes[node.type] || 12
 
   return (
     <g
+      className={cc("atlas-node", node.type, {
+        allocatable: isAllocatable,
+        allocated: isAllocated
+      })}
       transform={`translate(${node.position[0]}, ${node.position[1]})`}
-      onClick={() => onClick(node.id)}
-      style={{ cursor: "pointer" }}
+      onClick={() => onClick(node)}
     >
       {/* Glow Effect if Active */}
       {isAllocated && (
@@ -125,12 +136,8 @@ function AtlasNode({ node, isAllocated, onClick }: any) {
       )}
 
       {/* Node background & inactive border */}
-      <circle
-        r={size}
-        stroke={isAllocated ? COLOR_GLOW : COLOR_BORDER_NODE}
-        strokeWidth={2}
-        fill={getNodeColor(node, isAllocated)}
-      />
+      <circle className="atlas-node-border" r={size} strokeWidth={2} />
+      <circle className="atlas-node-bg" r={size - 4} />
 
       {/* Encounter Icon */}
       {node.type === "encounter" && (
@@ -157,9 +164,9 @@ function AtlasNode({ node, isAllocated, onClick }: any) {
       {node.type === "keystone" && (
         <image
           href={EmeraIcons[node.emera]}
-          height="70"
-          width="70"
-          transform="translate(-35 -35)"
+          height="60"
+          width="60"
+          transform="translate(-30 -30)"
           opacity={isAllocated ? 1 : 0.5}
         />
       )}
@@ -243,20 +250,19 @@ const EmeraIcons: Record<Emera, string> = {
   zmove: "/assets/atlas/Z_EMERA.png"
 }
 
-function getNodeColor(node: TreeNode, isAllocated: boolean): string {
-  if (node.type === "condition" && !isAllocated) return COLOR_BG_NODE_LOCKED
-  if (node.type === "item")
-    return isAllocated
-      ? COLOR_BG_SHINY_ITEM_NODE_ACTIVE
-      : COLOR_BG_SHINY_ITEM_NODE_INACTIVE
-
-  return isAllocated ? COLOR_BG_NODE_ACTIVE : COLOR_BG_NODE_INACTIVE
+function isConnectedAndAllocatable(
+  nodeId: string,
+  allocatedNodes: Set<string>
+) {
+  // Logic to check if adjacent node is allocated
+  return (
+    allocatedNodes.has(nodeId) === false &&
+    AtlasTree.connections.some(
+      (conn) =>
+        (conn.from === nodeId && allocatedNodes.has(conn.to)) ||
+        (conn.to === nodeId && allocatedNodes.has(conn.from))
+    )
+  )
 }
 
 const COLOR_GLOW = "#ffffff"
-const COLOR_BG_NODE_INACTIVE = "var(--color-bg-primary)"
-const COLOR_BG_NODE_ACTIVE = "var(--color-bg-accent)"
-const COLOR_BG_NODE_LOCKED = "#a56060"
-const COLOR_BG_SHINY_ITEM_NODE_ACTIVE = "var(--color-bg-gold)"
-const COLOR_BG_SHINY_ITEM_NODE_INACTIVE = "#8b8356"
-const COLOR_BORDER_NODE = "var(--color-border)"
