@@ -46,7 +46,8 @@ export const TownEncountersByStage: {
     [Pkm.SABLEYE]: 1 / 20,
     [Pkm.MAKUHITA]: 1 / 20,
     [Pkm.LAPRAS]: 1 / 20,
-    [Pkm.CHIMECHO]: 1 / 20
+    [Pkm.CHIMECHO]: 1 / 20,
+    [Pkm.GROVYLE]: 1 / 20
   },
   22: {
     [Pkm.KECLEON]: 1 / 20,

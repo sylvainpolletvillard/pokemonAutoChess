@@ -949,5 +949,12 @@ export class MiniGame {
         )
       })
     }
+
+    if (
+      state.stageLevel === 17 &&
+      state.townEncounter === TownEncounters.GROVYLE
+    ) {
+      state.stageLevel += 2
+    }
   }
 }

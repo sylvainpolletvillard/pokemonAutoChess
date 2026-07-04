@@ -600,6 +600,17 @@ export default class MinigameManager {
       name: Pkm.CHIMECHO
     })
 
+    const grovyle = new PokemonSpecial({
+      scene: this.scene,
+      x: encounter === TownEncounters.GROVYLE ? cx : 48 * 48,
+      y: encounter === TownEncounters.GROVYLE ? cy : 25 * 48,
+      name: Pkm.GROVYLE,
+      orientation:
+        encounter === TownEncounters.GROVYLE
+          ? Orientation.DOWN
+          : Orientation.UPLEFT
+    })
+
     if (encounter !== TownEncounters.LAPRAS) {
       lapras.moveManager.setSpeed(15)
       lapras.moveManager.moveTo(8 * 48, 4 * 48)
@@ -649,6 +660,7 @@ export default class MinigameManager {
       kingambit,
       lapras,
       chimecho,
+      grovyle,
       ...podiumPokemons
     )
 
