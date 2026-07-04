@@ -1,6 +1,5 @@
 import type { Tree } from "../types/atlas"
 import { Item } from "../types/enum/Item"
-import { Synergy } from "../types/enum/Synergy"
 import { TownEncounters } from "../types/enum/TownEncounter"
 
 export const AtlasTree: Tree = {
@@ -27,8 +26,7 @@ export const AtlasTree: Tree = {
       id: "legendary_1",
       type: "keystone",
       position: rotToXY(-120, 300),
-      emera: "legendary",
-      types: [Synergy.FIRE, Synergy.WATER]
+      emera: "legendary"
     },
     // root - legendary_2 path
     {
@@ -51,11 +49,10 @@ export const AtlasTree: Tree = {
       id: "legendary_2",
       type: "keystone",
       position: rotToXY(-60, 300),
-      emera: "legendary",
-      types: [Synergy.ELECTRIC, Synergy.GRASS]
+      emera: "legendary"
     },
 
-    // zone up
+    // fusion
     {
       id: "condition_fusion",
       position: rotToXY(-90, 260),
@@ -64,7 +61,7 @@ export const AtlasTree: Tree = {
     },
     {
       id: "fusion",
-      position: rotToXY(-90, 400),
+      position: rotToXY(-90, 350),
       type: "keystone",
       emera: "fusion"
     },
@@ -80,6 +77,48 @@ export const AtlasTree: Tree = {
       type: "keystone",
       emera: "primal"
     },*/
+
+    // legendary1 - absorb bulb
+    {
+      id: "step1_legendary1_bulb",
+      position: sumVectors(rotToXY(-120, 300), rotToXY(-60, 90)),
+      type: "step"
+    },
+    {
+      id: "encounter_magnezone",
+      position: sumVectors(rotToXY(-120, 300), rotToXY(-60, 150)),
+      type: "encounter",
+      encounter: TownEncounters.MAGNEZONE
+    },
+    {
+      id: "step2_legendary1_bulb",
+      position: sumVectors(rotToXY(-120, 300), rotToXY(-60, 210)),
+      type: "step"
+    },
+    {
+      id: "absorb_bulb",
+      position: sumVectors(rotToXY(-120, 300), rotToXY(-60, 300)),
+      type: "item",
+      item: Item.ABSORB_BULB
+    },
+
+    // legendary2 - absorb bulb
+    {
+      id: "step1_legendary2_bulb",
+      position: sumVectors(rotToXY(-60, 300), rotToXY(-120, 90)),
+      type: "step"
+    },
+    {
+      id: "encounter_grovyle",
+      position: sumVectors(rotToXY(-60, 300), rotToXY(-120, 150)),
+      type: "encounter",
+      encounter: TownEncounters.GROVYLE
+    },
+    {
+      id: "step2_legendary2_bulb",
+      position: sumVectors(rotToXY(-60, 300), rotToXY(-120, 210)),
+      type: "step"
+    },
 
     // stellar path
     {
@@ -126,8 +165,7 @@ export const AtlasTree: Tree = {
       id: "zmove_1",
       position: rotToXY(120, 300),
       type: "keystone",
-      emera: "zmove",
-      types: [Synergy.DRAGON, Synergy.FAIRY]
+      emera: "zmove"
     },
 
     // Z-move right path
@@ -151,8 +189,7 @@ export const AtlasTree: Tree = {
       id: "zmove_2",
       position: rotToXY(60, 300),
       type: "keystone",
-      emera: "zmove",
-      types: [Synergy.AMORPHOUS, Synergy.AQUATIC]
+      emera: "zmove"
     },
 
     // legendary1 - gold bow
@@ -162,10 +199,10 @@ export const AtlasTree: Tree = {
       type: "step"
     },
     {
-      id: "encounter_ludicolo",
+      id: "encounter_chansey",
       type: "encounter",
       position: sumVectors(rotToXY(-120, 300), rotToXY(180, 150)),
-      encounter: TownEncounters.LUDICOLO
+      encounter: TownEncounters.CHANSEY
     },
     {
       id: "step2_legendary1_goldbow",
@@ -236,10 +273,10 @@ export const AtlasTree: Tree = {
       type: "step"
     },
     {
-      id: "encounter_chansey",
+      id: "encounter_ludicolo",
       type: "encounter",
       position: sumVectors(rotToXY(180, 300), rotToXY(120, 150)),
-      encounter: TownEncounters.CHANSEY
+      encounter: TownEncounters.LUDICOLO
     },
     {
       id: "step2_stellar_eviolite",
@@ -373,43 +410,49 @@ export const AtlasTree: Tree = {
       encounter: TownEncounters.MAROWAK
     },
     {
-      id: "step3_root_dynamax",
-      position: rotToXY(0, 400),
-      type: "step"
-    },
-    {
       id: "dynamax",
-      position: rotToXY(0, 500),
+      position: rotToXY(0, 390),
       type: "item",
       item: Item.DYNAMAX_BAND
     },
-
-    // marowak - mega
     {
-      id: "step1_marowak_mega",
-      position: sumVectors(rotToXY(0, 300), rotToXY(-30, 100)),
-      type: "condition",
-      condition: "mega"
-    },
-    {
-      id: "mega",
-      position: sumVectors(rotToXY(0, 300), rotToXY(-30, 200)),
-      type: "keystone",
-      emera: "mega"
-    },
-
-    // marowak - gigantamax
-    {
-      id: "step1_marowak_gigantamax",
-      position: sumVectors(rotToXY(0, 300), rotToXY(30, 100)),
+      id: "condition_gigantamax",
+      position: rotToXY(0, 470),
       type: "condition",
       condition: "gigantamax"
     },
     {
       id: "gigantamax",
-      position: sumVectors(rotToXY(0, 300), rotToXY(30, 200)),
+      position: rotToXY(0, 550),
       type: "keystone",
       emera: "gigantamax"
+    },
+
+    // mega paths
+    {
+      id: "condition_mega_1",
+      position: rotToXY(-60, 400),
+      type: "condition",
+      condition: "mega"
+    },
+    {
+      id: "mega_1",
+      position: rotToXY(-60, 500),
+      type: "keystone",
+      emera: "mega"
+    },
+
+    {
+      id: "condition_mega_2",
+      position: rotToXY(60, 400),
+      type: "condition",
+      condition: "mega"
+    },
+    {
+      id: "mega_2",
+      position: rotToXY(60, 500),
+      type: "keystone",
+      emera: "mega"
     },
 
     // marowak - legendary2
@@ -550,6 +593,16 @@ export const AtlasTree: Tree = {
     { from: "legendary_2", to: "condition_primal" },
     { from: "condition_primal", to: "primal" },*/
 
+    { from: "legendary_1", to: "step1_legendary1_bulb" },
+    { from: "step1_legendary1_bulb", to: "encounter_magnezone" },
+    { from: "encounter_magnezone", to: "step2_legendary1_bulb" },
+    { from: "step2_legendary1_bulb", to: "absorb_bulb" },
+
+    { from: "legendary_2", to: "step1_legendary2_bulb" },
+    { from: "step1_legendary2_bulb", to: "encounter_grovyle" },
+    { from: "encounter_grovyle", to: "step2_legendary2_bulb" },
+    { from: "step2_legendary2_bulb", to: "absorb_bulb" },
+
     { from: "root", to: "step1_root_stellar" },
     { from: "step1_root_stellar", to: "encounter_kecleon" },
     { from: "encounter_kecleon", to: "step2_root_stellar" },
@@ -566,8 +619,8 @@ export const AtlasTree: Tree = {
     { from: "step2_root_zmove2", to: "zmove_2" },
 
     { from: "legendary_1", to: "step1_legendary1_goldbow" },
-    { from: "step1_legendary1_goldbow", to: "encounter_ludicolo" },
-    { from: "encounter_ludicolo", to: "step2_legendary1_goldbow" },
+    { from: "step1_legendary1_goldbow", to: "encounter_chansey" },
+    { from: "encounter_chansey", to: "step2_legendary1_goldbow" },
     { from: "step2_legendary1_goldbow", to: "goldbow" },
 
     { from: "stellar", to: "step1_stellar_goldbow" },
@@ -581,8 +634,8 @@ export const AtlasTree: Tree = {
     { from: "step2_stellar_legendary1", to: "legendary_1" },
 
     { from: "stellar", to: "step1_stellar_eviolite" },
-    { from: "step1_stellar_eviolite", to: "encounter_chansey" },
-    { from: "encounter_chansey", to: "step2_stellar_eviolite" },
+    { from: "step1_stellar_eviolite", to: "encounter_ludicolo" },
+    { from: "encounter_ludicolo", to: "step2_stellar_eviolite" },
     { from: "step2_stellar_eviolite", to: "eviolite" },
 
     { from: "zmove_1", to: "step1_zmove1_eviolite" },
@@ -617,13 +670,9 @@ export const AtlasTree: Tree = {
     { from: "step1_root_dynamax", to: "encounter_munchlax" },
     { from: "encounter_munchlax", to: "step2_root_dynamax" },
     { from: "step2_root_dynamax", to: "encounter_marowak" },
-    { from: "encounter_marowak", to: "step3_root_dynamax" },
-    { from: "step3_root_dynamax", to: "dynamax" },
-
-    { from: "encounter_marowak", to: "step1_marowak_mega" },
-    { from: "step1_marowak_mega", to: "mega" },
-    { from: "encounter_marowak", to: "step1_marowak_gigantamax" },
-    { from: "step1_marowak_gigantamax", to: "gigantamax" },
+    { from: "encounter_marowak", to: "dynamax" },
+    { from: "dynamax", to: "condition_gigantamax" },
+    { from: "condition_gigantamax", to: "gigantamax" },
 
     { from: "encounter_marowak", to: "step1_marowak_legendary2" },
     { from: "step1_marowak_legendary2", to: "encounter_cinccino" },
@@ -634,6 +683,12 @@ export const AtlasTree: Tree = {
     { from: "step1_marowak_zmove2", to: "encounter_celebi" },
     { from: "encounter_celebi", to: "step2_marowak_zmove2" },
     { from: "step2_marowak_zmove2", to: "zmove_2" },
+
+    { from: "legendary_2", to: "condition_mega_1" },
+    { from: "condition_mega_1", to: "mega_1" },
+
+    { from: "zmove_2", to: "condition_mega_2" },
+    { from: "condition_mega_2", to: "mega_2" },
 
     { from: "legendary_2", to: "step1_legendary2_sacredash" },
     { from: "step1_legendary2_sacredash", to: "encounter_wigglytuff" },

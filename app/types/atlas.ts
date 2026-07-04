@@ -1,11 +1,8 @@
 import type { Item } from "./enum/Item"
-import type { Synergy } from "./enum/Synergy"
 import type { TownEncounter } from "./enum/TownEncounter"
 
 export type Emera =
-  | "blank"
   | "fusion"
-  | "primal"
   | "mega"
   | "gigantamax"
   | "stellar"
@@ -29,7 +26,6 @@ export type StepNode = BaseTreeNode & {
 export type KeystoneNode = BaseTreeNode & {
   type: "keystone"
   emera: Emera
-  types?: Synergy[]
 }
 
 export type EncounterNode = BaseTreeNode & {
@@ -39,7 +35,7 @@ export type EncounterNode = BaseTreeNode & {
 
 export type ConditionNode = BaseTreeNode & {
   type: "condition"
-  condition: "primal" | "fusion" | "mega" | "gigantamax" | "stellar"
+  condition: "fusion" | "mega" | "gigantamax" | "stellar"
 }
 
 export type ItemNode = BaseTreeNode & {
