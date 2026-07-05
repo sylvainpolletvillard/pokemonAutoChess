@@ -2698,6 +2698,7 @@
 		"REPEAT_BALL": "Repeat Ball",
 		"GOLD_BOW": "Gold Bow",
 		"TERA_ORB": "Tera Orb",
+		"LOOPLET": "Looplet",
 		"RED_SCALE": "Red Scale",
 		"DAMP_ROCK": "Damp Rock",
 		"ICY_ROCK": "Icy Rock",
@@ -3029,6 +3030,7 @@
 		"ABSORB_BULB": "All the damage reduction is absorbed by the bulb. Once under 50% HP, bulb explodes, dealing all damage absorbed to ADJACENT enemy units as SPECIAL.",
 		"SACRED_ASH": "Gives RESURRECTION. After resurrecting, up to 3 allies KO are resurrected as well, but without items.",
 		"STAR_PIECE": "Gives the holder one additional STAR, which increases the power of their ability.",
+		"LOOPLET": "Each EMERA set in a looplet through the Atlas grants additional stats and effects to the holder. Gain 1 EMERA when acquired.",
 		"REPEAT_BALL": "Each time you spend gold on a reroll, gain 1 free reroll. For every 2 shop rerolls, gain 1 SPEED and 2 SHIELD. After lots of rerolls, you may encounter powerful Pokémon in your shop.",
 		"GOLD_BOW": "The holder does not count for team size limit.",
 		"TERA_ORB": "The holder replaces their base types with the STELLAR type.",
@@ -5101,7 +5103,7 @@
 			"DUSKULL": "Double all GOLD from interests",
 			"MEOWTH": "Gain 10 GOLD",
 			"MAROWAK": "Next PvE fight is more difficult just for you",
-			"WOBBUFFET": "Get an RECYCLE_TICKET",
+			"WOBBUFFET": "Get a RECYCLE_TICKET",
 			"SPINDA": "Activate and get the reward of another random encounter in the atlas",
 			"REGIROCK": "Heal 15 player HP",
 			"MUNCHLAX": "Get a PICNIC_SET",
@@ -5119,12 +5121,13 @@
 			"GROVYLE": "Gain 1 more EMERA after each PvP round"
 		},
 		"keystone": {
-			"fusion": "Pokémon Fusion",
-			"mega": "Mega Evolution",
-			"gigantamax": "Gigantamax",
-			"stellar": "Terastal",
-			"legendary": "Legendary",
-			"zmove": "Z-Move"
+			"fusion": "Fusion Emera",
+			"mega": "Mega Emera",
+			"gigantamax": "Gigantamax Emera",
+			"stellar": "Terastal Emera",
+			"legendary": "Legendary Emera",
+			"zmove": "Z-Power Emera",
+			"awakening": "Awakening Emera"
 		},
 		"keystone_description": {
 			"fusion": "Get DNA_SPLICERS which allows you to combine two Legendaries into one. $t(atlas.pokemon_that_can_be_combined)",
@@ -5132,13 +5135,22 @@
 			"gigantamax": "Pokémon that can gigantamax and hold a DYNAMAX_BAND will increase their HP by 400% instead of 200%, and change their ability to a new G-Max one.",
 			"stellar": "Get a STELLAR_GEM which increases the level of all your active synergies by 1.",
 			"legendary": "Pick 1 of 6 Legendary Pokémon. For each portal symbol, you are guaranteed to get one proposal of that type.",
-			"zmove": "Get a Z_POWER_RING and pick 1 Z-Move among the ones matching with your portal symbols."
+			"zmove": "Get a Z_POWER_RING and pick 1 Z-Move among the ones matching with your portal symbols.",
+			"awakening": "Allow to reach level 10. All common and uncommon 1 STAR Pokémon on your board evolve immediately."
 		},
 		"condition": {
 			"fusion": "This node is locked until you get two Pokémon on your board that can be combined together. $t(atlas.pokemon_that_can_be_combined)",
 			"mega": "This node is locked until you get a Pokémon on your board that can mega evolve. $t(atlas.pokemon_that_can_mega_evolve)",
 			"gigantamax": "This node is locked until you get a Pokémon on your board that can gigantamax. $t(atlas.pokemon_that_can_gigantamax)",
 			"stellar": "This node is locked until you get at least 10 different active synergies"
+		},
+		"buff": {
+			"looplet": "Additional effect for the LOOPLET:\n",
+			"pink": "$t(atlas.buff.looplet)Get 10 LUCK. Prevents the holder from taking critical hits.",
+			"red": "$t(atlas.buff.looplet)Get 5 ATK. Attacks inflict BURN for 3 seconds.",
+			"yellow": "$t(atlas.buff.looplet)Get 20 SPEED. +1 GOLD each time holder knocks out an opponent.",
+			"green": "$t(atlas.buff.looplet)Gain 20% base MAX HP. Holder heals for 20% of all damage inflicted.",
+			"blue": "$t(atlas.buff.looplet)Gain 10 PP. Holder restores 5 additional PP ON_ATTACK."
 		},
 		"connection_orb": "Connection Orb",
 		"connection_orb_description": "The start of your journey. You can only activate nodes connected to already activated nodes.",

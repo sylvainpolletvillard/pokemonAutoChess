@@ -33,17 +33,7 @@ export function Atlas() {
   const COLOR_GLOW = "#ffffff"
 
   return (
-    <div
-      style={{
-        width: "800px",
-        height: "800px",
-        margin: "auto",
-        aspectRatio: "1/1",
-        overflow: "hidden",
-        position: "relative",
-        border: "var(--border-thick)"
-      }}
-    >
+    <div id="atlas-container">
       <TransformWrapper
         initialScale={3.4}
         minScale={2.5}
@@ -230,6 +220,17 @@ function AtlasNode({
         />
       )}
 
+      {/* Node Buff Icon */}
+      {node.type === "buff" && (
+        <image
+          href={EmeraIcons[node.buff]}
+          height="30"
+          width="30"
+          transform="translate(-15 -15)"
+          opacity={isAllocated ? 1 : 0.5}
+        />
+      )}
+
       {/* Node active border frame */}
       {isAllocated && (
         <image
@@ -276,6 +277,8 @@ function AtlasNodeDetail({ nodeId }: { nodeId: string }) {
     description = t(`atlas.keystone_description.${node.emera}`)
   } else if (node.type === "condition") {
     description = t(`atlas.condition.${node.condition}`)
+  } else if (node.type === "buff") {
+    description = t(`atlas.buff.${node.buff}`)
   }
   return (
     <div className="atlas-node-detail">
@@ -302,18 +305,25 @@ const NodeSizes: Record<TreeNode["type"], number> = {
   item: 45,
   encounter: 24,
   condition: 20,
-  step: 20
+  step: 20,
+  buff: 20
 }
 
-const EmeraIcons: Record<Emera & "blank", string> = {
+const EmeraIcons: Record<Emera, string> = {
   blank: "/assets/atlas/BLANK_EMERA.png",
+  pink: "/assets/atlas/PINK_EMERA.png",
+  red: "/assets/atlas/RED_EMERA.png",
+  yellow: "/assets/atlas/YELLOW_EMERA.png",
+  green: "/assets/atlas/GREEN_EMERA.png",
+  blue: "/assets/atlas/BLUE_EMERA.png",
   fusion: "/assets/atlas/FUSION_EMERA.png",
   //primal: "/assets/atlas/PRIMAL_EMERA.png",
   mega: "/assets/atlas/MEGA_EMERA.png",
   gigantamax: "/assets/atlas/MAX_EMERA.png",
   stellar: "/assets/atlas/TERA_EMERA.png",
   legendary: "/assets/atlas/LEGENDARY_EMERA.png",
-  zmove: "/assets/atlas/Z_EMERA.png"
+  zmove: "/assets/atlas/Z_EMERA.png",
+  awakening: "/assets/atlas/AWAKENING_EMERA.png"
 }
 
 function isConnectedAndAllocatable(

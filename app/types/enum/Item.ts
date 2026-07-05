@@ -120,6 +120,7 @@ export enum Item {
   ABSORB_BULB = "ABSORB_BULB",
   SACRED_ASH = "SACRED_ASH",
   STAR_PIECE = "STAR_PIECE",
+  LOOPLET = "LOOPLET",
   REPEAT_BALL = "REPEAT_BALL",
   GOLD_BOW = "GOLD_BOW",
   TERA_ORB = "TERA_ORB",
@@ -668,6 +669,7 @@ export const ShinyItems = [
   Item.REPEAT_BALL,
   Item.GOLD_BOW,
   Item.TERA_ORB,
+  Item.LOOPLET,
   Item.RED_SCALE
 ] satisfies Item[]
 

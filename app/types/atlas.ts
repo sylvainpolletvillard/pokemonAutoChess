@@ -1,17 +1,34 @@
 import type { Item } from "./enum/Item"
 import type { TownEncounter } from "./enum/TownEncounter"
 
-export type Emera =
+export type KeystoneEmera =
   | "fusion"
   | "mega"
   | "gigantamax"
   | "stellar"
   | "legendary"
   | "zmove"
+  | "awakening"
+
+export type Emera =
+  | KeystoneEmera
+  | "blank"
+  | "pink"
+  | "red"
+  | "yellow"
+  | "green"
+  | "blue"
 
 export type BaseTreeNode = {
   id: string
-  type: "start" | "step" | "keystone" | "encounter" | "condition" | "item"
+  type:
+    | "start"
+    | "step"
+    | "keystone"
+    | "encounter"
+    | "condition"
+    | "item"
+    | "buff"
   position: [number, number]
 }
 
@@ -25,7 +42,7 @@ export type StepNode = BaseTreeNode & {
 
 export type KeystoneNode = BaseTreeNode & {
   type: "keystone"
-  emera: Emera
+  emera: KeystoneEmera
 }
 
 export type EncounterNode = BaseTreeNode & {
@@ -43,6 +60,11 @@ export type ItemNode = BaseTreeNode & {
   item: Item
 }
 
+export type BuffNode = BaseTreeNode & {
+  type: "buff"
+  buff: "red" | "blue" | "pink" | "yellow" | "green"
+}
+
 export type TreeNode =
   | StartNode
   | KeystoneNode
@@ -50,6 +72,7 @@ export type TreeNode =
   | ConditionNode
   | StepNode
   | ItemNode
+  | BuffNode
 
 export type TreeConnection = {
   from: string
