@@ -3074,6 +3074,83 @@ export const AbilitiesAnimations: {
       })
     })
   ],
+
+  ALL_OUT_PUMMELING_PUNCH: [
+    projectile({
+      scale: 2,
+      oriented: false,
+      startCoords: "target",
+      startPositionOffset: [100, -100],
+      depth: DEPTH.HIT_FX_ABOVE_POKEMON
+    })
+  ],
+
+  ALL_OUT_PUMMELING_PUNCH2: [
+    projectile({
+      scale: 2,
+      oriented: false,
+      startCoords: "target",
+      startPositionOffset: [-100, 100],
+      depth: DEPTH.HIT_FX_ABOVE_POKEMON
+    })
+  ],
+
+  ALL_OUT_PUMMELING_KICK: [
+    projectile({
+      scale: 2,
+      oriented: false,
+      startCoords: "target",
+      startPositionOffset: [100, 100],
+      depth: DEPTH.HIT_FX_ABOVE_POKEMON
+    })
+  ],
+
+  ALL_OUT_PUMMELING_KICK2: [
+    projectile({
+      scale: 2,
+      oriented: false,
+      startCoords: "target",
+      startPositionOffset: [-100, -100],
+      depth: DEPTH.HIT_FX_ABOVE_POKEMON
+    })
+  ],
+
+  [Ability.ALL_OUT_PUMMELING]: (args) => {
+    const orientation =
+      args.positionY < args.targetY
+        ? Orientation.UP
+        : args.positionY > args.targetY
+          ? Orientation.DOWN
+          : Orientation.UP
+
+    return [
+      projectile({
+        ability: Ability.HYPERSPACE_FURY,
+        distance: 5,
+        scale: 3,
+        orientation,
+        depth: DEPTH.ABILITY_MAJOR,
+        rotation:
+          orientation === (args.flip ? Orientation.UP : Orientation.DOWN)
+            ? (-3 / 4) * Math.PI
+            : (1 / 4) * Math.PI
+      })(args),
+
+      projectile({
+        ability: Ability.SUNSTEEL_STRIKE,
+        distance: 4,
+        scale: 1,
+        tint: 0xddffff,
+        orientation,
+        rotation:
+          orientation === (args.flip ? Orientation.UP : Orientation.DOWN)
+            ? 0
+            : Math.PI,
+        depth: DEPTH.ABILITY_BELOW_POKEMON
+      })(args)
+    ]
+  },
+
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(
       (p) => p.positionX === positionX && p.positionY === positionY

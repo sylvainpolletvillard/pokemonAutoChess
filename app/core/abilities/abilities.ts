@@ -18,6 +18,7 @@ import { AerialAceStrategy } from "./aerial-ace"
 import { AfterYouStrategy } from "./after-you"
 import { AgilityStrategy } from "./agility"
 import { AirSlashStrategy } from "./air-slash"
+import { AllOutPummelingStrategy } from "./all-out-pummeling"
 import { AnchorShotStrategy } from "./anchor-shot"
 import { AncientPowerStrategy } from "./ancient-power"
 import { AppleAcidStrategy } from "./apple-acid"
@@ -730,6 +731,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.AFTER_YOU]: new AfterYouStrategy(),
   [Ability.AGILITY]: new AgilityStrategy(),
   [Ability.AIR_SLASH]: new AirSlashStrategy(),
+  [Ability.ALL_OUT_PUMMELING]: new AllOutPummelingStrategy(),
   [Ability.ANCHOR_SHOT]: new AnchorShotStrategy(),
   [Ability.ANCIENT_POWER]: new AncientPowerStrategy(),
   [Ability.APPLE_ACID]: new AppleAcidStrategy(),

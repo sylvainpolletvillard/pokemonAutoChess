@@ -1775,7 +1775,8 @@
 		"COIL": "Coil",
 		"SUBSTITUTE": "Substitute",
 		"SWARM": "Call of the Swarm",
-		"FLING": "Fling"
+		"FLING": "Fling",
+		"ALL_OUT_PUMMELING": "All-Out Pummeling"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2338,7 +2339,8 @@
 		"COIL": "Ensnares the target with it's powerful tail, inflicting LOCKED and PARALYSIS for 3 seconds. User also buffs its ATK and DEF by [3,5,10,20,SP]",
 		"SUBSTITUTE": "Spawns a Substitute at the location of the user with [25,25,25,50,SP]% of user's max HP as bonus HP. The user moves to a free cell nearby and all aggro is redirected to the Substitute.",
 		"SWARM": "A copy of a BUG Pokémon on your board hops out of the nest. Rarity increases with every cast.",
-		"FLING": "When throwing the BALL, all enemies in between user and receiver take [30,30,30,100,SP]% of user's SPEED as SPECIAL. If not holding a BALL, jump in a corner of the board and get a new BALL instead"
+		"FLING": "When throwing the BALL, all enemies in between user and receiver take [30,30,30,100,SP]% of user's SPEED as SPECIAL. If not holding a BALL, jump in a corner of the board and get a new BALL instead",
+		"ALL_OUT_PUMMELING": "Gain [30,60,100,200] SHIELD and strikes a series of punches and kicks that deals 8x [30,40,50,100,SP] SPECIAL split between ADJACENT enemies, then finish by a devastating punch that deals [50,100,150,300,SP] SPECIAL and knocks back all enemies in a 3-wide column."
 	},
 	"effect": {
 		"STAMINA": "Stamina",
@@ -2910,7 +2912,8 @@
 		"SKY_MELODICA": "Sky Melodica",
 		"TERRA_CYMBAL": "Terra Cymbal",
 		"SOOTHE_BELL": "Soothe Bell",
-		"BALL": "Ball"
+		"BALL": "Ball",
+		"Z_RING": "Z-Ring"
 	},
 	"item_description": {
 		"FOSSIL_STONE": "A fossil of a Pokémon that lived in prehistoric times",
@@ -3244,7 +3247,8 @@
 		"SKY_MELODICA": "Pokémon in shop have 5% additional chance to have the FLYING type.",
 		"TERRA_CYMBAL": "Pokémon in shop have 5% additional chance to have the GROUND type.",
 		"SOOTHE_BELL": "Use it on a Pokémon to refresh your shop with Pokémon sharing a type with this Pokémon",
-		"BALL": "A ball made of a large hard berry. When casting ability, throws the ball to the furthest FIELD ally to pass them the BALL and 50 SHIELD. If no FIELD ally with a free item slot at sight, throws the ball to the furthest enemy instead, dealing [30,SP]% of user's SPEED as PHYSICAL"
+		"BALL": "A ball made of a large hard berry. When casting ability, throws the ball to the furthest FIELD ally to pass them the BALL and 50 SHIELD. If no FIELD ally with a free item slot at sight, throws the ball to the furthest enemy instead, dealing [30,SP]% of user's SPEED as PHYSICAL",
+		"Z_RING": "Allows the holder to equip Z-Crystals and gather the Z-Power required to perform Z-Moves."
 	},
 	"passive_description": {
 		"NONE": "No passive",
