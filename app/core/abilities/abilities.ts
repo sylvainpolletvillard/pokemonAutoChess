@@ -105,6 +105,7 @@ import { DeepFreezeStrategy } from "./deep-freeze"
 import { DefendOrderStrategy } from "./defend-order"
 import { DefenseCurlStrategy } from "./defense-curl"
 import { DetectStrategy } from "./detect"
+import { DevastatingDrakeStrategy } from "./devastating-drake"
 import { DiamondStormStrategy } from "./diamond-storm"
 import { DigStrategy } from "./dig"
 import { DireClawStrategy } from "./dire-claw"
@@ -820,6 +821,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.DEFEND_ORDER]: new DefendOrderStrategy(),
   [Ability.DEFENSE_CURL]: new DefenseCurlStrategy(),
   [Ability.DETECT]: new DetectStrategy(),
+  [Ability.DEVASTATING_DRAKE]: new DevastatingDrakeStrategy(),
   [Ability.DIAMOND_STORM]: new DiamondStormStrategy(),
   [Ability.DIG]: new DigStrategy(),
   [Ability.DIRE_CLAW]: new DireClawStrategy(),

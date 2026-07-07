@@ -6,6 +6,7 @@ import {
   CELL_WIDTH
 } from "../../../../config"
 import PokemonFactory from "../../../../models/pokemon-factory"
+import type { IPokemonEntity } from "../../../../types"
 import {
   type AbilityAnimation,
   type AbilityAnimationArgs,
@@ -42,7 +43,7 @@ import { transformEntityCoordinates } from "../../pages/utils/utils"
 import { DEPTH } from "../depths"
 import type { DebugScene } from "../scenes/debug-scene"
 import type GameScene from "../scenes/game-scene"
-import PokemonSprite from "./pokemon"
+import PokemonSprite, { isEntity } from "./pokemon"
 
 /** Fixed base angle (degrees) per feather type so each stat feather has a distinct tilt */
 const FeatherBaseAngles: Record<string, number> = {
@@ -730,6 +731,69 @@ const skyfall: AbilityAnimationMaker<TweenAnimationMakerOptions> =
       ...options,
       startCoords: [args.targetX, 9, false]
     })(args)
+  }
+
+type PathAnimationMakerOptions = {
+  duration?: number
+  ease?: string | ((v: number) => number)
+  finishAnim?: AbilityAnimation
+  tweenProps?: Record<string, any>
+  path: Phaser.Curves.Curve
+  destroyOnTweenComplete?: boolean
+  initSprite?: (sprite: GameObjects.Sprite) => void
+}
+
+const pathAnimation: AbilityAnimationMaker<PathAnimationMakerOptions> =
+  (options) => (args) => {
+    const { scene } = args
+    let { rotation } = options
+    const delay = options.delay ?? args.delay ?? 0
+    setTimeout(() => {
+      const follower = { t: 0, vec: new Phaser.Math.Vector2() }
+      const { x: startX, y: startY } = options.path.getStartPoint()
+      let lastX = startX,
+        lastY = startY
+
+      const sprite = addAbilitySprite(
+        scene,
+        options.ability ?? args.ability,
+        args.ap,
+        [startX, startY],
+        {
+          destroyOnComplete: false,
+          ...options,
+          rotation
+        }
+      )
+      if (!sprite) return null
+      if (options.initSprite) options.initSprite(sprite)
+
+      const tweenConfig: Phaser.Types.Tweens.TweenBuilderConfig = {
+        targets: follower,
+        duration: options.duration || 500,
+        ease: options.ease || "linear",
+        t: 1,
+        onUpdate: () => {
+          options.path.getPointAt(follower.t, follower.vec)
+          sprite.setPosition(follower.vec.x, follower.vec.y)
+          if (options?.oriented) {
+            rotation =
+              angleBetween([lastX, lastY], [follower.vec.x, follower.vec.y]) +
+              (options.rotation ?? 0)
+            sprite.setRotation(rotation)
+          }
+          lastX = follower.vec.x
+          lastY = follower.vec.y
+        },
+        onComplete: () => {
+          if (options.destroyOnTweenComplete !== false) sprite?.destroy()
+          if (options.finishAnim) options.finishAnim(args)
+        },
+        ...(options.tweenProps ?? {})
+      }
+
+      scene.tweens.add(tweenConfig)
+    }, delay)
   }
 
 const shakeCamera: AbilityAnimationMaker<{
@@ -3150,6 +3214,96 @@ export const AbilitiesAnimations: {
       })(args)
     ]
   },
+
+  [Ability.DEVASTATING_DRAKE]: [
+    (args) => {
+      const MAX_NB_ENEMIES_HIT = 6
+      let orientation = args.orientation
+      let lastX = args.positionX,
+        lastY = args.positionY
+
+      const casterSprite = args.pokemonsOnBoard.find(
+        (pkmUI) =>
+          pkmUI.positionX === args.positionX &&
+          pkmUI.positionY === args.positionY
+      )
+
+      const points: [number, number][] = []
+      if (casterSprite) {
+        points.push([casterSprite.x, casterSprite.y])
+      }
+
+      const enemies = args.pokemonsOnBoard.filter(
+        (p) =>
+          (p.pokemon && !isEntity(p.pokemon)) ||
+          p.pokemon.team !== (casterSprite?.pokemon as IPokemonEntity).team
+      )
+      const remainingTargets = new Set(enemies)
+
+      while (remainingTargets.size > 0 && points.length < MAX_NB_ENEMIES_HIT) {
+        const distances = [...remainingTargets].map((e) =>
+          distanceM(lastX, lastY, e.pokemon.positionX, e.pokemon.positionY)
+        )
+        const minDistance = Math.min(...distances)
+        const enemiesAtMinDistance = [...remainingTargets].filter(
+          (_, i) => distances[i] === minDistance
+        )
+        let nextEnemy: PokemonSprite
+
+        if (enemiesAtMinDistance.length > 0) {
+          // search again the closest while taking the current orientation into account
+          const movementVector = OrientationVector[orientation]
+          const x2 = lastX + movementVector[0]
+          const y2 = lastY + movementVector[1]
+          const distances = [...remainingTargets].map((e) =>
+            distanceM(x2, y2, e.pokemon.positionX, e.pokemon.positionY)
+          )
+          const minDistance = Math.min(...distances)
+          const enemiesAtMinDistance = [...remainingTargets].filter(
+            (_, i) => distances[i] === minDistance
+          )
+          nextEnemy = enemiesAtMinDistance[0]
+        } else {
+          nextEnemy = enemiesAtMinDistance[0]
+        }
+
+        remainingTargets.delete(nextEnemy)
+        orientation = getOrientation(
+          lastX,
+          lastY,
+          nextEnemy.positionX,
+          nextEnemy.positionY
+        )
+        points.push([nextEnemy.x, nextEnemy.y])
+        lastX = nextEnemy.positionX
+        lastY = nextEnemy.positionY
+      }
+
+      const path = new Phaser.Curves.Spline(points)
+      const [explosionX, explosionY] = transformEntityCoordinates(
+        lastX,
+        lastY,
+        args.flip
+      )
+      return pathAnimation({
+        path,
+        scale: 3,
+        oriented: true,
+        rotation: -Math.PI / 2,
+        duration: enemies.length * 300,
+        initSprite(sprite) {
+          sprite.enableFilters()
+          sprite.filters?.internal.addGlow(0xff00ff, 6, 1, 0.5)
+        },
+        finishAnim: staticAnimation({
+          ability: "DEVASTATING_DRAKE_HIT",
+          x: explosionX,
+          y: explosionY,
+          scale: 4
+        })
+      })(args)
+    }
+  ],
 
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(
