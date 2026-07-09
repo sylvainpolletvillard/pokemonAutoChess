@@ -510,6 +510,7 @@ import { TailwindStrategy } from "./tailwind"
 import { TakeHeartStrategy } from "./take-heart"
 import { TauntStrategy } from "./taunt"
 import { TeaTimeStrategy } from "./tea-time"
+import { TectonicRageStrategy } from "./tectonic-rage"
 import { TeeterDanceStrategy } from "./teeter-dance"
 import { TeleportStrategy } from "./teleport"
 import { TerrainPulseStrategy } from "./terrain-pulse"
@@ -1229,6 +1230,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.TAKE_HEART]: new TakeHeartStrategy(),
   [Ability.TAUNT]: new TauntStrategy(),
   [Ability.TEA_TIME]: new TeaTimeStrategy(),
+  [Ability.TECTONIC_RAGE]: new TectonicRageStrategy(),
   [Ability.TEETER_DANCE]: new TeeterDanceStrategy(),
   [Ability.TELEPORT]: new TeleportStrategy(),
   [Ability.TERRAIN_PULSE]: new TerrainPulseStrategy(),

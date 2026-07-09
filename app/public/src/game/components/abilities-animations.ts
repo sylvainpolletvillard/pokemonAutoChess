@@ -3305,6 +3305,47 @@ export const AbilitiesAnimations: {
     }
   ],
 
+  [Ability.TECTONIC_RAGE]: [
+    (args) => {
+      const cx = args.targetX
+      const cy = args.targetY
+      const minRadiusSquared = 2 * 2
+      const maxRadiusSquared = 3 * 3
+      for (let y = cy - 4; y <= cy + 4; y++) {
+        for (let x = cx - 4; x < cx + 4; x++) {
+          const dy = cy - y
+          const dx = cx - x
+          const distanceSquared = dy * dy + dx * dx
+          if (
+            distanceSquared >= minRadiusSquared &&
+            distanceSquared <= maxRadiusSquared
+          ) {
+            const distanceToAttacker = distanceE(
+              args.positionX,
+              args.positionY,
+              x,
+              y
+            )
+            const distanceToEpicenter = distanceE(cx, cy, x, y)
+            const delay = 100 * distanceToAttacker + 40 * distanceToEpicenter
+            const [px, py] = transformEntityCoordinates(x, y, args.flip)
+
+            staticAnimation({
+              x: px,
+              y: py,
+              delay
+            })(args)
+          }
+        }
+      }
+    }
+  ],
+
+  ["TECTONIC_RAGE_FINAL"]: [
+    onTargetScale2,
+    onTarget({ ability: "ERUPTION", scale: 3, delay: 150 })
+  ],
+
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(
       (p) => p.positionX === positionX && p.positionY === positionY
