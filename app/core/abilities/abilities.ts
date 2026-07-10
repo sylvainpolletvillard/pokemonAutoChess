@@ -189,6 +189,7 @@ import { FutureSightStrategy } from "./future-sight"
 import { GearGrindStrategy } from "./gear-grind"
 import { GeomancyStrategy } from "./geomancy"
 import { GigatonHammerStrategy } from "./gigaton-hammer"
+import { GigavoltHavocStrategy } from "./gigavolt-havoc";
 import { GlacialLanceStrategy } from "./glacial-lance"
 import { GlaciateStrategy } from "./glaciate"
 import { GlaiveRushStrategy } from "./glaive-rush"
@@ -907,6 +908,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.GEAR_GRIND]: new GearGrindStrategy(),
   [Ability.GEOMANCY]: new GeomancyStrategy(),
   [Ability.GIGATON_HAMMER]: new GigatonHammerStrategy(),
+  [Ability.GIGAVOLT_HAVOC]: new GigavoltHavocStrategy(),
   [Ability.GLACIAL_LANCE]: new GlacialLanceStrategy(),
   [Ability.GLACIATE]: new GlaciateStrategy(),
   [Ability.GLAIVE_RUSH]: new GlaiveRushStrategy(),

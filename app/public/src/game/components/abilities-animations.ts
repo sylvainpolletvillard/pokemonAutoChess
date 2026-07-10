@@ -445,11 +445,12 @@ export function addAbilitySprite(
         ? [origin]
         : [0.5, 0.5])
   )
+  const apScaling = options.apScaling !== false ? 1 + ap / 200 : 1
   const scaleX = max(10)(
-    (Array.isArray(scale) ? scale[0] : (scale ?? 2)) * (1 + ap / 200)
+    (Array.isArray(scale) ? scale[0] : (scale ?? 2)) * apScaling
   )
   const scaleY = max(10)(
-    (Array.isArray(scale) ? scale[1] : (scale ?? 2)) * (1 + ap / 200)
+    (Array.isArray(scale) ? scale[1] : (scale ?? 2)) * apScaling
   )
   sprite.setScale(scaleX, scaleY)
   sprite.setDepth(depth ?? DEPTH.ABILITY)
@@ -3344,6 +3345,24 @@ export const AbilitiesAnimations: {
   ["TECTONIC_RAGE_FINAL"]: [
     onTargetScale2,
     onTarget({ ability: "ERUPTION", scale: 3, delay: 150 })
+  ],
+
+  [Ability.GIGAVOLT_HAVOC]: [
+    onTarget({ scale: 5, positionOffset: [-32, -32], apScaling: false }),
+    tweenAnimation({
+      ability: "GIGAVOLT_HAVOC_ZONE",
+      apScaling: false,
+      scale: 5,
+      startCoords: "target",
+      startPositionOffset: [-32, -32],
+      duration: 1900,
+      delay: 100,
+      alpha: 0,
+      tweenProps: {
+        alpha: [0, 1, 1, 1, 1, 1, 0],
+        interpolation: "bezier"
+      }
+    })
   ],
 
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {

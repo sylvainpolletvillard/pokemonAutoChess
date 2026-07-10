@@ -1778,7 +1778,8 @@
 		"FLING": "Fling",
 		"ALL_OUT_PUMMELING": "All-Out Pummeling",
 		"DEVASTATING_DRAKE": "Devastating Drake",
-		"TECTONIC_RAGE": "Tectonic Rage"
+		"TECTONIC_RAGE": "Tectonic Rage",
+		"GIGAVOLT_HAVOC": "Gigavolt Havoc"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2344,7 +2345,8 @@
 		"FLING": "When throwing the BALL, all enemies in between user and receiver take [30,30,30,100,SP]% of user's SPEED as SPECIAL. If not holding a BALL, jump in a corner of the board and get a new BALL instead",
 		"ALL_OUT_PUMMELING": "Gain [30,60,100,200] SHIELD and strikes a series of punches and kicks that deals 8x [30,40,50,100,SP] SPECIAL split between ADJACENT enemies, then finish by a devastating punch that deals [50,100,150,300,SP] SPECIAL and knocks back all enemies in a 3-wide column.",
 		"DEVASTATING_DRAKE": "A dragon spirit flies through up to 6 enemies, causing FLINCH for 2 seconds and [30,40,50,100,SP] SPECIAL, before exploding and dealing [50,100,150,300,SP] SPECIAL to ADJACENT enemies.",
-		"TECTONIC_RAGE": "Rocks emerge from the ground along a circular fault, dealing [30,40,50,100,SP] SPECIAL. The last rock in the center is larger and explodes in an eruption of magma, dealing [50,100,150,300,SP] SPECIAL and BURN for 5 seconds."
+		"TECTONIC_RAGE": "Rocks emerge from the ground along a circular fault, dealing [30,40,50,100,SP] SPECIAL + 30% damage on tiles with fully dug holes. The last rock in the center is larger and explodes in an eruption of magma, dealing [50,100,150,300,SP] SPECIAL and BURN for 5 seconds.",
+		"GIGAVOLT_HAVOC": "A powerful electric current hits in a 4x4 zone centered on the enemy team, dealing 5 times [15,25,40,80,SP] SPECIAL and burning 25 PP over 2 seconds. Enemies in the center of the zone take an additional [50,100,150,300,SP] SPECIAL burst."
 	},
 	"effect": {
 		"STAMINA": "Stamina",

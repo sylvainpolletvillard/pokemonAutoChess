@@ -4575,8 +4575,7 @@ export class Golem extends Pokemon {
   speDef = 12
   maxPP = 100
   range = 1
-  //skill = Ability.ROCK_SLIDE
-  skill = Ability.TECTONIC_RAGE
+  skill = Ability.ROCK_SLIDE
 }
 
 export class Totodile extends Pokemon {
