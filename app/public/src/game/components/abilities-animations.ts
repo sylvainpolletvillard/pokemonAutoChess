@@ -3365,6 +3365,44 @@ export const AbilitiesAnimations: {
     })
   ],
 
+  [Ability.BLACK_HOLE_ECLIPSE]: [
+    tweenAnimation({
+      startCoords: "target",
+      endCoords: "target",
+      ability: "portal",
+      scale: 0.1,
+      tweenProps: { scale: 3 },
+      duration: 1500,
+      textureKey: "portal",
+      animOptions: { repeat: 3 },
+      frame: "000"
+    }),
+    onTarget({ scale: 3, animOptions: { frameRate: 30 } })
+  ],
+
+  ["BLACK_HOLE_ECLIPSE_SUCK"]: [
+    onSprite((args) => {
+      args.casterSprite?.moveManager.setEnable(false)
+      const [x, y] = transformEntityCoordinates(
+        args.targetX,
+        args.targetY,
+        args.flip
+      )
+      const tweenConfig: Phaser.Types.Tweens.TweenBuilderConfig = {
+        targets: args.casterSprite,
+        x,
+        y,
+        duration: 1000,
+        ease: Phaser.Math.Easing.Bounce.Out,
+        onComplete: () => {
+          args.casterSprite?.moveManager.setEnable(true)
+        }
+      }
+
+      args.scene.tweens.add(tweenConfig)
+    })
+  ],
+
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(
       (p) => p.positionX === positionX && p.positionY === positionY

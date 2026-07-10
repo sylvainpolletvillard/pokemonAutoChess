@@ -47,6 +47,7 @@ import { BideStrategy } from "./bide"
 import { BiteStrategy } from "./bite"
 import { BitterBladeStrategy } from "./bitter-blade"
 import { BitterMaliceStrategy } from "./bitter-malice"
+import { BlackHoleEclipseStrategy } from "./black-hole-eclipse";
 import { BlastBurnStrategy } from "./blast-burn"
 import { BlazeKickStrategy } from "./blaze-kick"
 import { BleakwindStormStrategy } from "./bleakwind-storm"
@@ -764,6 +765,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.BITE]: new BiteStrategy(),
   [Ability.BITTER_BLADE]: new BitterBladeStrategy(),
   [Ability.BITTER_MALICE]: new BitterMaliceStrategy(),
+  [Ability.BLACK_HOLE_ECLIPSE]: new BlackHoleEclipseStrategy(),
   [Ability.BLAST_BURN]: new BlastBurnStrategy(),
   [Ability.BLAZE_KICK]: new BlazeKickStrategy(),
   [Ability.BLEAKWIND_STORM]: new BleakwindStormStrategy(),
