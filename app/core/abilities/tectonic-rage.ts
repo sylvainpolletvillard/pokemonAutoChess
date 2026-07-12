@@ -9,8 +9,8 @@ export class TectonicRageStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit, true)
-    const damageEdge = [30, 40, 50, 100][pokemon.stars - 1] ?? 100
-    const damageCenter = [50, 100, 150, 300][pokemon.stars - 1] ?? 300
+    const damageEdge = [30, 40, 50, 60, 100][pokemon.stars - 1] ?? 100
+    const damageCenter = [50, 100, 150, 200, 300][pokemon.stars - 1] ?? 300
     const opponentTeam =
       pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
     const epicenter = pokemon.state.getMostSurroundedCoordinateAvailablePlace(

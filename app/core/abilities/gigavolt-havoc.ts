@@ -13,10 +13,10 @@ export class GigavoltHavocStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
-    // A powerful electric current hits in a 4x4 zone centered on the enemy team, dealing 5 times [15,25,40,80,SP] SPECIAL and burning 25 PP over 2 seconds.
-    // Enemies in the center of the zone take an additional [50,100,150,300,SP] SPECIAL burst.
-    const damageZone = [15, 25, 40, 80][pokemon.stars - 1] ?? 80
-    const damageBurst = [50, 100, 150, 300][pokemon.stars - 1] ?? 300
+    // A powerful electric current hits in a 4x4 zone centered on the enemy team, dealing 5 times [15,25,60,100,SP] SPECIAL and burning 25 PP over 2 seconds.
+    // Enemies in the center of the zone take an additional [50,100,150,200,300,SP] SPECIAL burst.
+    const damageZone = [15, 25, 40, 60, 100][pokemon.stars - 1] ?? 100
+    const damageBurst = [50, 100, 150, 200, 300][pokemon.stars - 1] ?? 300
     const ppBurn = 5
 
     const enemies = board.cells.filter<PokemonEntity>(

@@ -40,6 +40,7 @@ import {
 } from "../../../../utils/orientation"
 import { pickRandomIn, randomBetween } from "../../../../utils/random"
 import { transformEntityCoordinates } from "../../pages/utils/utils"
+import { preference } from "../../preferences"
 import { DEPTH } from "../depths"
 import type { DebugScene } from "../scenes/debug-scene"
 import type GameScene from "../scenes/game-scene"
@@ -3401,6 +3402,17 @@ export const AbilitiesAnimations: {
 
       args.scene.tweens.add(tweenConfig)
     })
+  ],
+
+  ["LIGHT_THAT_BURNS_THE_SKY_CHARGE"]: onCaster({
+    scale: 3,
+    animOptions: { repeat: 1 }
+  }),
+  [Ability.LIGHT_THAT_BURNS_THE_SKY]: [
+    onCasterScale4,
+    (args) => {
+      if (!preference("disableCameraShake")) args.scene.cameras.main.flash(250)
+    }
   ],
 
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {

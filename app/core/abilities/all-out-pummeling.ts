@@ -13,7 +13,7 @@ export class AllOutPummelingStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
-    const shield = [30,60,100,200][pokemon.stars - 1] ?? 200
+    const shield = [30, 60, 100, 150, 200][pokemon.stars - 1] ?? 200
     pokemon.addShield(shield, pokemon, 0, false)
 
     // Strikes a series of punches and kicks that deals 8x [50,SP] SPECIAL split between the enemies in front of the user
@@ -27,7 +27,7 @@ export class AllOutPummelingStrategy extends AbilityStrategy {
             )
             .map((c) => c.value)
           const enemyHit = pickRandomIn(enemiesHit) ?? target
-          const damage = [30, 40, 50, 100][pokemon.stars - 1] ?? 100
+          const damage = [30, 40, 50, 60, 100][pokemon.stars - 1] ?? 100
           enemyHit.handleSpecialDamage(
             damage,
             board,
@@ -72,7 +72,7 @@ export class AllOutPummelingStrategy extends AbilityStrategy {
           ) {
             const entityOnCell = board.getEntityOnCell(x, y)
             if (entityOnCell && entityOnCell.team !== pokemon.team) {
-              const damage = [50, 100, 150, 300][pokemon.stars - 1] ?? 100
+              const damage = [50, 100, 150, 200, 300][pokemon.stars - 1] ?? 300
               entityOnCell.handleSpecialDamage(
                 damage,
                 board,
@@ -101,7 +101,7 @@ export class AllOutPummelingStrategy extends AbilityStrategy {
           }
         }
         pokemon.broadcastAbility({
-            ap: Math.round(pokemon.ap * (crit ? pokemon.critPower : 1))
+          ap: Math.round(pokemon.ap * (crit ? pokemon.critPower : 1))
         })
       }, 1000)
     )

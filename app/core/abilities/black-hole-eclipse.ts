@@ -13,7 +13,7 @@ export class BlackHoleEclipseStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
-    const damage = [40, 70, 100, 200][pokemon.stars - 1] ?? 200
+    const damage = [40, 70, 100, 130, 200][pokemon.stars - 1] ?? 200
 
     const enemies = board.cells.filter<PokemonEntity>(
       (v): v is PokemonEntity => v != null && v.team !== pokemon.team

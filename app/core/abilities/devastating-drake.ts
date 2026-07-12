@@ -12,8 +12,8 @@ export class DevastatingDrakeStrategy extends AbilityStrategy {
     super.process(pokemon, board, target, crit)
 
     const MAX_NB_ENEMIES_HIT = 6
-    const damageDrake = [30, 40, 50, 100][pokemon.stars - 1] ?? 100
-    const damageExplosion = [50, 100, 150, 300][pokemon.stars - 1] ?? 300
+    const damageDrake = [30, 40, 50, 60, 100][pokemon.stars - 1] ?? 100
+    const damageExplosion = [50, 100, 150, 200, 300][pokemon.stars - 1] ?? 300
     const flinchDuration = 2000
 
     let orientation = pokemon.orientation

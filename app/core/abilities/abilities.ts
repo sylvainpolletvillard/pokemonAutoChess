@@ -290,6 +290,7 @@ import { LeafBladeStrategy } from "./leaf-blade"
 import { LeechLifeStrategy } from "./leech-life"
 import { LeechSeedStrategy } from "./leech-seed"
 import { LickStrategy } from "./lick"
+import { LightThatBurnsTheSkyStrategy } from "./light-that-burns-the-sky";
 import { LingeringAromaStrategy } from "./lingering-aroma"
 import { LinkCableStrategy } from "./link-cable"
 import { LiquidationStrategy } from "./liquidation"
@@ -1009,6 +1010,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.LEECH_LIFE]: new LeechLifeStrategy(),
   [Ability.LEECH_SEED]: new LeechSeedStrategy(),
   [Ability.LICK]: new LickStrategy(),
+  [Ability.LIGHT_THAT_BURNS_THE_SKY]: new LightThatBurnsTheSkyStrategy(),
   [Ability.LINGERING_AROMA]: new LingeringAromaStrategy(),
   [Ability.LINK_CABLE]: new LinkCableStrategy(),
   [Ability.LIQUIDATION]: new LiquidationStrategy(),
