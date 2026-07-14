@@ -12,6 +12,7 @@ import { AbilityStrategy } from "./ability-strategy"
 import { AbsorbStrategy } from "./absorb"
 import { AccelerockStrategy } from "./accelerock"
 import { AcidArmorStrategy } from "./acid-armor"
+import { AcidDownpourStrategy } from "./acid-donwpour"
 import { AcidSprayStrategy } from "./acid-spray"
 import { AcrobaticsStrategy } from "./acrobatics"
 import { AerialAceStrategy } from "./aerial-ace"
@@ -47,7 +48,7 @@ import { BideStrategy } from "./bide"
 import { BiteStrategy } from "./bite"
 import { BitterBladeStrategy } from "./bitter-blade"
 import { BitterMaliceStrategy } from "./bitter-malice"
-import { BlackHoleEclipseStrategy } from "./black-hole-eclipse";
+import { BlackHoleEclipseStrategy } from "./black-hole-eclipse"
 import { BlastBurnStrategy } from "./blast-burn"
 import { BlazeKickStrategy } from "./blaze-kick"
 import { BleakwindStormStrategy } from "./bleakwind-storm"
@@ -190,7 +191,7 @@ import { FutureSightStrategy } from "./future-sight"
 import { GearGrindStrategy } from "./gear-grind"
 import { GeomancyStrategy } from "./geomancy"
 import { GigatonHammerStrategy } from "./gigaton-hammer"
-import { GigavoltHavocStrategy } from "./gigavolt-havoc";
+import { GigavoltHavocStrategy } from "./gigavolt-havoc"
 import { GlacialLanceStrategy } from "./glacial-lance"
 import { GlaciateStrategy } from "./glaciate"
 import { GlaiveRushStrategy } from "./glaive-rush"
@@ -290,7 +291,7 @@ import { LeafBladeStrategy } from "./leaf-blade"
 import { LeechLifeStrategy } from "./leech-life"
 import { LeechSeedStrategy } from "./leech-seed"
 import { LickStrategy } from "./lick"
-import { LightThatBurnsTheSkyStrategy } from "./light-that-burns-the-sky";
+import { LightThatBurnsTheSkyStrategy } from "./light-that-burns-the-sky"
 import { LingeringAromaStrategy } from "./lingering-aroma"
 import { LinkCableStrategy } from "./link-cable"
 import { LiquidationStrategy } from "./liquidation"
@@ -730,6 +731,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.ABSORB]: new AbsorbStrategy(),
   [Ability.ACCELEROCK]: new AccelerockStrategy(),
   [Ability.ACID_ARMOR]: new AcidArmorStrategy(),
+  [Ability.ACID_DOWNPOUR]: new AcidDownpourStrategy(),
   [Ability.ACID_SPRAY]: new AcidSprayStrategy(),
   [Ability.ACROBATICS]: new AcrobaticsStrategy(),
   [Ability.AERIAL_ACE]: new AerialAceStrategy(),

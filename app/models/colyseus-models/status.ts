@@ -574,7 +574,8 @@ export default class Status extends Schema implements IStatus {
   triggerPoison(
     duration: number,
     pkm: PokemonEntity,
-    origin: PokemonEntity | undefined
+    origin: PokemonEntity | undefined,
+    nbStacks = 1
   ) {
     if (!pkm.effects.has(EffectEnum.IMMUNITY_POISON) && !this.runeProtect) {
       let maxStacks = 3
@@ -587,7 +588,7 @@ export default class Status extends Schema implements IStatus {
           maxStacks = 5
         }
       }
-      this.poisonStacks = max(maxStacks)(this.poisonStacks + 1)
+      this.poisonStacks = max(maxStacks)(this.poisonStacks + nbStacks)
 
       duration = this.applyStatusDurationReductions(duration, pkm)
 

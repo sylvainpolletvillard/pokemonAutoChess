@@ -1781,7 +1781,8 @@
 		"TECTONIC_RAGE": "Tectonic Rage",
 		"GIGAVOLT_HAVOC": "Gigavolt Havoc",
 		"BLACK_HOLE_ECLIPSE": "Black Hole Eclipse",
-		"LIGHT_THAT_BURNS_THE_SKY": "Light That Burns the Sky"
+		"LIGHT_THAT_BURNS_THE_SKY": "Light That Burns the Sky",
+		"ACID_DOWNPOUR": "Acid Downpour"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2350,7 +2351,8 @@
 		"TECTONIC_RAGE": "Rocks emerge from the ground along a circular fault, dealing [30,40,50,60,100,SP] SPECIAL + 30% damage on tiles with fully dug holes. The last rock in the center is larger and explodes in an eruption of magma, dealing [50,100,150,200,300,SP] SPECIAL and BURN for 5 seconds.",
 		"GIGAVOLT_HAVOC": "A powerful electric current hits in a 4x4 zone centered on the enemy team, dealing 5 times [15,25,40,60,100,SP] SPECIAL and burning 25 PP over 2 seconds. Enemies in the center of the zone take an additional [50,100,150,200,300,SP] SPECIAL burst.",
 		"BLACK_HOLE_ECLIPSE": "A black hole centered on the enemy team attracts all enemies in a 2 range radius, preventing them to act for 1 second before exploding, dealing [40,70,100,130,200,SP] SPECIAL and projecting all enemies around.",
-		"LIGHT_THAT_BURNS_THE_SKY": "Gets PROTECT for 1 second while concentrating ambient light energy, then projects an intense light that deals [50,100,150,200,300,SP] SPECIAL and BURN for 5 seconds enemies within a 2-tile radius. The other enemies are BLINDED for 5 seconds."
+		"LIGHT_THAT_BURNS_THE_SKY": "Gets PROTECT for 1 second while concentrating ambient light energy, then projects an intense light that deals [50,100,150,200,300,SP] SPECIAL and BURN for 5 seconds enemies within a 2-tile radius. The other enemies are BLINDED for 5 seconds.",
+		"ACID_DOWNPOUR": "An acid rain falls across the entire board, [40,SP] drops onto random tiles. Each drop apply max stacks of POISON, inflicts 30 SPECIAL and reduce target SPEED by 5."
 	},
 	"effect": {
 		"STAMINA": "Stamina",
@@ -2923,7 +2925,38 @@
 		"TERRA_CYMBAL": "Terra Cymbal",
 		"SOOTHE_BELL": "Soothe Bell",
 		"BALL": "Ball",
-		"Z_RING": "Z-Ring"
+		"Z_RING": "Z-Ring",
+		"ALUMINIUM_Z": "Aluminium Z",
+		"ANTHROPIUM_Z": "Anthropium Z",
+		"AQUARIUM_Z": "Aquarium Z",
+		"BUGINIUM_Z": "Bugnium Z",
+		"COLOSSIUM_Z": "Colossium Z",
+		"CONCERTIUM_Z": "Concertium Z",
+		"DARKIUM_Z": "Darkium Z",
+		"DELICIUM_Z": "Delicium Z",
+		"DIAPERIUM_Z": "Diaperium Z",
+		"DRAGONIUM_Z": "Dragonium Z",
+		"ELECTRIUM_Z": "Electrium Z",
+		"FAIRIUM_Z": "Fairium Z",
+		"FERALIUM_Z": "Feralium Z",
+		"FIELDIUM_Z": "Fieldium Z",
+		"FIGHTIUM_Z": "Fightium Z",
+		"FIRIUM_Z": "Firium Z",
+		"FLYNIUM_Z": "Flynium Z",
+		"GHOSTIUM_Z": "Ghostium Z",
+		"GRASSIUM_Z": "Grassium Z",
+		"GROUNDIUM_Z": "Groundium Z",
+		"ICIUM_Z": "Icium Z",
+		"NORMALIUM_Z": "Normalium Z",
+		"PETALIUM_Z": "Petalium Z",
+		"PETROLIUM_Z": "Petrolium Z",
+		"PHOTONIUM_Z": "Photonium Z",
+		"POISONIUM_Z": "Poisonium Z",
+		"PSYCHIUM_Z": "Psychium Z",
+		"ROCKIUM_Z": "Rockium Z",
+		"SLIMIUM_Z": "Slimium Z",
+		"STEELIUM_Z": "Steelium Z",
+		"WATERIUM_Z": "Waterium Z"
 	},
 	"item_description": {
 		"FOSSIL_STONE": "A fossil of a Pokémon that lived in prehistoric times",

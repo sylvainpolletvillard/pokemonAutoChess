@@ -1,3 +1,4 @@
+import { argon2Sync } from "crypto"
 import Phaser, { GameObjects } from "phaser"
 import {
   BOARD_HEIGHT,
@@ -3413,6 +3414,21 @@ export const AbilitiesAnimations: {
     (args) => {
       if (!preference("disableCameraShake")) args.scene.cameras.main.flash(250)
     }
+  ],
+
+  [Ability.ACID_DOWNPOUR]: [
+    projectile({
+      ability: "ACID_DOWNPOUR_DROP",
+      startCoords: "target",
+      startPositionOffset: [0, -512],
+      scale: 1
+    }),
+    (args) =>
+      onTarget({
+        scale: 1,
+        delay: 500 + (args.delay ?? 0),
+        depth: DEPTH.ABILITY_BELOW_POKEMON
+      })(args)
   ],
 
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {

@@ -20,7 +20,8 @@ import {
   Tools,
   TownItems,
   Wands,
-  WeatherRocks
+  WeatherRocks,
+  ZCrystals
 } from "../../../../../types/enum/Item"
 import { Synergy } from "../../../../../types/enum/Synergy"
 import { isIn } from "../../../../../utils/array"
@@ -365,6 +366,14 @@ export default function WikiItems() {
         <p>{addIconsToDescription(t("wiki.items.fire_shard_description"))}</p>
         <ul>
           <ItemList items={[Item.FIRE_SHARD]} />
+        </ul>
+      </article>
+
+      <article>
+        <h3>Z Crystals</h3>
+        <p>For Z Moves</p>
+        <ul>
+          <ItemList items={ZCrystals} />
         </ul>
       </article>
 
