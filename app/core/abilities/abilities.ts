@@ -190,6 +190,7 @@ import { FusionBoltStrategy } from "./fusion-bolt"
 import { FutureSightStrategy } from "./future-sight"
 import { GearGrindStrategy } from "./gear-grind"
 import { GeomancyStrategy } from "./geomancy"
+import { GiantRafflesiaStrategy } from "./giant-rafflesia"
 import { GigatonHammerStrategy } from "./gigaton-hammer"
 import { GigavoltHavocStrategy } from "./gigavolt-havoc"
 import { GlacialLanceStrategy } from "./glacial-lance"
@@ -912,6 +913,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.FUTURE_SIGHT]: new FutureSightStrategy(),
   [Ability.GEAR_GRIND]: new GearGrindStrategy(),
   [Ability.GEOMANCY]: new GeomancyStrategy(),
+  [Ability.GIANT_RAFFLESIA]: new GiantRafflesiaStrategy(),
   [Ability.GIGATON_HAMMER]: new GigatonHammerStrategy(),
   [Ability.GIGAVOLT_HAVOC]: new GigavoltHavocStrategy(),
   [Ability.GLACIAL_LANCE]: new GlacialLanceStrategy(),

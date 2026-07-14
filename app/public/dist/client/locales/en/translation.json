@@ -1782,7 +1782,8 @@
 		"GIGAVOLT_HAVOC": "Gigavolt Havoc",
 		"BLACK_HOLE_ECLIPSE": "Black Hole Eclipse",
 		"LIGHT_THAT_BURNS_THE_SKY": "Light That Burns the Sky",
-		"ACID_DOWNPOUR": "Acid Downpour"
+		"ACID_DOWNPOUR": "Acid Downpour",
+		"GIANT_RAFFLESIA": "Giant Rafflesia"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2352,7 +2353,8 @@
 		"GIGAVOLT_HAVOC": "A powerful electric current hits in a 4x4 zone centered on the enemy team, dealing 5 times [15,25,40,60,100,SP] SPECIAL and burning 25 PP over 2 seconds. Enemies in the center of the zone take an additional [50,100,150,200,300,SP] SPECIAL burst.",
 		"BLACK_HOLE_ECLIPSE": "A black hole centered on the enemy team attracts all enemies in a 2 range radius, preventing them to act for 1 second before exploding, dealing [40,70,100,130,200,SP] SPECIAL and projecting all enemies around.",
 		"LIGHT_THAT_BURNS_THE_SKY": "Gets PROTECT for 1 second while concentrating ambient light energy, then projects an intense light that deals [50,100,150,200,300,SP] SPECIAL and BURN for 5 seconds enemies within a 2-tile radius. The other enemies are BLINDED for 5 seconds.",
-		"ACID_DOWNPOUR": "An acid rain falls across the entire board, [40,SP] drops onto random tiles. Each drop apply max stacks of POISON, inflicts 30 SPECIAL and reduce target SPEED by 5."
+		"ACID_DOWNPOUR": "An acid rain falls across the entire board, [20,30,45,60,75,SP] drops onto random tiles. Each drop apply max stacks of POISON, inflicts 30 SPECIAL and reduce target SPEED by 5.",
+		"GIANT_RAFFLESIA": "Spawn a giant carnivorous plant in the middle of the enemy team. It hits 5 times all ADJACENT enemies for [15,25,40,60,100,SP] SPECIAL and throws a projectile to a random enemy that deals [20,40,80,120,180,SP] SPECIAL and PARALYSIS for 5 seconds."
 	},
 	"effect": {
 		"STAMINA": "Stamina",

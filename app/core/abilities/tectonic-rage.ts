@@ -1,3 +1,4 @@
+import { BOARD_WIDTH } from "../../config"
 import { AttackType, Team } from "../../types/enum/Game"
 import { distanceC, distanceM } from "../../utils/distance"
 import type { Board } from "../board"
@@ -17,6 +18,8 @@ export class TectonicRageStrategy extends AbilityStrategy {
       opponentTeam,
       board
     ) ?? { x: pokemon.targetX, y: pokemon.targetY }
+
+    const boardPlayer = pokemon.simulation.bluePlayer
 
     pokemon.broadcastAbility({
       skill: "TECTONIC_RAGE",
@@ -42,8 +45,12 @@ export class TectonicRageStrategy extends AbilityStrategy {
       if (cell.distanceToEpicenter >= 2) {
         // edge damage
         if (cell.value && cell.value.team !== pokemon.team) {
+          const index = cell.y * BOARD_WIDTH + cell.x
+          const fullyDugHole =
+            boardPlayer && boardPlayer.groundHoles[index] === 5
+
           cell.value.handleSpecialDamage(
-            damageEdge,
+            Math.round(damageEdge * (fullyDugHole ? 1.3 : 1)),
             board,
             AttackType.SPECIAL,
             pokemon,

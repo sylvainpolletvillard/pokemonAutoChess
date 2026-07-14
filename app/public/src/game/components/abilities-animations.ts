@@ -1,4 +1,3 @@
-import { argon2Sync } from "crypto"
 import Phaser, { GameObjects } from "phaser"
 import {
   BOARD_HEIGHT,
@@ -726,6 +725,64 @@ const projectile: AbilityAnimationMaker<
         ...(options.tweenProps ?? {})
       }
     })(args)
+  }
+
+const parabolicProjectile: AbilityAnimationMaker<
+  TweenAnimationMakerOptions & {
+    peakHeight?: number
+  }
+> =
+  (options = {}) =>
+  (args) => {
+    const { scene, ap, positionX, positionY, targetX, targetY, flip } = args
+    let [startX, startY] = transformEntityCoordinates(
+      positionX,
+      positionY,
+      flip
+    )
+    startX += options.startPositionOffset?.[0] ?? 0
+    startY += options.startPositionOffset?.[1] ?? 0
+
+    let [endX, endY] = transformEntityCoordinates(targetX, targetY, flip)
+    endX += options.endPositionOffset?.[0] ?? 0
+    endY += options.endPositionOffset?.[1] ?? 0
+
+    const projectile = addAbilitySprite(
+      scene,
+      options.ability ?? args.ability,
+      ap,
+      [startX, startY],
+      {
+        destroyOnComplete: false,
+        ...options
+      }
+    )
+    if (!projectile) return null
+
+    const peakHeight = 150
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: options.duration || 1000,
+      ease: options.ease || "linear",
+      onUpdate: (tween) => {
+        const t = tween.getValue()! // Progress from 0 to 1
+
+        // Linear interpolation for X
+        projectile.x = startX + (endX - startX) * t
+
+        // Parabolic formula for Y: y = startY + displacement + arc height
+        // The term (4 * peakHeight * t * (1 - t)) creates a perfect parabola peak at t = 0.5
+        const heightOffset = 4 * peakHeight * t * (1 - t)
+        projectile.y =
+          Phaser.Math.Interpolation.Linear([startY, endY], t) - heightOffset
+      },
+      onComplete: () => {
+        if (options.destroyOnTweenComplete !== false) projectile?.destroy()
+        if (options.hitAnim) options.hitAnim(args)
+      },
+      ...(options.tweenProps ?? {})
+    })
   }
 
 const skyfall: AbilityAnimationMaker<TweenAnimationMakerOptions> =
@@ -3429,6 +3486,33 @@ export const AbilitiesAnimations: {
         delay: 500 + (args.delay ?? 0),
         depth: DEPTH.ABILITY_BELOW_POKEMON
       })(args)
+  ],
+
+  [Ability.GIANT_RAFFLESIA]: [
+    onCaster({
+      scale: 3,
+      depth: DEPTH.ABILITY_GROUND_LEVEL
+    }),
+    onCaster({
+      scale: 3,
+      ability: "GIANT_RAFFLESIA_DIG",
+      positionOffset: [-4, 20],
+      depth: DEPTH.ABILITY_GROUND_LEVEL
+    })
+  ],
+
+  ["GIANT_RAFFLESIA_PROJECTILE"]: [
+    parabolicProjectile({
+      startPositionOffset: [0, -20],
+      animOptions: { repeat: -1 },
+      scale: 1,
+      peakHeight: 150,
+      hitAnim: onTarget({
+        ability: "GIANT_RAFFLESIA_PROJECTILE_HIT",
+        scale: 1.5,
+        depth: DEPTH.ABILITY_GROUND_LEVEL
+      })
+    })
   ],
 
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
