@@ -501,6 +501,7 @@ import { SunsteelStrikeStrategy } from "./sunsteel-strike"
 import { SuperFangStrategy } from "./super-fang"
 import { SuperHeatStrategy } from "./super-heat"
 import { SupercellSlamStrategy } from "./supercell-slam"
+import { SupersonicSkystrikeStrategy } from "./supersonic-skystrike"
 import { SurfStrategy } from "./surf"
 import { SurgingStrikesStrategy } from "./surging-strikes"
 import { SwaggerStrategy } from "./swagger"
@@ -1226,6 +1227,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.SUPER_FANG]: new SuperFangStrategy(),
   [Ability.SUPER_HEAT]: new SuperHeatStrategy(),
   [Ability.SUPERCELL_SLAM]: new SupercellSlamStrategy(),
+  [Ability.SUPERSONIC_SKYSTRIKE]: new SupersonicSkystrikeStrategy(),
   [Ability.SURF]: new SurfStrategy(),
   [Ability.SURGING_STRIKES]: new SurgingStrikesStrategy(),
   [Ability.SWAGGER]: new SwaggerStrategy(),

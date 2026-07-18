@@ -1783,7 +1783,8 @@
 		"BLACK_HOLE_ECLIPSE": "Black Hole Eclipse",
 		"LIGHT_THAT_BURNS_THE_SKY": "Light That Burns the Sky",
 		"ACID_DOWNPOUR": "Acid Downpour",
-		"GIANT_RAFFLESIA": "Giant Rafflesia"
+		"GIANT_RAFFLESIA": "Giant Rafflesia",
+		"SUPERSONIC_SKYSTRIKE": "Supersonic Skystrike"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2354,7 +2355,8 @@
 		"BLACK_HOLE_ECLIPSE": "A black hole centered on the enemy team attracts all enemies in a 2 range radius, preventing them to act for 1 second before exploding, dealing [40,70,100,130,200,SP] SPECIAL and projecting all enemies around.",
 		"LIGHT_THAT_BURNS_THE_SKY": "Gets PROTECT for 1 second while concentrating ambient light energy, then projects an intense light that deals [50,100,150,200,300,SP] SPECIAL and BURN for 5 seconds enemies within a 2-tile radius. The other enemies are BLINDED for 5 seconds.",
 		"ACID_DOWNPOUR": "An acid rain falls across the entire board, [20,30,45,60,75,SP] drops onto random tiles. Each drop apply max stacks of POISON, inflicts 30 SPECIAL and reduce target SPEED by 5.",
-		"GIANT_RAFFLESIA": "Spawn a giant carnivorous plant in the middle of the enemy team. It hits 5 times all ADJACENT enemies for [15,25,40,60,100,SP] SPECIAL and throws a projectile to a random enemy that deals [20,40,80,120,180,SP] SPECIAL and PARALYSIS for 5 seconds."
+		"GIANT_RAFFLESIA": "Spawn a giant carnivorous plant in the middle of the enemy team. It hits 5 times all ADJACENT enemies for [15,25,40,60,100,SP] SPECIAL and throws a projectile to a random enemy that deals [20,40,80,120,180,SP] SPECIAL and PARALYSIS for 5 seconds.",
+		"SUPERSONIC_SKYSTRIKE": "Dives down in the middle of the enemy team from the sky, dealing [50,100,150,200,300,SP] SPECIAL in a 4-tile radius, damage decreased by 20% for each tile of distance. The holder gets PROTECT for 2 seconds."
 	},
 	"effect": {
 		"STAMINA": "Stamina",

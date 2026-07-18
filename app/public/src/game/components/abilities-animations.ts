@@ -559,7 +559,7 @@ type AbilityCoordinates = [number, number, boolean?] | "target" | "caster"
 type TweenAnimationMakerOptions = {
   duration?: number
   ease?: string | ((v: number) => number)
-  hitAnim?: AbilityAnimation
+  hitAnim?: AbilityAnimation | AbilityAnimation[]
   tweenProps?: Record<string, any>
   startCoords?: AbilityCoordinates
   endCoords?: AbilityCoordinates
@@ -632,7 +632,11 @@ const tweenAnimation: AbilityAnimationMaker<TweenAnimationMakerOptions> =
         ease: options.ease || "linear",
         onComplete: () => {
           if (options.destroyOnTweenComplete !== false) sprite?.destroy()
-          if (options.hitAnim) options.hitAnim(args)
+          if (options.hitAnim) {
+            if (Array.isArray(options.hitAnim)) {
+              options.hitAnim.forEach((anim) => anim(args))
+            } else options.hitAnim(args)
+          }
         },
         ...(options.tweenProps ?? {})
       }
@@ -862,7 +866,7 @@ const shakeCamera: AbilityAnimationMaker<{
 }> =
   (options) =>
   ({ scene }) =>
-    scene.shakeCamera(options)
+    setTimeout(() => scene.shakeCamera(options), options.delay ?? 0)
 
 const poppingIcon: AbilityAnimationMaker<
   TweenAnimationMakerOptions & { maxScale: number }
@@ -1979,6 +1983,23 @@ export const AbilitiesAnimations: {
     onTarget({ ability: Ability.HEAVY_SLAM, scale: 1, delay: 300 })
   ],
   [Ability.SUNSTEEL_STRIKE]: skyfall({ hitAnim: shakeCamera({}), scale: 1 }),
+  [Ability.SUPERSONIC_SKYSTRIKE]: skyfall({
+    ability: "FLYING_SKYDIVE",
+    scale: 3,
+    hitAnim: [
+      shakeCamera({ duration: 500, intensity: 0.02 }),
+      onTarget({
+        ability: "SUPERSONIC_SKYSTRIKE",
+        apScaling: false,
+        scale: 8
+      }),
+      onTarget({
+        ability: "SUPERSONIC_SKYSTRIKE_LANDING",
+        apScaling: false,
+        scale: 8
+      })
+    ]
+  }),
   ["COMET_CRASH"]: skyfall({
     ability: Ability.SUNSTEEL_STRIKE,
     scale: 0.5,
