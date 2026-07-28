@@ -5,7 +5,7 @@ import { DelayedCommand } from "../simulation-command"
 import { AbilityStrategy } from "./ability-strategy"
 
 export class LightThatBurnsTheSkyStrategy extends AbilityStrategy {
-  canCritByDefault = true
+  requiresTarget = false
   process(
     pokemon: PokemonEntity,
     board: Board,

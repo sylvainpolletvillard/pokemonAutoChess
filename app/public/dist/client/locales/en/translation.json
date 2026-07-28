@@ -1784,7 +1784,8 @@
 		"LIGHT_THAT_BURNS_THE_SKY": "Light That Burns the Sky",
 		"ACID_DOWNPOUR": "Acid Downpour",
 		"GIANT_RAFFLESIA": "Giant Rafflesia",
-		"SUPERSONIC_SKYSTRIKE": "Supersonic Skystrike"
+		"SUPERSONIC_SKYSTRIKE": "Supersonic Skystrike",
+		"FOOD_FIGHT": "Food Fight"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2356,7 +2357,8 @@
 		"LIGHT_THAT_BURNS_THE_SKY": "Gets PROTECT for 1 second while concentrating ambient light energy, then projects an intense light that deals [50,100,150,200,300,SP] SPECIAL and BURN for 5 seconds enemies within a 2-tile radius. The other enemies are BLINDED for 5 seconds.",
 		"ACID_DOWNPOUR": "An acid rain falls across the entire board, [20,30,45,60,75,SP] drops onto random tiles. Each drop apply max stacks of POISON, inflicts 30 SPECIAL and reduce target SPEED by 5.",
 		"GIANT_RAFFLESIA": "Spawn a giant carnivorous plant in the middle of the enemy team. It hits 5 times all ADJACENT enemies for [15,25,40,60,100,SP] SPECIAL and throws a projectile to a random enemy that deals [20,40,80,120,180,SP] SPECIAL and PARALYSIS for 5 seconds.",
-		"SUPERSONIC_SKYSTRIKE": "Dives down in the middle of the enemy team from the sky, dealing [50,100,150,200,300,SP] SPECIAL in a 4-tile radius, damage decreased by 20% for each tile of distance. The holder gets PROTECT for 2 seconds."
+		"SUPERSONIC_SKYSTRIKE": "Dives down in the middle of the enemy team from the sky, dealing [50,100,150,200,300,SP] SPECIAL in a 4-tile radius, damage decreased by 20% for each tile of distance. The holder gets PROTECT for 2 seconds.",
+		"FOOD_FIGHT": "Throw [6,8,10,16,24,SP] random dishes in the next 3 seconds to random allies and enemies. Allies hit heal 50 HP and receive the dish effect while enemies take 50 SPECIAL."
 	},
 	"effect": {
 		"STAMINA": "Stamina",

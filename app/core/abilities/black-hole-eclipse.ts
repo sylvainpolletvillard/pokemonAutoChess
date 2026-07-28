@@ -6,6 +6,7 @@ import { DelayedCommand } from "../simulation-command"
 import { AbilityStrategy } from "./ability-strategy"
 
 export class BlackHoleEclipseStrategy extends AbilityStrategy {
+  requiresTarget = false
   process(
     pokemon: PokemonEntity,
     board: Board,

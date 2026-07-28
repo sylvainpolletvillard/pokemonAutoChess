@@ -179,6 +179,7 @@ import { FlyStrategy } from "./fly"
 import { FlyingPressStrategy } from "./flying-press"
 import { FocusPunchStrategy } from "./focus-punch"
 import { FollowMeStrategy } from "./follow-me"
+import { FoodFightStrategy } from "./food-fight"
 import { ForcePalmStrategy } from "./force-palm"
 import { ForecastStrategy } from "./forecast"
 import { FoulPlayStrategy } from "./foul-play"
@@ -903,6 +904,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.FLYING_PRESS]: new FlyingPressStrategy(),
   [Ability.FOCUS_PUNCH]: new FocusPunchStrategy(),
   [Ability.FOLLOW_ME]: new FollowMeStrategy(),
+  [Ability.FOOD_FIGHT]: new FoodFightStrategy(),
   [Ability.FORCE_PALM]: new ForcePalmStrategy(),
   [Ability.FORECAST]: new ForecastStrategy(),
   [Ability.FOUL_PLAY]: new FoulPlayStrategy(),

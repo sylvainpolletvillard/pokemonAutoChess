@@ -6,7 +6,7 @@ import {
   CELL_WIDTH
 } from "../../../../config"
 import PokemonFactory from "../../../../models/pokemon-factory"
-import type { IPokemonEntity } from "../../../../types"
+import { Dishes, type IPokemonEntity } from "../../../../types"
 import {
   type AbilityAnimation,
   type AbilityAnimationArgs,
@@ -3535,6 +3535,25 @@ export const AbilitiesAnimations: {
       })
     })
   ],
+
+  [Ability.FOOD_FIGHT]: (args) => {
+    const dish = Dishes[args.delay ?? 0]
+    args.ability = undefined
+    projectile({
+      ability: undefined,
+      textureKey: "item",
+      frame: `${dish}.png`,
+      scale: 0.35,
+      tweenProps: { angle: 480 },
+      duration: 500,
+      hitAnim: onTarget({
+        ability: "WILD/hit",
+        scale: 3,
+        textureKey: "attacks",
+        tint: 0xffff80
+      })
+    })(args)
+  },
 
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(
