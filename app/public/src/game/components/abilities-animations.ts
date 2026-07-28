@@ -793,7 +793,11 @@ const parabolicProjectile: AbilityAnimationMaker<
       },
       onComplete: () => {
         if (options.destroyOnTweenComplete !== false) projectile?.destroy()
-        if (options.hitAnim) options.hitAnim(args)
+        if (options.hitAnim) {
+          if (Array.isArray(options.hitAnim)) {
+            options.hitAnim.forEach((anim) => anim(args))
+          } else options.hitAnim(args)
+        }
       },
       ...(options.tweenProps ?? {})
     })
@@ -3333,27 +3337,21 @@ export const AbilitiesAnimations: {
   },
 
   [Ability.DEVASTATING_DRAKE]: [
-    (args) => {
+    onSprite(({ casterSprite, ...args }) => {
       const MAX_NB_ENEMIES_HIT = 6
       let orientation = args.orientation
       let lastX = args.positionX,
         lastY = args.positionY
 
-      const casterSprite = args.pokemonsOnBoard.find(
-        (pkmUI) =>
-          pkmUI.positionX === args.positionX &&
-          pkmUI.positionY === args.positionY
-      )
+      if (!casterSprite) return
 
       const points: [number, number][] = []
-      if (casterSprite) {
-        points.push([casterSprite.x, casterSprite.y])
-      }
+      points.push([casterSprite.x, casterSprite.y])
 
       const enemies = args.pokemonsOnBoard.filter(
         (p) =>
           (p.pokemon && !isEntity(p.pokemon)) ||
-          p.pokemon.team !== (casterSprite?.pokemon as IPokemonEntity).team
+          p.pokemon.team !== (casterSprite.pokemon as IPokemonEntity).team
       )
       const remainingTargets = new Set(enemies)
 
@@ -3419,7 +3417,7 @@ export const AbilitiesAnimations: {
           scale: 4
         })
       })(args)
-    }
+    })
   ],
 
   [Ability.TECTONIC_RAGE]: [
@@ -3574,7 +3572,7 @@ export const AbilitiesAnimations: {
 
   [Ability.FOOD_FIGHT]: (args) => {
     const dish = Dishes[args.delay ?? 0]
-    args.ability = undefined
+    args.ability = ""
     projectile({
       ability: undefined,
       textureKey: "item",
