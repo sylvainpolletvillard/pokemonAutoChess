@@ -403,6 +403,7 @@ import { ReflectStrategy } from "./reflect"
 import { RelicSongStrategy } from "./relic-song"
 import { RetaliateStrategy } from "./retaliate"
 import { ReturnStrategy } from "./return"
+import { RevelationDanceStrategy } from "./revelation-dance";
 import { RoarStrategy } from "./roar"
 import { RoarOfTimeStrategy } from "./roar-of-time"
 import { RockArtilleryStrategy } from "./rock-artillery"
@@ -633,7 +634,8 @@ export class KnowledgeThiefStrategy extends AbilityStrategy {
     } else super.process(pokemon, board, target, crit)
     if (pokemon.player && !pokemon.isGhostOpponent) {
       const xpGain = [1, 1, 1, 2, 3][pokemon.stars - 1] ?? 3
-      pokemon.player.addExperience(xpGain)
+      const xpActuallyGained = pokemon.player.addExperience(xpGain)
+      pokemon.addStack(xpActuallyGained)
     }
   }
 }
@@ -1129,6 +1131,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.RELIC_SONG]: new RelicSongStrategy(),
   [Ability.RETALIATE]: new RetaliateStrategy(),
   [Ability.RETURN]: new ReturnStrategy(),
+  [Ability.REVELATION_DANCE]: new RevelationDanceStrategy(),
   [Ability.ROAR]: new RoarStrategy(),
   [Ability.ROAR_OF_TIME]: new RoarOfTimeStrategy(),
   [Ability.ROCK_ARTILLERY]: new RockArtilleryStrategy(),
