@@ -806,8 +806,8 @@ const parabolicProjectile: AbilityAnimationMaker<
 const skyfall: AbilityAnimationMaker<TweenAnimationMakerOptions> =
   (options) => (args) => {
     return projectile({
-      ...options,
-      startCoords: [args.targetX, 9, false]
+      startCoords: [args.targetX, 9, false],
+      ...options
     })(args)
   }
 
@@ -1851,7 +1851,7 @@ export const AbilitiesAnimations: {
     scale: 1,
     tint: 0xffc0c0
   }),
-  ["FOCUS_PUNCH_EJECT"]: onSprite(
+  ["BOARD_EJECT_ORIENTED"]: onSprite(
     ({ targetSprite, orientation, positionX, positionY, scene, flip }) => {
       const [dx, dy] = OrientationVector[orientation]
       const [x, y] = transformEntityCoordinates(
@@ -1868,6 +1868,21 @@ export const AbilitiesAnimations: {
       })
     }
   ),
+  ["BOARD_EJECT"]: onSprite(({ targetSprite, casterSprite, scene }) => {
+    if (!targetSprite || !casterSprite) return
+    const angle = Math.atan2(
+      targetSprite.y - casterSprite.y,
+      targetSprite.x - casterSprite.x
+    )
+    const dx = Math.cos(angle)
+    const dy = Math.sin(angle)
+    scene.tweens.add({
+      targets: targetSprite,
+      duration: 1000,
+      x: casterSprite.x + dx * 1000,
+      y: casterSprite.y + dy * 1000
+    })
+  }),
   [Ability.STONE_EDGE]: onCaster({ ability: Ability.TORMENT }),
   [Ability.MAGNET_PULL]: onCaster({
     ability: Ability.THUNDER_CAGE,
@@ -3588,6 +3603,22 @@ export const AbilitiesAnimations: {
       })
     })(args)
   },
+
+  [Ability.TWINKLE_TACKLE]: onCasterScale4,
+  ["TWINKLE_STAR"]: (args) =>
+    skyfall({
+      startCoords: [args.positionX, 9, false],
+      endCoords: "caster",
+      rotation: Math.PI,
+      oriented: false,
+      scale: 2,
+      duration: 800,
+      hitAnim: onCaster({
+        ability: "TWINKLE_EXPLOSION",
+        tint: 0xffc0c0,
+        scale: 4
+      })
+    })(args),
 
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(

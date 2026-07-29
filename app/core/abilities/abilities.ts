@@ -546,6 +546,7 @@ import { TripleKickStrategy } from "./triple-kick"
 import { TropKickStrategy } from "./trop-kick"
 import { TwinBeamStrategy } from "./twin-beam"
 import { TwineedleStrategy } from "./twineedle"
+import { TwinkleTackleStrategy } from "./twinkle-tackle";
 import { TwisterStrategy } from "./twister"
 import { UTurnStrategy } from "./u-turn"
 import { UltraThrustersStrategy } from "./ultra-thrusters"
@@ -1275,6 +1276,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.TROP_KICK]: new TropKickStrategy(),
   [Ability.TWIN_BEAM]: new TwinBeamStrategy(),
   [Ability.TWINEEDLE]: new TwineedleStrategy(),
+  [Ability.TWINKLE_TACKLE]: new TwinkleTackleStrategy(),
   [Ability.TWISTER]: new TwisterStrategy(),
   [Ability.U_TURN]: new UTurnStrategy(),
   [Ability.ULTRA_THRUSTERS]: new UltraThrustersStrategy(),
