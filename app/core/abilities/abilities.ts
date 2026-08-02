@@ -54,6 +54,7 @@ import { BlazeKickStrategy } from "./blaze-kick"
 import { BleakwindStormStrategy } from "./bleakwind-storm"
 import { BlizzardStrategy } from "./blizzard"
 import { BloodMoonStrategy } from "./blood-moon"
+import { BloomDoomStrategy } from "./bloom-doom";
 import { BlueFlareStrategy } from "./blue-flare"
 import { BodySlamStrategy } from "./body-slam"
 import { BoltBeakStrategy } from "./bolt-beak"
@@ -780,6 +781,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.BLEAKWIND_STORM]: new BleakwindStormStrategy(),
   [Ability.BLIZZARD]: new BlizzardStrategy(),
   [Ability.BLOOD_MOON]: new BloodMoonStrategy(),
+  [Ability.BLOOM_DOOM]: new BloomDoomStrategy(),
   [Ability.BLUE_FLARE]: new BlueFlareStrategy(),
   [Ability.BODY_SLAM]: new BodySlamStrategy(),
   [Ability.BOLT_BEAK]: new BoltBeakStrategy(),

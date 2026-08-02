@@ -3558,6 +3558,32 @@ export const AbilitiesAnimations: {
       })(args)
   ],
 
+  [Ability.BLOOM_DOOM]: [
+    onTarget({
+      ability: "DRAGON_ENERGY",
+      tint: 0xa0ffc0,
+      scale: 4,
+      depth: DEPTH.ABILITY_BELOW_POKEMON
+    }),
+    (args) => {
+      for (let i = 0; i < 10; i++) {
+        setTimeout(
+          () => {
+            const r = 128 + randomBetween(-32, 32)
+            onTarget({
+              ability: "MAGICAL_LEAF_CHARGE",
+              positionOffset: [
+                Math.round(Math.cos((i / 10) * Math.PI * 2) * r),
+                Math.round(Math.sin((i / 10) * Math.PI * 2) * r)
+              ]
+            })(args)
+          },
+          100 + i * 50
+        )
+      }
+    }
+  ],
+
   [Ability.GIANT_RAFFLESIA]: [
     onCaster({
       scale: 3,

@@ -1792,7 +1792,8 @@
 		"GIANT_RAFFLESIA": "Giant Rafflesia",
 		"SUPERSONIC_SKYSTRIKE": "Supersonic Skystrike",
 		"FOOD_FIGHT": "Food Fight",
-		"TWINKLE_TACKLE": "Twinkle Tackle"
+		"TWINKLE_TACKLE": "Twinkle Tackle",
+		"BLOOM_DOOM": "Bloom Doom"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2367,7 +2368,8 @@
 		"GIANT_RAFFLESIA": "Spawn a giant carnivorous plant in the middle of the enemy team. It hits 5 times all ADJACENT enemies for [15,25,40,60,100,SP] SPECIAL and throws a projectile to a random enemy that deals [20,40,80,120,180,SP] SPECIAL and PARALYSIS for 5 seconds.",
 		"SUPERSONIC_SKYSTRIKE": "Dives down in the middle of the enemy team from the sky, dealing [50,100,150,200,300,SP] SPECIAL in a 4-tile radius, damage decreased by 20% for each tile of distance. The holder gets PROTECT for 2 seconds.",
 		"FOOD_FIGHT": "Throw [6,8,10,16,24,SP] random dishes in the next 3 seconds to random allies and enemies. Allies hit heal 50 HP and receive the dish effect while enemies take 50 SPECIAL.",
-		"TWINKLE_TACKLE": "A magical zone within a 4-tile radius of the caster causes all enemies to get CHARM by the caster for 2 seconds. Then, after 2 seconds, a star strikes all ADJACENT enemies for [300,SP] SPECIAL and knocks them back, with a [30,LK]% chance of knocking them off the battlefield."
+		"TWINKLE_TACKLE": "A magical zone within a 4-tile radius of the caster causes all enemies to get CHARM by the caster for 2 seconds. Then, after 2 seconds, a star strikes all ADJACENT enemies for [300,SP] SPECIAL and knocks them back, with a [30,LK]% chance of knocking them off the battlefield.",
+		"BLOOM_DOOM": "An explosion of petals hits the target and all enemies in a 2-tile radius around it, dealing [50,100,150,200,300,SP] SPECIAL. The allies in the area heal for [50,100,150,200,300,SP] HP."
 	},
 	"effect": {
 		"STAMINA": "Stamina",
@@ -3353,7 +3355,7 @@
 		"FIRIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"FLYNIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.SUPERSONIC_SKYSTRIKE)",
 		"GHOSTIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
-		"GRASSIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
+		"GRASSIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.BLOOM_DOOM)",
 		"GROUNDIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.TECTONIC_RAGE)",
 		"ICIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"NORMALIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
