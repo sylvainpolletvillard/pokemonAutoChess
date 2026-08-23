@@ -84,6 +84,7 @@
 		"PICHU": "皮丘",
 		"PIKACHU": "皮卡丘",
 		"PIKACHU_SURFER": "冲浪皮卡丘",
+		"PIKACHU_LIBRE": "面罩摔角手皮卡丘",
 		"RAICHU": "雷丘",
 		"MACHOP": "腕力",
 		"MACHOKE": "豪力",
@@ -860,6 +861,8 @@
 		"FUECOCO": "呆火鳄",
 		"CROCALOR": "炙烫鳄",
 		"SKELEDIRGE": "骨纹巨声鳄",
+		"GALAR_MEOWTH": "伽勒尔喵喵",
+		"PERRSERKER": "喵头目",
 		"TANGELA": "蔓藤怪",
 		"TANGROWTH": "巨蔓藤",
 		"PSYDUCK": "可达鸭",
@@ -1781,7 +1784,9 @@
 		"SUBSTITUTE": "替身",
 		"SWARM": "虫群呼唤",
 		"FLING": "投掷",
-		"REVELATION_DANCE": "觉醒之舞"
+		"REVELATION_DANCE": "觉醒之舞",
+		"THUNDERCLAP_PRESS": "雷霆重压",
+		"DRAGON_RAGE": "龙之怒"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -1990,7 +1995,7 @@
 		"MIST_BALL": "发射一个直线飞行的迷雾泡，对击中的敌方宝可梦造成[10,20,30,60,SP]点SPECIAL并降低他们30点AP。迷雾泡飞行4格后会往回移动。",
 		"MUD_BUBBLE": "使用者恢复[10,20,40,80,SP]点HP。",
 		"LINK_CABLE": "突进至最远的可触及敌方宝可梦的邻位，随后在正电拍拍和负电拍拍之间创造一道电弧，对击中的敌方宝可梦造成[40,40,40,80,SP]点SPECIAL。若正电拍拍或负电拍拍单独在场，改为对ADJACENT敌方宝可梦造成伤害。",
-		"MAGIC_BOUNCE": "在接下来的5秒内，每当使用者被招式击中时，格挡此伤害并将[50,100,200,400,SP]%的SPECIAL反弹给招式的使用者。",
+		"MAGIC_BOUNCE": "在接下来的4秒内，每当使用者被招式击中时，格挡此伤害并将[50,100,200,400,SP]%的SPECIAL反弹给招式的使用者。",
 		"REFLECT": "在接下来的[3,3,3,5]秒内，每当使用者受到PHYSICAL时，格挡此伤害并将[50,75,100,150,SP]%的SPECIAL反弹给伤害来源。",
 		"HIDDEN_POWER_A": "召唤4只凯西，战场上每一角1只。",
 		"HIDDEN_POWER_B": "使所有敌方宝可梦陷入BURN 30秒。",
@@ -2272,7 +2277,7 @@
 		"DRILL_PECK": "一边旋转一边将尖喙刺入对手，对其造成[30,60,120,240,SP]点SPECIAL并与之交换位置。若相同方向上存在下一目标，立即对其重复此招式。",
 		"ROCK_ARTILLERY": "朝随机敌方宝可梦投掷总计[10,15,25,50]块会掉落在其所在位置或ADJACENT格子的岩石，每块对命中的敌方宝可梦造成[20,30,40,80,SP]点SPECIAL。",
 		"ZING_ZAP": "滚动至目标身后，对其造成[30,60,90,180,SP]点SPECIAL，并使其陷入FLINCH 3秒。若目标处于PARALYSIS，获得[10,20,40,80,SP]点SHIELD。",
-		"NO_RETREAT": "队伍中每有一只列阵兵，便提升1点DEF和1点SPE_DEF。每只跟班撞击目标，造成[20,20,20,40,SP]点SPECIAL。",
+		"NO_RETREAT": "队伍中每有一只列阵兵，便提升1点ATK，1点DEF，1点SPE_DEF和5点SPEED。每只跟班撞击目标，造成[20,20,20,40,SP]点SPECIAL。",
 		"TACKLE": "对目标造成[20,40,60,120,SP]点SPECIAL。",
 		"STATIC_SHOCK": "对目标造成[30,50,70,100,SP]点SPECIAL。每有一只ADJACENT的ELECTRIC宝可梦，便获得[10,20,30,60,SP]点SHIELD；每有一只ADJACENT的FAIRY宝可梦，便恢复[10,20,30,60,SP]点HP。",
 		"SAND_SPIT": "对前方的3只敌方宝可梦吐出沙子，造成[30,60,120,240,SP]点SPECIAL并使他们陷入BLINDED 2秒。",
@@ -2345,7 +2350,9 @@
 		"SUBSTITUTE": "在使用者的位置创建一个HP为自身最大HP的[25,25,25,50,SP]%的替身。使用者移动至附近的空格子，所有原本以其为目标的敌方宝可梦改为以替身为目标。",
 		"SWARM": "从虫巢中召唤场上的一只我方BUG宝可梦的复制。每次释放此招式时，提升被召唤宝可梦的稀有度上限。",
 		"FLING": "若携带着BALL，本次投球时使用者和接球者之间的所有敌方宝可梦受到SPECIAL，数值相当于使用者[30,30,30,100,SP]%的SPEED。若未携带BALL，则改为跳至战场一角并获得一个新的BALL。",
-		"REVELATION_DANCE": "跳舞，在ADJACENT格子上生成羽毛。被羽毛击中的敌方宝可梦受到[15,30,50,80,SP]点SPECIAL，我方宝可梦根据此宝可梦的风格获得以下增幅——\n热辣热辣风格：提升[3,6,10,15,SP]点SPEED\n啪滋啪滋风格：提升[2,4,6,10,SP]点ATK\n呼拉呼拉风格：提升[2,4,6,10,SP]点SPE_DEF\n轻盈轻盈风格：获得[15,30,50,80,SP]点SHIELD"		
+		"REVELATION_DANCE": "跳舞，在ADJACENT格子上生成羽毛。被羽毛击中的敌方宝可梦受到[15,30,50,80,SP]点SPECIAL，我方宝可梦根据此宝可梦的风格获得以下增幅——\n热辣热辣风格：提升[3,6,10,15,SP]点SPEED\n啪滋啪滋风格：提升[2,4,6,10,SP]点ATK\n呼拉呼拉风格：提升[2,4,6,10,SP]点SPE_DEF\n轻盈轻盈风格：获得[15,30,50,80,SP]点SHIELD",
+		"THUNDERCLAP_PRESS": "用带电的身体压制目标，将其击退。其和击退路径上的敌方宝可梦陷入PARALYSIS 4秒，并受到[20,40,80,160,SP]点SPECIAL。",
+		"DRAGON_RAGE": "获得[15,30,45,60,SP]点SHIELD。接下来的6秒内，每秒再获得[5,10,15,20]点SHIELD，并对ADJACENT敌方宝可梦造成[5,10,15,20,SP]点SPECIAL。此招式效果结束时，消耗剩余的SHIELD，恢复HP，数值相当于40%的消耗量。"
 	},
 	"effect": {
 		"STAMINA": "持久力",
@@ -2932,7 +2939,7 @@
 		"REGIONAL_TOUR": "地区旅行",
 		"SMALL_EXP_GIFT": "经验赠礼（小）",
 		"LARGE_EXP_GIFT": "经验赠礼（大）",
-		"EVOLVE_GIFT": "星之赠礼",
+		"STAR_GIFT": "星之赠礼",
 		"BANQUET": "宴席",
 		"PINK_NECTAR": "桃粉色花蜜",
 		"PURPLE_NECTAR": "兰紫色花蜜",
@@ -3101,7 +3108,7 @@
 		"WILD_GEM": "计为1只WILD宝可梦",
 		"AMORPHOUS_GEM": "计为1只AMORPHOUS宝可梦",
 		"GOURMET_GEM": "计为1只GOURMET宝可梦",
-		"FIRE_SHARD": "扣除3点玩家HP，使一只FIRE宝可梦永久提升3点ATK和3点SPEED。携带后立即消耗。",
+		"FIRE_SHARD": "扣除3点（双打模式下1点）玩家HP，使一只FIRE宝可梦永久提升3点ATK和3点SPEED。携带后立即消耗。",
 		"CELL_BATTERY": "存在于备战区时，所有我方ELECTRIC宝可梦提升2点SPEED。\n对一只ELECTRIC宝可梦使用，使其在下一轮对战中处于增压状态，提升20点SPEED，获得30点SHIELD且全程处于ELECTRIC_FIELD。",
 		"TEAL_MASK": "用结晶装饰的木雕面具，使厄鬼椪视作FLORA宝可梦。护盾被击破后厄鬼椪会失去面具。",
 		"WELLSPRING_MASK": "用结晶装饰的木雕面具，使厄鬼椪视作AQUATIC宝可梦。护盾被击破后厄鬼椪会失去面具。",
@@ -3292,7 +3299,7 @@
 		"REGIONAL_TOUR": "向你的搭档赠送一张$t(item.LAPRAS_PASSPORT)，并使其获得10次免费刷新次数。",
 		"SMALL_EXP_GIFT": "使你的搭档获得8点XP。若其玩家等级已达最大，溢出的XP改为使其获得等量GOLD。",
 		"LARGE_EXP_GIFT": "使你的搭档获得24点XP。若其玩家等级已达最大，溢出的XP改为使其获得等量GOLD。",
-		"EVOLVE_GIFT": "随机使你搭档出战宝可梦中的一只进化。若没有可进化宝可梦，改为使随机一只获得大量属性值。",
+		"STAR_GIFT": "随机使你搭档出战宝可梦中的一只进化。若没有可进化宝可梦，改为使随机一只获得大量属性值。",
 		"BANQUET": "使你搭档场上的所有宝可梦各随机获得一份料理。此外，再使其获得每种蘑菇各一朵，外加一份$t(item.PICNIC_SET)。我开动了！",
 		"PINK_NECTAR": "对花舞鸟使用，使其变化为呼拉呼拉风格",
 		"PURPLE_NECTAR": "对花舞鸟使用，使其变化为轻盈轻盈风格",
@@ -3378,7 +3385,7 @@
 		"HISUIAN_TYPHLOSION": "此宝可梦对处于BURN或SILENCE的目标额外造成20%的伤害。",
 		"PICKUP": "若此宝可梦没有携带任何道具，战斗开始时随机携带一件。",
 		"CORSOLA": "$t(pkm.CORSOLA)被击倒后进化为$t(pkm.GALAR_CORSOLA)。",
-		"CELEBI": "$t(pkm.CELEBI)每次释放$t(ability.TIME_TRAVEL)时，玩家恢复1点HP。\n你已通过此法恢复了{{stacks}}点HP。",
+		"CELEBI": "$t(pkm.CELEBI)每次释放$t(ability.TIME_TRAVEL)时，玩家恢复1点HP（双打模式中，每场战斗限一次）。\n你已通过此法恢复了{{stacks}}点HP。",
 		"GIMMIGHOUL": "$t(pkm.GIMMIGHOUL)似乎需要99 GOLD……",
 		"GHOLDENGO": "每场战斗开始前，若玩家持有至少50 GOLD，本场战斗中$t(pkm.GHOLDENGO)全程处于SAFEGUARD。",
 		"METEOR": "$t(pkm.MINIOR)在其流星和核心的样子之间切换。在流星的样子下，每次攻击提升[5,SP]点SPEED。\n核心的样子的攻击会对目标及ADJACENT宝可梦施加额外效果——\n浅蓝色：额外造成[100,100,100,200,SP]%的SPECIAL\n红色：额外造成[150,150,150,300,SP]%的PHYSICAL\n橙色：额外造成[50,50,50,100,SP]%的TRUE\n绿色：为ADJACENT我方宝可梦恢复造成伤害量的[100,100,100,200,SP]%",
@@ -3455,11 +3462,12 @@
 		"SLAKING": "从SLEEP中醒来时，$t(pkm.SLAKING)陷入RAGE 3秒",
 		"STANTLER": "在第20轮更换地区后进化为$t(pkm.WYRDEER)。",
 		"PIKACHU_SURFER": "$t(pkm.PIKACHU_SURFER)的能力随着海浪增强而提升，每级激活的AQUATIC共鸣使之获得50点SHIELD和3点ATK。此外，海浪逼近时，$t(pkm.PIKACHU_SURFER)会回复PP。",
+		"PIKACHU_LIBRE": "若FIGHTING共鸣已激活，每格挡10次便会陷入RAGE 2秒。",
 		"ESPURR": "根据PSYCHIC和FIELD共鸣中等级较高的一方决定进化的性别。",
 		"FUR_COAT": "每轮战斗后体毛会长长，提升2点DEF并降低5点SPEED。在备战区停留一轮以进行修剪，重置DEF和SPEED修正。若修剪前修正层数达到了上限，还会获得一条SILK_SCARF。",
 		"ACCELERATION": "加速：每移动1格，提升15点SPEED（跳跃或冲刺等位移行为仅算作1格）。",
 		"MELTAN": "拖动至$t(pkm.MELMETAL)的位置松开可将其融合，永久提升其50点最大HP。",
-		"FALINKS": "商店中现在有[4,LK]%的概率刷出列阵兵跟班，其价格为3 GOLD，至多拥有6只。\n每轮战斗开始时，备战区上的所有跟班会加入头头的战斗，每只跟班为头头提供自身的基础ATK和DEF，并使其获得SHIELD，数值相当于各跟班的基础HP。",
+		"FALINKS": "商店中现在有[4,LK]%的概率刷出列阵兵跟班，其价格为3 GOLD，至多拥有6只。\n每轮战斗开始时，备战区上的所有未在训练的跟班会加入头头的战斗，每只跟班为头头提供自身的基础ATK和DEF，并使其获得SHIELD，数值相当于各跟班的基础HP。",
 		"FLABEBE_COLOR": "她们的颜色据说和第一朵开放的FLORA花朵有关……",
 		"DUNSPARCE": "土龙弟弟在进行20次挖掘后进化。",
 		"PACHIRISU": "每轮战斗后有[30,LK]%的概率从战场上挖出一枚SITRUS_BERRY。",
@@ -3495,7 +3503,8 @@
 		"SUBSTITUTE": "一个看起来像是宝可梦的替身。",
 		"PASSIMIAN": "投掷猴自身携带着一枚BALL。",
 		"UXIE": "你已通过此宝可梦的招式获得了{{stacks}}点XP",
-		"NECTAR": "花盆中的宝可梦完全长成时，根据其颜色获得对应的花蜜。"
+		"NECTAR": "花盆中的宝可梦完全长成时，根据其颜色获得对应的花蜜。",
+		"STEELY_SPIRIT": "ADJACENT_IN_THE_SAME_ROW我方宝可梦的攻击伤害的10%改为TRUE。"
 	},
 	"stat": {
 		"ATK": "攻击",
@@ -3947,6 +3956,7 @@
 	},
 	"rank": "名次",
 	"replay": {
+		"leave_replay": "退出回放",
 		"loading": "回放加载中……",
 		"loading_sub": "准备战场……",
 		"seeking": "寻找场景中……",
@@ -4041,7 +4051,7 @@
 			},
 			"row": {
 				"phase": "第{{stage}}轮： {{phase}}",
-				"elimination": "{{player}}被淘汰",
+				"elimination": "{{player}}出局",
 				"round_win": "对战{{opponent}}：胜利",
 				"round_loss": "对战{{opponent}}：失败",
 				"round_draw": "对战{{opponent}}：平局",
@@ -4261,6 +4271,7 @@
 		"disable_animated_tilemap": "禁用背景动画",
 		"disable_camera_shake": "禁用屏幕振动和闪光",
 		"antialiasing": "启用抗锯齿",
+		"custom_cursors": "启用自定义光标",
 		"colorblind_mode": "色盲友好模式",
 		"record_replays": "自动录制游戏回放",
 		"renderer": "渲染器",
@@ -4819,7 +4830,8 @@
 		"GO_BIG_OR_GO_HOME": "坚 持 锻 炼",
 		"FAMILY_OUTING": "全 家 出 动",
 		"UNOWN_SPELL": "图 腾 神 力",
-		"CHOSEN_ONES": "钦 定 之 选"
+		"CHOSEN_ONES": "钦 定 之 选",
+		"BENCH_IS_LAVA": "岩 浆 板 凳"
 	},
 	"scribble_description": {
 		"EVERYONE_IS_HERE": "所有附加宝可梦在游戏开始时立即可选。",
@@ -4841,7 +4853,8 @@
 		"GO_BIG_OR_GO_HOME": "所有宝可梦每轮提升5点最大HP，体型也会相应变大。",
 		"FAMILY_OUTING": "同一进化线上的宝可梦可以同时参与共鸣计数。",
 		"UNOWN_SPELL": "未知图腾会围观每轮对战，并向双方队伍释放招式。",
-		"CHOSEN_ONES": "你选择的附加宝可梦会立即进化，且会获得额外的属性值。"
+		"CHOSEN_ONES": "你选择的附加宝可梦会立即进化，且会获得额外的属性值。",
+		"BENCH_IS_LAVA": "战斗过程中，备战区的地面会变为岩浆，使所有位于此处的宝可梦陷入BURN。如果战斗时间足够长，来自岩浆的BURN伤害可以将那些宝可梦永久消灭。"
 	},
 	"town_encounter_description": {
 		"KECLEON": "变隐龙会以每块{{cost}} GOLD的价格出售共鸣赋予道具。",
@@ -4931,6 +4944,8 @@
 			"missing_points_answer": "只有排位模式能够影响elo分数。",
 			"damage": "物理伤害和特殊伤害是什么？",
 			"damage_answer": "普通攻击通常造成物理伤害，招式大多造成特殊伤害。部分招式可能造成物理或真实伤害。",
+			"elimination_rank": "为什么有人比我先出局，名次却比我高？",
+			"elimination_rank_answer": "名次是根据玩家在战斗轮结束后的最终生命值决定的。生命值相同的情况下，会比较局内等级。战斗轮完全结束后才会记录本轮出局玩家，因此多名玩家在同一轮内出局时，生命值较高者的名次会高于较早出局者。战斗时长和出局的具体时间点和名次没有关联。",
 			"shiny": "如何获得闪光宝可梦？",
 			"shiny_answer": "可以打开补充包解锁或在收藏页面购买闪光宝可梦表情。选择那个闪光表情，即可在游戏中将那只宝可梦闪光化。",
 			"support": "如何支持这个游戏？",

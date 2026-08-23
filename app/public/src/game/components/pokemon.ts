@@ -915,7 +915,10 @@ export default class PokemonSprite extends DraggableObject {
     })
   }
 
-  setLifeBar(pokemon: IPokemonEntity, scene: GameScene | DebugScene) {
+  setLifeBar(
+    pokemon: IPokemonEntity | IPokemon,
+    scene: GameScene | DebugScene
+  ) {
     if (pokemon.hp !== undefined) {
       this.lifebar = new Lifebar(
         scene,
@@ -924,13 +927,18 @@ export default class PokemonSprite extends DraggableObject {
         pokemon.maxHP,
         pokemon.hp,
         pokemon.shield,
-        pokemon.team as Team,
+        isEntity(pokemon) ? pokemon.team : Team.BLUE_TEAM,
         this.flip
       )
       this.lifebar.setShield(pokemon.shield)
       this.add(this.lifebar)
 
-      if (pokemon.pp !== undefined && pokemon.maxPP > 0)
+      if (
+        pokemon.pp !== undefined &&
+        pokemon.maxPP !== undefined &&
+        pokemon.maxPP > 0 &&
+        isEntity(pokemon)
+      )
         this.lifebar.setMaxPP(pokemon.maxPP)
     }
   }

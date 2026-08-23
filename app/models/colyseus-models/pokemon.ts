@@ -455,6 +455,40 @@ export class Egg extends Pokemon {
   canHoldItems = false
 }
 
+export class GalarMeowth extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.WILD])
+  rarity = Rarity.RARE
+  stars = 1
+  evolution = Pkm.PERRSERKER
+  hp = 90
+  atk = 9
+  speed = 32
+  def = 7
+  speDef = 6
+  maxPP = 70
+  range = 1
+  skill = Ability.METAL_CLAW
+  regional = true
+  additional = true
+}
+
+export class Perrserker extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.WILD])
+  rarity = Rarity.RARE
+  stars = 2
+  hp = 240
+  atk = 23
+  speed = 32
+  def = 9
+  speDef = 6
+  maxPP = 70
+  range = 1
+  skill = Ability.METAL_CLAW
+  regional = true
+  additional = true
+  passive = Passive.STEELY_SPIRIT
+}
+
 export class Electrike extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.FIELD])
   rarity = Rarity.RARE
@@ -5233,7 +5267,7 @@ export class Gyarados extends Pokemon {
   speDef = 2
   maxPP = 100
   range = 1
-  skill = Ability.HYDRO_PUMP
+  skill = Ability.DRAGON_RAGE
   onAcquired(player: Player) {
     player.titles.add(Title.FISHERMAN)
   }
@@ -5261,6 +5295,25 @@ export class PikachuSurfer extends Pokemon {
       player.transformPokemon(this, Pkm.PIKACHU)
     }
   }
+}
+
+export class PikachuLibre extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.ELECTRIC,
+    Synergy.FIGHTING,
+    Synergy.FAIRY
+  ])
+  rarity = Rarity.SPECIAL
+  stars = 3
+  hp = 120
+  atk = 8
+  speed = 54
+  def = 4
+  speDef = 6
+  maxPP = 100
+  range = 1
+  skill = Ability.THUNDERCLAP_PRESS
+  passive = Passive.PIKACHU_LIBRE
 }
 
 export class Rattata extends Pokemon {
@@ -12454,7 +12507,7 @@ export class Carnivine extends Pokemon {
   stars = 3
   hp = 180
   atk = 21
-  speed = 29
+  speed = 40
   def = 6
   speDef = 6
   maxPP = 100
@@ -13651,7 +13704,7 @@ export class Tandemaus extends Pokemon {
   evolution = Pkm.MAUSHOLD_THREE
   evolutionRule = {
     type: EvolutionRuleType.STATE,
-    condition: (pokemon, player, state) => state && state.stageLevel >= 14
+    condition: (pokemon, player, state) => state && state.stageLevel >= 15
   } satisfies StateEvolutionRule
   passive = Passive.FAMILY
 }
@@ -21235,6 +21288,8 @@ export const PokemonClasses: Record<
   [Pkm.PERSIAN]: Persian,
   [Pkm.ALOLAN_MEOWTH]: AlolanMeowth,
   [Pkm.ALOLAN_PERSIAN]: AlolanPersian,
+  [Pkm.GALAR_MEOWTH]: GalarMeowth,
+  [Pkm.PERRSERKER]: Perrserker,
   [Pkm.DEINO]: Deino,
   [Pkm.ZWEILOUS]: Zweilous,
   [Pkm.HYDREIGON]: Hydreigon,
@@ -21979,6 +22034,7 @@ export const PokemonClasses: Record<
   [Pkm.MINCCINO]: Minccino,
   [Pkm.CINCCINO]: Cinccino,
   [Pkm.PIKACHU_SURFER]: PikachuSurfer,
+  [Pkm.PIKACHU_LIBRE]: PikachuLibre,
   [Pkm.ESPURR]: Espurr,
   [Pkm.MEOWSTIC_MALE]: MeowsticMale,
   [Pkm.MEOWSTIC_FEMALE]: MeowsticFemale,

@@ -1,5 +1,5 @@
 import { Schema, type } from "@colyseus/schema"
-import { CC_COOLDOWN, FIGHTING_PHASE_DURATION, ItemStats, PkmAltFormsByPkm } from "../../config"
+import { CC_COOLDOWN, FIGHTING_PHASE_DURATION, ItemStats } from "../../config"
 import type { Board } from "../../core/board"
 import { transformToIceFace } from "../../core/effects/passives"
 import type { PokemonEntity } from "../../core/pokemon-entity"
@@ -194,7 +194,8 @@ export default class Status extends Schema implements IStatus {
     if (
       pokemon.effects.has(EffectEnum.POISON_GAS) &&
       this.poisonStacks === 0 &&
-      pokemon.items.has(Item.HEAVY_DUTY_BOOTS) === false
+      pokemon.items.has(Item.HEAVY_DUTY_BOOTS) === false &&
+      pokemon.types.has(Synergy.POISON) === false
     ) {
       this.triggerPoison(1500, pokemon, undefined)
     }
@@ -658,7 +659,10 @@ export default class Status extends Schema implements IStatus {
         })
       }
 
-      if (pkm.effects.has(EffectEnum.POISON_GAS) && pkm.items.has(Item.HEAVY_DUTY_BOOTS) === false) {
+      if (
+        pkm.effects.has(EffectEnum.POISON_GAS) &&
+        pkm.items.has(Item.HEAVY_DUTY_BOOTS) === false
+      ) {
         // reapply poison stack on every poison tick if in poison gas
         this.triggerPoison(1500, pkm, undefined)
       }

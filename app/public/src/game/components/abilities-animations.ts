@@ -1589,6 +1589,10 @@ export const AbilitiesAnimations: {
     scale: 3
   }),
   [Ability.WONDER_GUARD]: onCaster({ depth: DEPTH.ABILITY_BELOW_POKEMON }),
+  [Ability.THUNDERCLAP_PRESS]: onTarget({
+    ability: Ability.WONDER_GUARD,
+    scale: 2
+  }),
   [Ability.X_SCISSOR]: onTargetScale2,
   [Ability.OBLIVION_WING]: onTargetScale2,
   [Ability.GEOMANCY]: onCaster({
@@ -1925,6 +1929,11 @@ export const AbilitiesAnimations: {
     duration: 750,
     scale: 2,
     ability: Ability.DARK_HARVEST
+  }),
+  [Ability.DRAGON_RAGE]: projectile({
+    duration: 300,
+    scale: 2,
+    depth: DEPTH.ABILITY_BELOW_POKEMON
   }),
   [Ability.FUSION_BOLT]: projectile({ duration: 750, scale: 3 }),
   [Ability.SOLAR_BEAM]: projectile({

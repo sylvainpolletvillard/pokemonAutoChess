@@ -615,7 +615,7 @@ export class MiniGame {
         const index = items.findIndex((i) => isIn(SynergyStones, i))
         items[index] = pickRandomIn(CraftableNoStonesOrScarves)
       }
-    } else if (itemsSet === ItemComponentsNoFossilOrScarf && chance(0.4)) {
+    } else if (itemsSet === ItemComponentsNoFossilOrScarf && chance(0.8)) {
       // max 1 random fossil stone, added with 40% chance
       items.push(Item.FOSSIL_STONE)
     }

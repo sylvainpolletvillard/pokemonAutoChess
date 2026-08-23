@@ -16,7 +16,7 @@ import { max, min } from "../utils/number"
 import { chance, pickRandomIn } from "../utils/random"
 import type { Board, Cell } from "./board"
 import {
-  OnResurrectEffect,
+  OnResurrectingEffect,
   OnShieldDepletedEffect,
   PeriodicEffect
 } from "./effects/effect"
@@ -150,6 +150,9 @@ export default abstract class PokemonState {
       }
       if (pokemon.items.has(Item.RED_ORB)) {
         trueDamagePart += 0.25
+      }
+      if (pokemon.effects.has(EffectEnum.STEELY_SPIRIT_BONUS)) {
+        trueDamagePart += 0.1
       }
       if (pokemon.effects.has(EffectEnum.LOCK_ON)) {
         trueDamagePart +=
@@ -781,7 +784,7 @@ export default abstract class PokemonState {
         if (pokemon.status.resurrection) {
           pokemon.status.triggerResurrection(pokemon, board)
           pokemon
-            .getEffects(OnResurrectEffect)
+            .getEffects(OnResurrectingEffect)
             .forEach((effect) => effect.apply({ pokemon, board, attacker }))
           board.forEach((x, y, entity: PokemonEntity | undefined) => {
             if (entity && entity.targetEntityId === pokemon.id) {

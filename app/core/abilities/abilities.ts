@@ -127,6 +127,7 @@ import { DragonClawStrategy } from "./dragon-claw"
 import { DragonDartsStrategy } from "./dragon-darts"
 import { DragonEnergyStrategy } from "./dragon-energy"
 import { DragonPulseStrategy } from "./dragon-pulse"
+import { DragonRageStrategy } from "./dragon-rage"
 import { DragonTailStrategy } from "./dragon-tail"
 import { DrainPunchStrategy } from "./drain-punch"
 import { DreamEaterStrategy } from "./dream-eater"
@@ -404,7 +405,7 @@ import { ReflectStrategy } from "./reflect"
 import { RelicSongStrategy } from "./relic-song"
 import { RetaliateStrategy } from "./retaliate"
 import { ReturnStrategy } from "./return"
-import { RevelationDanceStrategy } from "./revelation-dance";
+import { RevelationDanceStrategy } from "./revelation-dance"
 import { RoarStrategy } from "./roar"
 import { RoarOfTimeStrategy } from "./roar-of-time"
 import { RockArtilleryStrategy } from "./rock-artillery"
@@ -530,6 +531,7 @@ import { ThunderStrategy } from "./thunder"
 import { ThunderCageStrategy } from "./thunder-cage"
 import { ThunderFangStrategy } from "./thunder-fang"
 import { thunderShockStrategy } from "./thunder-shock"
+import { ThunderclapPressStrategy } from "./thunderclap-press"
 import { ThunderousKickStrategy } from "./thunderous-kick"
 import { TickleStrategy } from "./tickle"
 import { TimeTravelStrategy } from "./time-travel"
@@ -855,6 +857,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.DRAGON_DARTS]: new DragonDartsStrategy(),
   [Ability.DRAGON_ENERGY]: new DragonEnergyStrategy(),
   [Ability.DRAGON_PULSE]: new DragonPulseStrategy(),
+  [Ability.DRAGON_RAGE]: new DragonRageStrategy(),
   [Ability.DRAGON_TAIL]: new DragonTailStrategy(),
   [Ability.DRAIN_PUNCH]: new DrainPunchStrategy(),
   [Ability.DREAM_EATER]: new DreamEaterStrategy(),
@@ -1261,6 +1264,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.THUNDER_CAGE]: new ThunderCageStrategy(),
   [Ability.THUNDER_FANG]: new ThunderFangStrategy(),
   [Ability.THUNDER_SHOCK]: thunderShockStrategy,
+  [Ability.THUNDERCLAP_PRESS]: new ThunderclapPressStrategy(),
   [Ability.THUNDEROUS_KICK]: new ThunderousKickStrategy(),
   [Ability.TICKLE]: new TickleStrategy(),
   [Ability.TIME_TRAVEL]: new TimeTravelStrategy(),
