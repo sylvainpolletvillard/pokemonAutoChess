@@ -30,14 +30,14 @@ export class TwinkleTackleStrategy extends AbilityStrategy {
 
     // Then, after 2 seconds, a star strikes all ADJACENT enemies and knocks them back, with a [30,LK]% chance of knocking them off the battlefield.
 
-    pokemon.commands.push(
+    pokemon.simulation.commands.push(
       new DelayedCommand(
         () => pokemon.broadcastAbility({ skill: "TWINKLE_STAR" }),
         duration - 800
       )
     )
 
-    pokemon.commands.push(
+    pokemon.simulation.commands.push(
       new DelayedCommand(() => {
         const adjacentEnemies = board
           .getAdjacentCells(pokemon.positionX, pokemon.positionY, false)

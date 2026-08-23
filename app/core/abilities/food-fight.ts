@@ -40,7 +40,7 @@ export class FoodFightStrategy extends AbilityStrategy {
             delay: Dishes.indexOf(dish) // delay is used to pass the index of the dish
           })
 
-          pokemon.commands.push(
+          pokemon.simulation.commands.push(
             new DelayedCommand(() => {
               if (randomTarget.hp <= 0) return
               if (randomTarget.team === pokemon.team) {

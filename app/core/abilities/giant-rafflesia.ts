@@ -34,7 +34,7 @@ export class GiantRafflesiaStrategy extends AbilityStrategy {
         positionY: rafflesiaPosition.y
       })
       for (let hit = 0; hit < nbHits; hit++) {
-        pokemon.commands.push(
+        pokemon.simulation.commands.push(
           new DelayedCommand(
             () => {
               board
@@ -70,7 +70,7 @@ export class GiantRafflesiaStrategy extends AbilityStrategy {
                 targetY: projectileTargetY
               })
               if (pokemon.hp > 0) {
-                pokemon.commands.push(
+                pokemon.simulation.commands.push(
                   new DelayedCommand(() => {
                     const enemyOnCell = board.getEntityOnCell(
                       projectileTargetX,

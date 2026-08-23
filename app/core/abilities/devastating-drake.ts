@@ -62,7 +62,7 @@ export class DevastatingDrakeStrategy extends AbilityStrategy {
         nextEnemy.positionY
       )
 
-      pokemon.commands.push(
+      pokemon.simulation.commands.push(
         new DelayedCommand(() => {
           if (nextEnemy.hp > 0) {
             nextEnemy.status.triggerFlinch(flinchDuration, nextEnemy, pokemon)
@@ -83,7 +83,7 @@ export class DevastatingDrakeStrategy extends AbilityStrategy {
     }
 
     // final explosion
-    pokemon.commands.push(
+    pokemon.simulation.commands.push(
       new DelayedCommand(() => {
         board
           .getAdjacentCells(lastX, lastY, true)

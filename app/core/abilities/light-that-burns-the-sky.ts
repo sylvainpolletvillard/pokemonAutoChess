@@ -18,7 +18,7 @@ export class LightThatBurnsTheSkyStrategy extends AbilityStrategy {
     pokemon.broadcastAbility({ skill: "LIGHT_THAT_BURNS_THE_SKY_CHARGE" })
     pokemon.status.triggerProtect(1000)
     pokemon.cooldown = 1200
-    pokemon.commands.push(
+    pokemon.simulation.commands.push(
       new DelayedCommand(() => {
         pokemon.broadcastAbility()
         const damage = [50, 100, 150, 200, 300][pokemon.stars - 1] ?? 300

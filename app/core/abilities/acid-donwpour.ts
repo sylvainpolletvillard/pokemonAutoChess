@@ -19,7 +19,7 @@ export class AcidDownpourStrategy extends AbilityStrategy {
       const x = randomBetween(0, BOARD_WIDTH - 1)
       const y = randomBetween(0, BOARD_HEIGHT - 1)
       pokemon.broadcastAbility({ targetX: x, targetY: y, delay: timeStep * i })
-      pokemon.commands.push(
+      pokemon.simulation.commands.push(
         new DelayedCommand(
           () => {
             const value = board.getEntityOnCell(x, y)

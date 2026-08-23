@@ -1,6 +1,6 @@
 import { BOARD_WIDTH } from "../../config"
 import { AttackType, Team } from "../../types/enum/Game"
-import { distanceC, distanceM } from "../../utils/distance"
+import { distanceC } from "../../utils/distance"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { DelayedCommand } from "../simulation-command"
@@ -60,7 +60,7 @@ export class TectonicRageStrategy extends AbilityStrategy {
       }
     })
 
-    pokemon.commands.push(
+    pokemon.simulation.commands.push(
       new DelayedCommand(() => {
         pokemon.broadcastAbility({
           skill: "TECTONIC_RAGE_FINAL",
