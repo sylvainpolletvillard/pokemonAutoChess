@@ -1798,7 +1798,8 @@
 		"SUPERSONIC_SKYSTRIKE": "Supersonic Skystrike",
 		"FOOD_FIGHT": "Food Fight",
 		"TWINKLE_TACKLE": "Twinkle Tackle",
-		"BLOOM_DOOM": "Bloom Doom"
+		"BLOOM_DOOM": "Bloom Doom",
+		"SAVAGE_SPIN_OUT": "Savage Spin-Out"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2376,7 +2377,8 @@
 		"SUPERSONIC_SKYSTRIKE": "Dives down in the middle of the enemy team from the sky, dealing [50,100,150,200,300,SP] SPECIAL in a 4-tile radius, damage decreased by 20% for each tile of distance. The holder gets PROTECT for 2 seconds.",
 		"FOOD_FIGHT": "Throw [6,8,10,16,24,SP] random dishes in the next 3 seconds to random allies and enemies. Allies hit heal 50 HP and receive the dish effect while enemies take 50 SPECIAL.",
 		"TWINKLE_TACKLE": "A magical zone within a 4-tile radius of the caster causes all enemies to get CHARM by the caster for 2 seconds. Then, after 2 seconds, a star strikes all ADJACENT enemies for [300,SP] SPECIAL and knocks them back, with a [30,LK]% chance of knocking them off the battlefield.",
-		"BLOOM_DOOM": "An explosion of petals hits the target and all enemies in a 2-tile radius around it, dealing [50,100,150,200,300,SP] SPECIAL. The allies in the area heal for [50,100,150,200,300,SP] HP."
+		"BLOOM_DOOM": "An explosion of petals hits the target and all enemies in a 2-tile radius around it, dealing [50,100,150,200,300,SP] SPECIAL. The allies in the area heal for [50,100,150,200,300,SP] HP.",
+		"SAVAGE_SPIN_OUT": "Target is encased in a cocoon and unable to act for 2 seconds. The caster spins the cocoon around, dealing [40,70,100,130,200,SP] SPECIAL to all enemies within a 2-tile radius. The encased target takes [15,20,25,30,50,SP] SPECIAL for each enemy hit in this way, then is knocked off the field if they have less than 100 HP remaining or are the last surviving unit."
 	},
 	"effect": {
 		"STAMINA": "Stamina",
@@ -3347,7 +3349,7 @@
 		"ALUMINIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"ANTHROPIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"AQUARIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
-		"BUGINIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
+		"BUGINIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.SAVAGE_SPIN_OUT)",
 		"COLOSSIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"CONCERTIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"DARKIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.BLACK_HOLE_ECLIPSE)",

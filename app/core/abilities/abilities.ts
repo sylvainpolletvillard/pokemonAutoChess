@@ -54,7 +54,7 @@ import { BlazeKickStrategy } from "./blaze-kick"
 import { BleakwindStormStrategy } from "./bleakwind-storm"
 import { BlizzardStrategy } from "./blizzard"
 import { BloodMoonStrategy } from "./blood-moon"
-import { BloomDoomStrategy } from "./bloom-doom";
+import { BloomDoomStrategy } from "./bloom-doom"
 import { BlueFlareStrategy } from "./blue-flare"
 import { BodySlamStrategy } from "./body-slam"
 import { BoltBeakStrategy } from "./bolt-beak"
@@ -423,6 +423,7 @@ import { SaltCureStrategy } from "./salt-cure"
 import { SandSpitStrategy } from "./sand-spit"
 import { SandTombStrategy } from "./sand-tomb"
 import { SandsearStormStrategy } from "./sandsear-storm"
+import { SavageSpinOutStrategy } from "./savage-spin-out"
 import { ScaleShotStrategy } from "./scale-shot"
 import { SchoolingStrategy } from "./schooling"
 import { ScreechStrategy } from "./screech"
@@ -549,7 +550,7 @@ import { TripleKickStrategy } from "./triple-kick"
 import { TropKickStrategy } from "./trop-kick"
 import { TwinBeamStrategy } from "./twin-beam"
 import { TwineedleStrategy } from "./twineedle"
-import { TwinkleTackleStrategy } from "./twinkle-tackle";
+import { TwinkleTackleStrategy } from "./twinkle-tackle"
 import { TwisterStrategy } from "./twister"
 import { UTurnStrategy } from "./u-turn"
 import { UltraThrustersStrategy } from "./ultra-thrusters"
@@ -1155,6 +1156,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.SAND_SPIT]: new SandSpitStrategy(),
   [Ability.SAND_TOMB]: new SandTombStrategy(),
   [Ability.SANDSEAR_STORM]: new SandsearStormStrategy(),
+  [Ability.SAVAGE_SPIN_OUT]: new SavageSpinOutStrategy(),
   [Ability.SCALE_SHOT]: new ScaleShotStrategy(),
   [Ability.SCHOOLING]: new SchoolingStrategy(),
   [Ability.SCREECH]: new ScreechStrategy(),

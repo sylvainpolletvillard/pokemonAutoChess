@@ -30,6 +30,7 @@ import { Sweets } from "../../../../types/enum/Item"
 import { Pillars, Pkm, PkmIndex } from "../../../../types/enum/Pokemon"
 import { range } from "../../../../utils/array"
 import { distanceE, distanceM } from "../../../../utils/distance"
+import { wait } from "../../../../utils/function"
 import { logger } from "../../../../utils/logger"
 import { angleBetween, max, min } from "../../../../utils/number"
 import {
@@ -473,7 +474,7 @@ export function addAbilitySprite(
 }
 
 const staticAnimation: AbilityAnimationMaker<{ x: number; y: number }> =
-  (options) => (args) => {
+  (options) => async (args) => {
     let rotation = options.rotation
     if (options?.oriented) {
       const coordinates = transformEntityCoordinates(
@@ -490,18 +491,17 @@ const staticAnimation: AbilityAnimationMaker<{ x: number; y: number }> =
     }
 
     const delay = options.delay ?? args.delay ?? 0
-    setTimeout(() => {
-      addAbilitySprite(
-        args.scene,
-        options.ability ?? args.ability,
-        args.ap,
-        [
-          options.x + (options?.positionOffset?.[0] ?? 0),
-          options.y + (options?.positionOffset?.[1] ?? 0)
-        ],
-        { ...options, rotation }
-      )
-    }, delay)
+    await wait(delay)
+    return addAbilitySprite(
+      args.scene,
+      options.ability ?? args.ability,
+      args.ap,
+      [
+        options.x + (options?.positionOffset?.[0] ?? 0),
+        options.y + (options?.positionOffset?.[1] ?? 0)
+      ],
+      { ...options, rotation }
+    )
   }
 
 const onCaster: AbilityAnimationMaker = (options) => (args) => {
@@ -1040,6 +1040,10 @@ export const AbilitiesAnimations: {
     duration: 1000,
     oriented: true,
     rotation: +Math.PI / 2
+  }),
+  ["BUG_HIT"]: onTarget({
+    ability: "BUG/hit",
+    textureKey: "attacks"
   }),
   ["POWER_LENS"]: onCasterScale2,
   ["STAR_DUST"]: onCasterScale2,
@@ -1857,12 +1861,14 @@ export const AbilitiesAnimations: {
   }),
   ["BOARD_EJECT_ORIENTED"]: onSprite(
     ({ targetSprite, orientation, positionX, positionY, scene, flip }) => {
+      if (!targetSprite) return
       const [dx, dy] = OrientationVector[orientation]
       const [x, y] = transformEntityCoordinates(
         positionX + dx * 8,
         positionY + dy * 8,
         flip
       )
+      targetSprite.moveManager.setEnable(false)
       scene.tweens.add({
         targets: targetSprite,
         duration: 1000,
@@ -1874,6 +1880,7 @@ export const AbilitiesAnimations: {
   ),
   ["BOARD_EJECT"]: onSprite(({ targetSprite, casterSprite, scene }) => {
     if (!targetSprite || !casterSprite) return
+    targetSprite.moveManager.setEnable(false)
     const angle = Math.atan2(
       targetSprite.y - casterSprite.y,
       targetSprite.x - casterSprite.x
@@ -3654,6 +3661,85 @@ export const AbilitiesAnimations: {
         scale: 4
       })
     })(args),
+
+  [Ability.SAVAGE_SPIN_OUT]: [
+    (args) =>
+      onSprite(async ({ targetSprite, casterSprite }) => {
+        const nbRotations = 3
+        const duration = 1000
+        const scale =
+          distanceE(
+            args.positionX,
+            args.positionY,
+            args.targetX,
+            args.targetY
+          ) * 1.9
+        const cocoon: GameObjects.Sprite = await onCaster({
+          oriented: true,
+          origin: [0.5, 0],
+          rotation: -Math.PI / 2,
+          alpha: 0,
+          scale: [scale, 0],
+          destroyOnComplete: false
+        })(args)
+
+        args.scene.tweens.add({
+          targets: cocoon,
+          ease: Phaser.Math.Easing.Quadratic.Out,
+          alpha: 1,
+          scaleY: scale,
+          duration: 300,
+          onComplete: () => {
+            args.scene.tweens.add({
+              targets: cocoon,
+              ease: Phaser.Math.Easing.Quadratic.In,
+              rotation: Math.PI * 2 * nbRotations,
+              duration,
+              onComplete() {
+                cocoon.destroy()
+              }
+            })
+
+            if (casterSprite && targetSprite) {
+              const startAngle =
+                angleBetween(
+                  [casterSprite.x, casterSprite.y],
+                  [targetSprite.x, targetSprite.y]
+                ) * Phaser.Math.RAD_TO_DEG
+              const circularPath = new Phaser.Curves.Ellipse(
+                casterSprite.x,
+                casterSprite.y,
+                scale * 54,
+                scale * 54,
+                startAngle,
+                startAngle + 360,
+                false
+              )
+              const pathFollower = { t: 0 }
+              const startPoint = circularPath.getPoint(0)
+              targetSprite.moveManager.setEnable(false)
+              targetSprite.setPosition(startPoint.x, startPoint.y)
+              console.log("set target start point", startPoint)
+
+              args.scene.tweens.add({
+                targets: pathFollower,
+                t: nbRotations,
+                ease: Phaser.Math.Easing.Quadratic.In,
+                duration: duration * 1.02,
+                onUpdate: () => {
+                  // Get point along the path at progress 't' and apply to orbiting sprite
+                  const point = circularPath.getPoint(pathFollower.t)
+                  targetSprite.setPosition(point.x, point.y)
+                },
+                onComplete() {
+                  targetSprite.moveManager.setEnable(true)
+                }
+              })
+            }
+          }
+        })
+      })(args)
+  ],
 
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(
