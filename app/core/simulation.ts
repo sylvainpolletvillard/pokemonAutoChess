@@ -640,7 +640,7 @@ export default class Simulation extends Schema implements ISimulation {
             if (randomSpawn) {
               spawns.push(randomSpawn)
             } else {
-              logger.info("no pokemon found for white flute call", rarity, tier)
+              logger.info("no pokemon found for gold mask", rarity, tier)
             }
           }
 

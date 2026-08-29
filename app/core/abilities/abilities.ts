@@ -12,7 +12,7 @@ import { AbilityStrategy } from "./ability-strategy"
 import { AbsorbStrategy } from "./absorb"
 import { AccelerockStrategy } from "./accelerock"
 import { AcidArmorStrategy } from "./acid-armor"
-import { AcidDownpourStrategy } from "./acid-donwpour"
+import { AcidDownpourStrategy } from "./acid-downpour"
 import { AcidSprayStrategy } from "./acid-spray"
 import { AcrobaticsStrategy } from "./acrobatics"
 import { AerialAceStrategy } from "./aerial-ace"
@@ -71,6 +71,7 @@ import { BulldozeStrategy } from "./bulldoze"
 import { BulletPunchStrategy } from "./bullet-punch"
 import { BurnUpStrategy } from "./burn-up"
 import { BurningJealousyStrategy } from "./burning-jealousy"
+import { CallOfTheWildStrategy } from "./call-of-the-wild"
 import { CamouflageStrategy } from "./camouflage"
 import { CavernousChompStrategy } from "./cavernous-chomp"
 import { CeaselessEdgeStrategy } from "./ceaseless-edge"
@@ -801,6 +802,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.BULLET_PUNCH]: new BulletPunchStrategy(),
   [Ability.BURN_UP]: new BurnUpStrategy(),
   [Ability.BURNING_JEALOUSY]: new BurningJealousyStrategy(),
+  [Ability.CALL_OF_THE_WILD]: new CallOfTheWildStrategy(),
   [Ability.CAMOUFLAGE]: new CamouflageStrategy(),
   [Ability.CAVERNOUS_CHOMP]: new CavernousChompStrategy(),
   [Ability.CEASELESS_EDGE]: new CeaselessEdgeStrategy(),

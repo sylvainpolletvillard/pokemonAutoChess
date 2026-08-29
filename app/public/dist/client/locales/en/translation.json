@@ -1799,7 +1799,8 @@
 		"FOOD_FIGHT": "Food Fight",
 		"TWINKLE_TACKLE": "Twinkle Tackle",
 		"BLOOM_DOOM": "Bloom Doom",
-		"SAVAGE_SPIN_OUT": "Savage Spin-Out"
+		"SAVAGE_SPIN_OUT": "Savage Spin-Out",
+		"CALL_OF_THE_WILD": "Call of the Wild"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2378,7 +2379,8 @@
 		"FOOD_FIGHT": "Throw [6,8,10,16,24,SP] random dishes in the next 3 seconds to random allies and enemies. Allies hit heal 50 HP and receive the dish effect while enemies take 50 SPECIAL.",
 		"TWINKLE_TACKLE": "A magical zone within a 4-tile radius of the caster causes all enemies to get CHARM by the caster for 2 seconds. Then, after 2 seconds, a star strikes all ADJACENT enemies for [300,SP] SPECIAL and knocks them back, with a [30,LK]% chance of knocking them off the battlefield.",
 		"BLOOM_DOOM": "An explosion of petals hits the target and all enemies in a 2-tile radius around it, dealing [50,100,150,200,300,SP] SPECIAL. The allies in the area heal for [50,100,150,200,300,SP] HP.",
-		"SAVAGE_SPIN_OUT": "Target is encased in a cocoon and unable to act for 2 seconds. The caster spins the cocoon around, dealing [40,70,100,130,200,SP] SPECIAL to all enemies within a 2-tile radius. The encased target takes [15,20,25,30,50,SP] SPECIAL for each enemy hit in this way, then is knocked off the field if they have less than 100 HP remaining or are the last surviving unit."
+		"SAVAGE_SPIN_OUT": "Target is encased in a cocoon and unable to act for 2 seconds. The caster spins the cocoon around, dealing [40,70,100,130,200,SP] SPECIAL to all enemies within a 2-tile radius. The encased target takes [15,20,25,30,50,SP] SPECIAL for each enemy hit in this way, then is knocked off the field if they have less than 100 HP remaining or are the last surviving unit.",
+		"CALL_OF_THE_WILD": "Spawn 2 WILD Pokémon on board in your team, of the same rarity and tier than the caster. [3,SP] other WILD Pokémon of lower rarity and tier walk to the field and can be caught by clicking on them."
 	},
 	"effect": {
 		"STAMINA": "Stamina",
@@ -3358,7 +3360,7 @@
 		"DRAGONIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.DEVASTATING_DRAKE)",
 		"ELECTRIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.GIGAVOLT_HAVOC)",
 		"FAIRIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.TWINKLE_TACKLE)",
-		"FERALIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
+		"FERALIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.CALL_OF_THE_WILD)",
 		"FIELDIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"FIGHTIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.ALL_OUT_PUMMELING)",
 		"FIRIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
