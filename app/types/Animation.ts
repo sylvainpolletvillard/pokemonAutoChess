@@ -422,6 +422,7 @@ export type AbilityAnimationArgs = {
   flip: boolean
   delay?: number
   ap: number
+  data?: any
 }
 
 export type AbilityAnimation = (args: AbilityAnimationArgs) => any

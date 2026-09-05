@@ -135,15 +135,6 @@ export class Pokemon extends Schema implements IPokemon {
     this.baseSkill = this.skill
   }
 
-  get final(): boolean {
-    /* true if should be excluded from shops when obtained */
-    if (this.passive === Passive.CORSOLA || this.passive === Passive.AVALUGG)
-      return false
-    return (
-      !this.hasEvolution || this.evolutionRule.type !== EvolutionRuleType.COUNT
-    )
-  }
-
   get canBePlaced(): boolean {
     return ![Pkm.EGG].includes(this.name)
   }

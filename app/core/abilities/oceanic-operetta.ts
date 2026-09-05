@@ -6,12 +6,8 @@ import { DelayedCommand } from "../simulation-command"
 import { AbilityStrategy } from "./ability-strategy"
 
 export class OceanicOperettaStrategy extends AbilityStrategy {
-  process(
-    pokemon: PokemonEntity,
-    board: Board,
-    target: PokemonEntity,
-    crit: boolean
-  ) {
+  requiresTarget = false
+  process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     //For the next 5 seconds, each second a wave of water and music hits in a 3-tile radius. All enemies hit are pushed back and receive [10,20,30,60,100,SP] SPECIAL. All allies in the area are cured of BURN and other SOUND allies receive [10,SP] PP.
     super.process(pokemon, board, target, crit, true)
     const nbWaves = 5
@@ -22,7 +18,7 @@ export class OceanicOperettaStrategy extends AbilityStrategy {
     function applyWave() {
       pokemon.broadcastAbility()
       pokemon.status.healBurn(pokemon)
-      
+
       const pokemonsHit = board
         .getCellsInRadius(pokemon.positionX, pokemon.positionY, radius, false)
         .map((cell) => cell.value)

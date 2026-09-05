@@ -500,7 +500,7 @@ export const bugSwarmSpawnEffect = new OnStageStartEffect(
   ({ player, room }) => {
     if (getFreeSpaceOnBench(player.board) > 0 && !player.isBot) {
       const bugsNotFinal = [...player.board.values()]
-        .filter((p) => p.hasSynergy(Synergy.BUG) && !p.final)
+        .filter((p) => p.hasSynergy(Synergy.BUG) && !EvolutionManager.isFinal(p))
         .sort((a, b) => RarityCost[a.rarity] - RarityCost[b.rarity])
       if (bugsNotFinal.length > 0) {
         const spawn = getPokemonBaseline(bugsNotFinal[0]!.name)

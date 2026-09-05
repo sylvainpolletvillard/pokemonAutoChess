@@ -1801,7 +1801,8 @@
 		"BLOOM_DOOM": "Bloom Doom",
 		"SAVAGE_SPIN_OUT": "Savage Spin-Out",
 		"CALL_OF_THE_WILD": "Call of the Wild",
-		"OCEANIC_OPERETTA": "Oceanic Operetta"
+		"OCEANIC_OPERETTA": "Oceanic Operetta",
+		"BABY_BOOM": "Baby Boom"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2382,7 +2383,8 @@
 		"BLOOM_DOOM": "An explosion of petals hits the target and all enemies in a 2-tile radius around it, dealing [50,100,150,200,300,SP] SPECIAL. The allies in the area heal for [50,100,150,200,300,SP] HP.",
 		"SAVAGE_SPIN_OUT": "Target is encased in a cocoon and unable to act for 2 seconds. The caster spins the cocoon around, dealing [40,70,100,130,200,SP] SPECIAL to all enemies within a 2-tile radius. The encased target takes [15,20,25,30,50,SP] SPECIAL for each enemy hit in this way, then is knocked off the field if they have less than 100 HP remaining or are the last surviving unit.",
 		"CALL_OF_THE_WILD": "Spawn 2 WILD Pokémon on board in your team, of the same rarity and tier than the caster. [3,SP] other WILD Pokémon of lower rarity and tier walk to the field and can be caught by clicking on them.",
-		"OCEANIC_OPERETTA": "For the next 5 seconds, each second a wave of water and music hits in a 3-tile radius. All enemies hit are pushed back and receive [10,20,40,60,100,SP] SPECIAL. All allies in the area are cured of BURN and other SOUND allies receive [10,SP] PP."
+		"OCEANIC_OPERETTA": "For the next 5 seconds, each second a wave of water and music hits in a 3-tile radius. All enemies hit are pushed back and receive [10,20,40,60,100,SP] SPECIAL. All allies in the area are cured of BURN and other SOUND allies receive [10,SP] PP.",
+		"BABY_BOOM": "3 explosive eggs are thrown to random enemies and 3 other eggs appear on the bench. Each egg has [10,10,10,100,LK]% chance to be golden. The eggs deal [100,SP] SPECIAL damage to the target and adjacent enemies. Golden eggs deal double damage and grant 1 GOLD per KO."
 	},
 	"effect": {
 		"STAMINA": "Stamina",
@@ -3358,7 +3360,7 @@
 		"CONCERTIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(OCEANIC_OPERETTA)",
 		"DARKIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.BLACK_HOLE_ECLIPSE)",
 		"DELICIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.FOOD_FIGHT)",
-		"DIAPERIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
+		"DIAPERIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.BABY_BOOM)",
 		"DRAGONIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.DEVASTATING_DRAKE)",
 		"ELECTRIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.GIGAVOLT_HAVOC)",
 		"FAIRIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.TWINKLE_TACKLE)",

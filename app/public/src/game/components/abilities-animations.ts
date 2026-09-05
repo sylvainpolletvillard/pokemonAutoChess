@@ -27,7 +27,7 @@ import {
   Stat
 } from "../../../../types/enum/Game"
 import { Sweets } from "../../../../types/enum/Item"
-import { Pillars, Pkm, PkmIndex } from "../../../../types/enum/Pokemon"
+import { Pkm, PkmIndex } from "../../../../types/enum/Pokemon"
 import { range } from "../../../../utils/array"
 import { distanceE, distanceM } from "../../../../utils/distance"
 import { wait } from "../../../../utils/function"
@@ -747,8 +747,9 @@ const parabolicProjectile: AbilityAnimationMaker<
   }
 > =
   (options = {}) =>
-  (args) => {
+  async (args) => {
     const { scene, ap, positionX, positionY, targetX, targetY, flip } = args
+    if (options.delay) await wait(options.delay)
     let [startX, startY] = transformEntityCoordinates(
       positionX,
       positionY,
@@ -790,6 +791,13 @@ const parabolicProjectile: AbilityAnimationMaker<
         const heightOffset = 4 * peakHeight * t * (1 - t)
         projectile.y =
           Phaser.Math.Interpolation.Linear([startY, endY], t) - heightOffset
+
+        if (options.tweenProps?.rotation) {
+          projectile.rotation = Phaser.Math.Interpolation.Linear(
+            [0, options.tweenProps.rotation],
+            t
+          )
+        }
       },
       onComplete: () => {
         if (options.destroyOnTweenComplete !== false) projectile?.destroy()
@@ -2102,7 +2110,17 @@ export const AbilitiesAnimations: {
     duration: 1000
   }),
   [Ability.PSYSTRIKE]: projectile({ duration: 1000 }),
-  [Ability.EGG_BOMB]: projectile({ duration: 800, scale: 3 }),
+  [Ability.EGG_BOMB]: parabolicProjectile({
+    duration: 800,
+    animOptions: { repeat: -1 },
+    scale: 2,
+    peakHeight: 150,
+    tweenProps: { rotation: Math.PI * 7 },
+    hitAnim: onTarget({
+      ability: "EGG_BOMB_HIT",
+      scale: 2
+    })
+  }),
   [Ability.SPARK]: projectile({ duration: 250 }),
   [Ability.SUCTION_HEAL]: projectile({
     scale: 3,
@@ -2669,9 +2687,9 @@ export const AbilitiesAnimations: {
   [Ability.AFTER_YOU]: poppingIcon({ maxScale: 1, tweenProps: { yoyo: true } }),
 
   [Ability.HYPERSPACE_FURY]: (args) => {
-    let nbHits = Number(args.orientation)
+    let nbHits = args.data.nbHits
     if (isNaN(nbHits) || nbHits < 1 || nbHits > 12) {
-      nbHits = 4 // default to 4 hits if orientation is not a valid number
+      nbHits = 4 // default to 4 hits if not a valid number
     }
     for (let i = 0; i < nbHits; i++) {
       onTarget({
@@ -2956,8 +2974,7 @@ export const AbilitiesAnimations: {
     const distance = min(1)(
       distanceE(args.positionX, args.positionY, args.targetX, args.targetY)
     )
-    // orientation field is used to pass the type of the pillar
-    const pillarType = Pillars[args.orientation] ?? Pkm.PILLAR_WOOD
+    const pillarType = args.data.pillarType ?? Pkm.PILLAR_WOOD
     const animKey = `${PkmIndex[pillarType]}/${PokemonTint.NORMAL}/${AnimationType.Idle}/${SpriteType.ANIM}/${Orientation.DOWN}`
     const frame = `${PokemonTint.NORMAL}/${AnimationType.Idle}/${SpriteType.ANIM}/${Orientation.DOWN}/0000`
     return projectile({
@@ -3749,6 +3766,21 @@ export const AbilitiesAnimations: {
     }),
     onCaster({ ability: "CHATTER", scale: 2, depth: DEPTH.ABILITY_MAJOR })
   ],
+
+  [Ability.BABY_BOOM]: (args) =>
+    parabolicProjectile({
+      duration: 1000,
+      delay: args.delay ?? 0,
+      animOptions: { repeat: -1 },
+      tweenProps: { rotation: Math.PI * 7 },
+      ability: args.data?.golden ? "EGG_BOMB_GOLDEN" : "EGG_BOMB",
+      scale: 2,
+      peakHeight: 150,
+      hitAnim: onTarget({
+        ability: "EGG_BOMB_HIT",
+        scale: 2
+      })
+    })(args),
 
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(

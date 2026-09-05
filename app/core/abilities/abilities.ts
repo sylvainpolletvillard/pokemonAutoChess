@@ -39,6 +39,7 @@ import { AuraWheelStrategy } from "./aura-wheel"
 import { AuroraBeamStrategy } from "./aurora-beam"
 import { AuroraVeilStrategy } from "./aurora-veil"
 import { AxeKickStrategy } from "./axe-kick"
+import { BabyBoomStrategy } from "./baby-boom";
 import { BanefulBunkerStrategy } from "./baneful-bunker"
 import { BarbBarrageStrategy } from "./barb-barrage"
 import { BaredFangsStrategy } from "./bared-fangs"
@@ -771,6 +772,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.AURORA_BEAM]: new AuroraBeamStrategy(),
   [Ability.AURORA_VEIL]: new AuroraVeilStrategy(),
   [Ability.AXE_KICK]: new AxeKickStrategy(),
+  [Ability.BABY_BOOM]: new BabyBoomStrategy(),
   [Ability.BANEFUL_BUNKER]: new BanefulBunkerStrategy(),
   [Ability.BARB_BARRAGE]: new BarbBarrageStrategy(),
   [Ability.BARED_FANGS]: new BaredFangsStrategy(),

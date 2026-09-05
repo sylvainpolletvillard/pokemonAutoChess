@@ -947,11 +947,11 @@ export default class Player extends Schema implements IPlayer {
     if (this.specialGameRule === SpecialGameRule.FAMILY_OUTING) return new Set() // in family outing mode, do not remove finished lines from shop
     const finals = new Set(
       schemaValues(this.board)
-        .filter((pokemon) => pokemon.final)
+        .filter((pokemon) => EvolutionManager.isFinal(pokemon))
         .map((pokemon) => getPokemonBaseline(pokemon.name))
     )
     this.pokemonsTrainingInDojo.forEach((pokemonInDojo) => {
-      if (pokemonInDojo.pokemon.final) {
+      if (EvolutionManager.isFinal(pokemonInDojo.pokemon)) {
         finals.add(getPokemonBaseline(pokemonInDojo.pokemon.name))
       }
     })
