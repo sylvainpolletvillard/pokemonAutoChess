@@ -347,6 +347,7 @@ import { NutrientsStrategy } from "./nutrients"
 import { NuzzleStrategy } from "./nuzzle"
 import { OblivionWingStrategy } from "./oblivion-wing"
 import { ObstructStrategy } from "./obstruct"
+import { OceanicOperettaStrategy } from "./oceanic-operetta";
 import { OctazookaStrategy } from "./octazooka"
 import { OctolockStrategy } from "./octolock"
 import { OrderUpStrategy } from "./order-up"
@@ -1081,6 +1082,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.NUZZLE]: new NuzzleStrategy(),
   [Ability.OBLIVION_WING]: new OblivionWingStrategy(),
   [Ability.OBSTRUCT]: new ObstructStrategy(),
+  [Ability.OCEANIC_OPERETTA]: new OceanicOperettaStrategy(),
   [Ability.OCTAZOOKA]: new OctazookaStrategy(),
   [Ability.OCTOLOCK]: new OctolockStrategy(),
   [Ability.ORDER_UP]: new OrderUpStrategy(),

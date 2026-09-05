@@ -3741,6 +3741,15 @@ export const AbilitiesAnimations: {
       })(args)
   ],
 
+  [Ability.OCEANIC_OPERETTA]: [
+    onCaster({
+      ability: "WATER_PULSE",
+      scale: 3,
+      depth: DEPTH.ABILITY_BELOW_POKEMON
+    }),
+    onCaster({ ability: "CHATTER", scale: 2, depth: DEPTH.ABILITY_MAJOR })
+  ],
+
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(
       (p) => p.positionX === positionX && p.positionY === positionY
