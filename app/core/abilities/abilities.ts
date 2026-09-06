@@ -39,7 +39,7 @@ import { AuraWheelStrategy } from "./aura-wheel"
 import { AuroraBeamStrategy } from "./aurora-beam"
 import { AuroraVeilStrategy } from "./aurora-veil"
 import { AxeKickStrategy } from "./axe-kick"
-import { BabyBoomStrategy } from "./baby-boom";
+import { BabyBoomStrategy } from "./baby-boom"
 import { BanefulBunkerStrategy } from "./baneful-bunker"
 import { BarbBarrageStrategy } from "./barb-barrage"
 import { BaredFangsStrategy } from "./bared-fangs"
@@ -348,7 +348,7 @@ import { NutrientsStrategy } from "./nutrients"
 import { NuzzleStrategy } from "./nuzzle"
 import { OblivionWingStrategy } from "./oblivion-wing"
 import { ObstructStrategy } from "./obstruct"
-import { OceanicOperettaStrategy } from "./oceanic-operetta";
+import { OceanicOperettaStrategy } from "./oceanic-operetta"
 import { OctazookaStrategy } from "./octazooka"
 import { OctolockStrategy } from "./octolock"
 import { OrderUpStrategy } from "./order-up"
@@ -493,6 +493,7 @@ import { SteamrollerStrategy } from "./steamroller"
 import { SteelWingStrategy } from "./steel-wing"
 import { StickyWebStrategy } from "./sticky-web"
 import { StockpileStrategy } from "./stockpile"
+import { StokedSparksurferStrategy } from "./stoked-sparksurfer"
 import { StompStrategy } from "./stomp"
 import { StoneAxeStrategy } from "./stone-axe"
 import { StoneEdgeStrategy } from "./stone-edge"
@@ -1230,6 +1231,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.STEEL_WING]: new SteelWingStrategy(),
   [Ability.STICKY_WEB]: new StickyWebStrategy(),
   [Ability.STOCKPILE]: new StockpileStrategy(),
+  [Ability.STOKED_SPARKSURFER]: new StokedSparksurferStrategy(),
   [Ability.STOMP]: new StompStrategy(),
   [Ability.STONE_AXE]: new StoneAxeStrategy(),
   [Ability.STONE_EDGE]: new StoneEdgeStrategy(),

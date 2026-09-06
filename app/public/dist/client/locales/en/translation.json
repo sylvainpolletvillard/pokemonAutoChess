@@ -1802,7 +1802,8 @@
 		"SAVAGE_SPIN_OUT": "Savage Spin-Out",
 		"CALL_OF_THE_WILD": "Call of the Wild",
 		"OCEANIC_OPERETTA": "Oceanic Operetta",
-		"BABY_BOOM": "Baby Boom"
+		"BABY_BOOM": "Baby Boom",
+		"STOKED_SPARKSURFER": "Stoked Sparksurfer"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2384,7 +2385,8 @@
 		"SAVAGE_SPIN_OUT": "Target is encased in a cocoon and unable to act for 2 seconds. The caster spins the cocoon around, dealing [40,70,100,130,200,SP] SPECIAL to all enemies within a 2-tile radius. The encased target takes [15,20,25,30,50,SP] SPECIAL for each enemy hit in this way, then is knocked off the field if they have less than 100 HP remaining or are the last surviving unit.",
 		"CALL_OF_THE_WILD": "Spawn 2 WILD Pokémon on board in your team, of the same rarity and tier than the caster. [3,SP] other WILD Pokémon of lower rarity and tier walk to the field and can be caught by clicking on them.",
 		"OCEANIC_OPERETTA": "For the next 5 seconds, each second a wave of water and music hits in a 3-tile radius. All enemies hit are pushed back and receive [10,20,40,60,100,SP] SPECIAL. All allies in the area are cured of BURN and other SOUND allies receive [10,SP] PP.",
-		"BABY_BOOM": "3 explosive eggs are thrown to random enemies and 3 other eggs appear on the bench. Each egg has [10,10,10,100,LK]% chance to be golden. The eggs deal [100,SP] SPECIAL damage to the target and adjacent enemies. Golden eggs deal double damage and grant 1 GOLD per KO."
+		"BABY_BOOM": "3 explosive eggs are thrown to random enemies and 3 other eggs appear on the bench. Each egg has [10,10,10,100,LK]% chance to be golden. The eggs deal [100,SP] SPECIAL damage to the target and adjacent enemies. Golden eggs deal double damage and grant 1 GOLD per KO.",
+		"STOKED_SPARKSURFER": "Unleash a tidal wave with power proportional to the caster's STAR level. An Alolan Raichu surfs on the wave through the 2 most crowded rows of the board, dealing [30,60,100,150,250,SP] SPECIAL and PARALYSIS for 4 seconds to enemies."
 	},
 	"effect": {
 		"STAMINA": "Stamina",
@@ -3354,7 +3356,7 @@
 		"Z_RING": "Allows the holder to equip Z-Crystals and gather the Z-Power required to perform Z-Moves.",
 		"ALUMINIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"ANTHROPIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
-		"AQUARIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
+		"AQUARIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.STOKED_SPARKSURFER)",
 		"BUGINIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.SAVAGE_SPIN_OUT)",
 		"COLOSSIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"CONCERTIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(OCEANIC_OPERETTA)",

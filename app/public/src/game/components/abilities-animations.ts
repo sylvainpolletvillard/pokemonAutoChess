@@ -822,6 +822,7 @@ const skyfall: AbilityAnimationMaker<TweenAnimationMakerOptions> =
 type PathAnimationMakerOptions = {
   duration?: number
   ease?: string | ((v: number) => number)
+  sprite?: GameObjects.Sprite
   finishAnim?: AbilityAnimation
   tweenProps?: Record<string, any>
   path: Phaser.Curves.Curve
@@ -840,17 +841,19 @@ const pathAnimation: AbilityAnimationMaker<PathAnimationMakerOptions> =
       let lastX = startX,
         lastY = startY
 
-      const sprite = addAbilitySprite(
-        scene,
-        options.ability ?? args.ability,
-        args.ap,
-        [startX, startY],
-        {
-          destroyOnComplete: false,
-          ...options,
-          rotation
-        }
-      )
+      const sprite =
+        options.sprite ??
+        addAbilitySprite(
+          scene,
+          options.ability ?? args.ability,
+          args.ap,
+          [startX, startY],
+          {
+            destroyOnComplete: false,
+            ...options,
+            rotation
+          }
+        )
       if (!sprite) return null
       if (options.initSprite) options.initSprite(sprite)
 
@@ -3398,7 +3401,8 @@ export const AbilitiesAnimations: {
 
       const enemies = args.pokemonsOnBoard.filter(
         (p) =>
-          (p.pokemon && !isEntity(p.pokemon)) ||
+          p.pokemon &&
+          isEntity(p.pokemon) &&
           p.pokemon.team !== (casterSprite.pokemon as IPokemonEntity).team
       )
       const remainingTargets = new Set(enemies)
@@ -3736,7 +3740,6 @@ export const AbilitiesAnimations: {
               const startPoint = circularPath.getPoint(0)
               targetSprite.moveManager.setEnable(false)
               targetSprite.setPosition(startPoint.x, startPoint.y)
-              console.log("set target start point", startPoint)
 
               args.scene.tweens.add({
                 targets: pathFollower,
@@ -3756,6 +3759,59 @@ export const AbilitiesAnimations: {
           }
         })
       })(args)
+  ],
+
+  [Ability.STOKED_SPARKSURFER]: [
+    onSprite(({ casterSprite, ...args }) => {
+      if (!casterSprite || !args.data?.rows) return
+      const [startX, startY] = transformEntityCoordinates(-1, 0, args.flip)
+      //casterSprite.moveManager.moveTo(startX, startY)
+
+      const points: [number, number][] = []
+      const rows = args.data.rows
+      points.push([startX, startY])
+
+      rows.forEach((row, i) => {
+        const leftPos = transformEntityCoordinates(0, row, args.flip)
+        const rightPos = transformEntityCoordinates(7, row, args.flip)
+        if (i % 2) {
+          points.push(leftPos)
+          points.push(rightPos)
+        } else {
+          points.push(rightPos)
+          points.push(leftPos)
+        }
+
+        /*setTimeout(() => {
+          const enemiesInRow = args.pokemonsOnBoard.filter(
+            (p) =>
+              p.pokemon &&
+              isEntity(p.pokemon) &&
+              p.pokemon.team !==
+                (casterSprite.pokemon as IPokemonEntity).team &&
+              p.positionY === row
+          )
+          for(const enemy of enemiesInRow){
+            onTarget(enemy
+          }
+        }, i * 500)*/
+      })
+
+      args.scene.animationManager?.animatePokemon(
+        casterSprite,
+        PokemonActionState.IDLE,
+        args.flip
+      )
+
+      const path = new Phaser.Curves.Spline(points)
+      return pathAnimation({
+        path,
+        scale: 2,
+        oriented: true,
+        rotation: 0,
+        duration: 2000
+      })(args)
+    })
   ],
 
   [Ability.OCEANIC_OPERETTA]: [
