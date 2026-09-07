@@ -3838,6 +3838,27 @@ export const AbilitiesAnimations: {
       })
     })(args),
 
+  [Ability.KAIJU_ATTACK]: [
+    onSprite(({ casterSprite }) => casterSprite?.emoteAnimation()),
+    onCaster({ rotation: Math.PI, scale: 4 })
+  ],
+
+  KAIJU_ATTACK_PROJECTILE: [
+    parabolicProjectile({
+      peakHeight: 150,
+      scale: 2,
+      animOptions: { repeat: -1 },
+      tweenProps: { rotation: Math.PI * 2 },
+      duration: 400,
+      delay: 100,
+      hitAnim: onTarget({
+        ability: "KAIJU_ATTACK_EXPLOSION",
+        scale: 2,
+        positionOffset: [0, -100]
+      })
+    })
+  ],
+
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(
       (p) => p.positionX === positionX && p.positionY === positionY

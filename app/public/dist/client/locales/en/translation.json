@@ -1803,7 +1803,8 @@
 		"CALL_OF_THE_WILD": "Call of the Wild",
 		"OCEANIC_OPERETTA": "Oceanic Operetta",
 		"BABY_BOOM": "Baby Boom",
-		"STOKED_SPARKSURFER": "Stoked Sparksurfer"
+		"STOKED_SPARKSURFER": "Stoked Sparksurfer",
+		"KAIJU_ATTACK": "Kaiju Attack"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2380,13 +2381,14 @@
 		"GIANT_RAFFLESIA": "Spawn a giant carnivorous plant in the middle of the enemy team. It hits 5 times all ADJACENT enemies for [15,25,40,60,100,SP] SPECIAL and throws a projectile to a random enemy that deals [20,40,80,120,180,SP] SPECIAL and PARALYSIS for 5 seconds.",
 		"SUPERSONIC_SKYSTRIKE": "Dives down in the middle of the enemy team from the sky, dealing [50,100,150,200,300,SP] SPECIAL in a 4-tile radius, damage decreased by 20% for each tile of distance. The holder gets PROTECT for 2 seconds.",
 		"FOOD_FIGHT": "Throw [6,8,10,16,24,SP] random dishes in the next 3 seconds to random allies and enemies. Allies hit heal 50 HP and receive the dish effect while enemies take 50 SPECIAL.",
-		"TWINKLE_TACKLE": "A magical zone within a 4-tile radius of the caster causes all enemies to get CHARM by the caster for 2 seconds. Then, after 2 seconds, a star strikes all ADJACENT enemies for [300,SP] SPECIAL and knocks them back, with a [30,LK]% chance of knocking them off the battlefield.",
+		"TWINKLE_TACKLE": "A magical zone within a 4-tile radius of the caster causes all enemies to get CHARM by the caster for 2 seconds. Then, after 2 seconds, a star strikes all ADJACENT enemies for [100,200,300,400,800,SP] SPECIAL and knocks them back, with a [30,LK]% chance of knocking them off the battlefield.",
 		"BLOOM_DOOM": "An explosion of petals hits the target and all enemies in a 2-tile radius around it, dealing [50,100,150,200,300,SP] SPECIAL. The allies in the area heal for [50,100,150,200,300,SP] HP.",
 		"SAVAGE_SPIN_OUT": "Target is encased in a cocoon and unable to act for 2 seconds. The caster spins the cocoon around, dealing [40,70,100,130,200,SP] SPECIAL to all enemies within a 2-tile radius. The encased target takes [15,20,25,30,50,SP] SPECIAL for each enemy hit in this way, then is knocked off the field if they have less than 100 HP remaining or are the last surviving unit.",
 		"CALL_OF_THE_WILD": "Spawn 2 WILD Pokémon on board in your team, of the same rarity and tier than the caster. [3,SP] other WILD Pokémon of lower rarity and tier walk to the field and can be caught by clicking on them.",
 		"OCEANIC_OPERETTA": "For the next 5 seconds, each second a wave of water and music hits in a 3-tile radius. All enemies hit are pushed back and receive [10,20,40,60,100,SP] SPECIAL. All allies in the area are cured of BURN and other SOUND allies receive [10,SP] PP.",
 		"BABY_BOOM": "3 explosive eggs are thrown to random enemies and 3 other eggs appear on the bench. Each egg has [10,10,10,100,LK]% chance to be golden. The eggs deal [100,SP] SPECIAL damage to the target and adjacent enemies. Golden eggs deal double damage and grant 1 GOLD per KO.",
-		"STOKED_SPARKSURFER": "Unleash a tidal wave with power proportional to the caster's STAR level. An Alolan Raichu surfs on the wave through the 2 most crowded rows of the board, dealing [30,60,100,150,250,SP] SPECIAL and PARALYSIS for 4 seconds to enemies."
+		"STOKED_SPARKSURFER": "Unleash a tidal wave with power proportional to the caster's STAR level. An Alolan Raichu surfs on the wave through the 2 most crowded rows of the board, dealing [30,60,100,150,250,SP] SPECIAL and PARALYSIS for 4 seconds to enemies.",
+		"KAIJU_ATTACK": "Gain [100,100,100,120,150,SP]% additional base max HP and lets out a terrifying howl that causes all ennemies FLINCH for 4 seconds. Then target the enemy with the highest max HP and hurls a huge rock that deals [100,200,300,400,800,SP] SPECIAL to it and ADJACENT enemies."
 	},
 	"effect": {
 		"STAMINA": "Stamina",
@@ -3358,8 +3360,8 @@
 		"ANTHROPIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"AQUARIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.STOKED_SPARKSURFER)",
 		"BUGINIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.SAVAGE_SPIN_OUT)",
-		"COLOSSIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
-		"CONCERTIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(OCEANIC_OPERETTA)",
+		"COLOSSIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.KAIJU_ATTACK)",
+		"CONCERTIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.OCEANIC_OPERETTA)",
 		"DARKIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.BLACK_HOLE_ECLIPSE)",
 		"DELICIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.FOOD_FIGHT)",
 		"DIAPERIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.BABY_BOOM)",

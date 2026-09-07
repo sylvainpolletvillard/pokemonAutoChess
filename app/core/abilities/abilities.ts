@@ -286,6 +286,7 @@ import { IvyCudgelStrategy } from "./ivy-cudgel"
 import { JawLockStrategy } from "./jaw-lock"
 import { JetPunchStrategy } from "./jet-punch"
 import { JudgementStrategy } from "./judgement"
+import { KaijuAttackStrategy } from "./kaiju-attack";
 import { KingShieldStrategy } from "./king-shield"
 import { KnockOffStrategy } from "./knock-off"
 import { KowtowCleaveStrategy } from "./kowtow-cleave"
@@ -1020,6 +1021,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.JAW_LOCK]: new JawLockStrategy(),
   [Ability.JET_PUNCH]: new JetPunchStrategy(),
   [Ability.JUDGEMENT]: new JudgementStrategy(),
+  [Ability.KAIJU_ATTACK]: new KaijuAttackStrategy(),
   [Ability.KING_SHIELD]: new KingShieldStrategy(),
   [Ability.KNOCK_OFF]: new KnockOffStrategy(),
   [Ability.KNOWLEDGE_THIEF]: new KnowledgeThiefStrategy(),
