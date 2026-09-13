@@ -43,6 +43,10 @@ h2 .description-icon > img {
   text-transform: capitalize;
 }
 
+.technical-term-label {
+  white-space: pre-line;
+}
+
 .technical-term-label::first-letter {
   text-transform: uppercase;
 }

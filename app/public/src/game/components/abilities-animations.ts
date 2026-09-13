@@ -823,7 +823,7 @@ type PathAnimationMakerOptions = {
   duration?: number
   ease?: string | ((v: number) => number)
   sprite?: GameObjects.Sprite
-  finishAnim?: AbilityAnimation
+  finishAnim?: AbilityAnimation | AbilityAnimation[]
   tweenProps?: Record<string, any>
   path: Phaser.Curves.Curve
   destroyOnTweenComplete?: boolean
@@ -876,7 +876,13 @@ const pathAnimation: AbilityAnimationMaker<PathAnimationMakerOptions> =
         },
         onComplete: () => {
           if (options.destroyOnTweenComplete !== false) sprite?.destroy()
-          if (options.finishAnim) options.finishAnim(args)
+          if (options.finishAnim) {
+            if (Array.isArray(options.finishAnim)) {
+              options.finishAnim.forEach((anim) => anim(args))
+            } else {
+              options.finishAnim(args)
+            }
+          }
         },
         ...(options.tweenProps ?? {})
       }
@@ -3462,12 +3468,15 @@ export const AbilitiesAnimations: {
           sprite.enableFilters()
           sprite.filters?.internal.addGlow(0xff00ff, 6, 1, 0.5)
         },
-        finishAnim: staticAnimation({
-          ability: "DEVASTATING_DRAKE_HIT",
-          x: explosionX,
-          y: explosionY,
-          scale: 4
-        })
+        finishAnim: [
+          shakeCamera({ duration: 400, intensity: 0.01 }),
+          staticAnimation({
+            ability: "DEVASTATING_DRAKE_HIT",
+            x: explosionX,
+            y: explosionY,
+            scale: 4
+          })
+        ]
       })(args)
     })
   ],
@@ -3510,7 +3519,8 @@ export const AbilitiesAnimations: {
 
   ["TECTONIC_RAGE_FINAL"]: [
     onTargetScale2,
-    onTarget({ ability: "ERUPTION", scale: 3, delay: 150 })
+    onTarget({ ability: "ERUPTION", scale: 3, delay: 150 }),
+    shakeCamera({ duration: 300, intensity: 0.015 })
   ],
 
   [Ability.GIGAVOLT_HAVOC]: [
@@ -3575,6 +3585,7 @@ export const AbilitiesAnimations: {
   }),
   [Ability.LIGHT_THAT_BURNS_THE_SKY]: [
     onCasterScale4,
+    shakeCamera({ duration: 500, intensity: 0.02 }),
     (args) => {
       if (!preference("disableCameraShake")) args.scene.cameras.main.flash(250)
     }
@@ -3676,11 +3687,14 @@ export const AbilitiesAnimations: {
       oriented: false,
       scale: 2,
       duration: 800,
-      hitAnim: onCaster({
-        ability: "TWINKLE_EXPLOSION",
-        tint: 0xffc0c0,
-        scale: 4
-      })
+      hitAnim: [
+        onCaster({
+          ability: "TWINKLE_EXPLOSION",
+          tint: 0xffc0c0,
+          scale: 4
+        }),
+        shakeCamera({ duration: 500, intensity: 0.02 })
+      ]
     })(args),
 
   [Ability.SAVAGE_SPIN_OUT]: [
@@ -3851,12 +3865,28 @@ export const AbilitiesAnimations: {
       tweenProps: { rotation: Math.PI * 2 },
       duration: 400,
       delay: 100,
-      hitAnim: onTarget({
-        ability: "KAIJU_ATTACK_EXPLOSION",
-        scale: 2,
-        positionOffset: [0, -100]
-      })
+      hitAnim: [
+        onTarget({
+          ability: "KAIJU_ATTACK_EXPLOSION",
+          scale: 2,
+          positionOffset: [0, -100]
+        }),
+        shakeCamera({ duration: 300, intensity: 0.01 })
+      ]
     })
+  ],
+
+  [Ability.BREAKNECK_BLITZ]: [
+    onCaster({
+      ability: "HYPER_BEAM_CHARGE",
+      scale: 2,
+      tint: 0xf0f0ff
+    })
+  ],
+
+  ["BREAKNECK_BLITZ_HIT"]: [
+    onTargetScale4,
+    shakeCamera({ duration: 500, intensity: 0.02 })
   ],
 
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {

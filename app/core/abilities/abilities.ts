@@ -64,6 +64,7 @@ import { BonemerangStrategy } from "./bonemerang"
 import { BoomBurstStrategy } from "./boomburst"
 import { BounceStrategy } from "./bounce"
 import { BraveBirdStrategy } from "./brave-bird"
+import { BreakneckBlitzStrategy } from "./breakneck-blitz"
 import { BrickBreakStrategy } from "./brick-break"
 import { BugBiteStrategy } from "./bug-bite"
 import { BugBuzzStrategy } from "./bug-buzz"
@@ -286,7 +287,7 @@ import { IvyCudgelStrategy } from "./ivy-cudgel"
 import { JawLockStrategy } from "./jaw-lock"
 import { JetPunchStrategy } from "./jet-punch"
 import { JudgementStrategy } from "./judgement"
-import { KaijuAttackStrategy } from "./kaiju-attack";
+import { KaijuAttackStrategy } from "./kaiju-attack"
 import { KingShieldStrategy } from "./king-shield"
 import { KnockOffStrategy } from "./knock-off"
 import { KowtowCleaveStrategy } from "./kowtow-cleave"
@@ -799,6 +800,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.BOOMBURST]: new BoomBurstStrategy(),
   [Ability.BOUNCE]: new BounceStrategy(),
   [Ability.BRAVE_BIRD]: new BraveBirdStrategy(),
+  [Ability.BREAKNECK_BLITZ]: new BreakneckBlitzStrategy(),
   [Ability.BRICK_BREAK]: new BrickBreakStrategy(),
   [Ability.BUG_BITE]: new BugBiteStrategy(),
   [Ability.BUG_BUZZ]: new BugBuzzStrategy(),

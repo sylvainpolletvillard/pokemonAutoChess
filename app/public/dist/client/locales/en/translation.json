@@ -1804,7 +1804,8 @@
 		"OCEANIC_OPERETTA": "Oceanic Operetta",
 		"BABY_BOOM": "Baby Boom",
 		"STOKED_SPARKSURFER": "Stoked Sparksurfer",
-		"KAIJU_ATTACK": "Kaiju Attack"
+		"KAIJU_ATTACK": "Kaiju Attack",
+		"BREAKNECK_BLITZ": "Breakneck Blitz"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -1868,7 +1869,7 @@
 		"BLAST_BURN": "Deal [30,60,120,240,SP] SPECIAL to all ADJACENT enemy Pokémon.",
 		"CHARGE": "Until the end of the fight, attacks deal [100,100,100,200,SP]% additional SPECIAL (stackable).",
 		"DISCHARGE": "Deal [25,50,100,200,SP] SPECIAL to all ADJACENT enemy Pokémon and inflict them with PARALYSIS for 5 seconds.",
-		"SHOCKWAVE": "Deal [30,60,120,240,SP] SPECIAL to all enemies in a 2-range radius, +1 range if user is in an ELECTRIC_FIELD, -20% damage per tile from the user.",
+		"SHOCKWAVE": "Deal [30,60,120,240,SP] SPECIAL to all enemies in a 2-range radius, +1 range if user is in an ELECTRIC_FIELD, with 20% DAMAGE_REDUCTION_OVER_DISTANCE.",
 		"BITE": "Deal [40,80,120,200,SP] SPECIAL to the target and heal the user for 30% of the damage dealt. Cause the target to FLINCH for 5 seconds.",
 		"AQUA_TAIL": "Deal [30,60,100,200,SP] SPECIAL to the target and gain [30,60,100,200,SP] SHIELD.",
 		"DRAGON_TAIL": "Deal [30,60,100,150,SP] SPECIAL to the target and increase the user's DEF and SPE_DEF by [2,4,6,10,SP].",
@@ -2111,7 +2112,7 @@
 		"CRUSH_GRIP": "The target is crushed with great force. The more HP % the target has left, the greater the damage: between [15,25,50,100,SP] and [65,125,250,500,SP] SPECIAL.",
 		"AURASPHERE": "Exude an aura and project energy in a line, dealing [25,50,100,200,SP] SPECIAL and inflicting all enemy Pokémon hit with SILENCE for 3 seconds.",
 		"SKETCH": "Copy the ability, max PP and STAR of the allied Pokémon on the user's left at the start of the fight, if not INIMITABLE.",
-		"OVERDRIVE": "Twang an electric guitar, causing a huge echo and strong vibration. Deal [120,120,150,300,SP]% of ATK as SPECIAL within a 3 tile radius of the user, -20% damage per tile from the user.",
+		"OVERDRIVE": "Twang an electric guitar, causing a huge echo and strong vibration. Deal [120,120,150,300,SP]% of ATK as SPECIAL within a 3 tile radius of the user, with 20% DAMAGE_REDUCTION_OVER_DISTANCE.",
 		"LOVELY_KISS": "Kiss the enemy Pokémon with a frightening expression. Put the target to SLEEP for [2,4,6,12,SP] seconds. If the target is already suffering from SLEEP, deal [50,100,150,300,SP] SPECIAL instead.",
 		"TRANSFORM": "Take the appearance, stats (except HP) and ability of the target.",
 		"PSYCHIC_FANGS": "Remove all the target's ATK, DEF and SPE_DEF stat increases, then deal [20,40,80,160,SP] SPECIAL.",
@@ -2388,7 +2389,8 @@
 		"OCEANIC_OPERETTA": "For the next 5 seconds, each second a wave of water and music hits in a 3-tile radius. All enemies hit are pushed back and receive [10,20,40,60,100,SP] SPECIAL. All allies in the area are cured of BURN and other SOUND allies receive [10,SP] PP.",
 		"BABY_BOOM": "3 explosive eggs are thrown to random enemies and 3 other eggs appear on the bench. Each egg has [10,10,10,100,LK]% chance to be golden. The eggs deal [100,SP] SPECIAL damage to the target and adjacent enemies. Golden eggs deal double damage and grant 1 GOLD per KO.",
 		"STOKED_SPARKSURFER": "Unleash a tidal wave with power proportional to the caster's STAR level. An Alolan Raichu surfs on the wave through the 2 most crowded rows of the board, dealing [30,60,100,150,250,SP] SPECIAL and PARALYSIS for 4 seconds to enemies.",
-		"KAIJU_ATTACK": "Gain [100,100,100,120,150,SP]% additional base max HP and lets out a terrifying howl that causes all ennemies FLINCH for 4 seconds. Then target the enemy with the highest max HP and hurls a huge rock that deals [100,200,300,400,800,SP] SPECIAL to it and ADJACENT enemies."
+		"KAIJU_ATTACK": "Gain [100,100,100,120,150,SP]% additional base max HP and lets out a terrifying howl that causes all ennemies FLINCH for 4 seconds. Then target the enemy with the highest max HP and hurls a huge rock that deals [100,200,300,400,800,SP] SPECIAL to it and ADJACENT enemies.",
+		"BREAKNECK_BLITZ": "Builds up momentum for 1 second then crashes into the middle of the enemy team, dealing [60,120,200,300,500,SP] + [100,SP]% of current SHIELD as SPECIAL within a 3-tile radius with 30% of DAMAGE_REDUCTION_OVER_DISTANCE. The SHIELD explodes and is consumed upon impact."
 	},
 	"effect": {
 		"STAMINA": "Stamina",
@@ -3377,7 +3379,7 @@
 		"GRASSIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.BLOOM_DOOM)",
 		"GROUNDIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.TECTONIC_RAGE)",
 		"ICIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
-		"NORMALIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
+		"NORMALIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.BREAKNECK_BLITZ)",
 		"PETALIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.GIANT_RAFFLESIA)",
 		"PETROLIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"PHOTONIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.LIGHT_THAT_BURNS_THE_SKY)",
@@ -5260,6 +5262,7 @@
 		"ADJACENT_IN_THE_SAME_ROW": "adjacent in the same row",
 		"BOARD_EFFECT": "Board Effect",
 		"CONE": "cone",
+		"DAMAGE_REDUCTION_OVER_DISTANCE": "damage reduction over distance",
 		"FLY_AWAY": "fly away",
 		"INIMITABLE": "Inimitable",
 		"ON_HIT": "on hit",
@@ -5271,6 +5274,7 @@
 		"ADJACENT_IN_THE_SAME_ROW": "the tiles directly to the left and right of a unit",
 		"BOARD_EFFECT": "A Board Effect is an effect on a cell of the board that influences all units standing on it, no matter the team, until the end of the fight. Board effects can be cleared by certain abilities.",
 		"CONE": "shooting at a 90 degrees angle in front of the unit, centered on the target",
+		"DAMAGE_REDUCTION_OVER_DISTANCE": "reduce the base damage by a percentage based on the distance between the target and the impact point or the attacker. ADJACENT enemies take full damage, then for each additional tile of distance, the damage is reduced by the corresponding percentage.",
 		"FLY_AWAY": "Moves to the safest spot while still being at RANGE of an enemy",
 		"INIMITABLE": "An ability is inimitable if it cannot be copied and used by another Pokémon.",
 		"ON_HIT": "On Hit effects trigger when a unit is hit by an attack or an ability. They are triggered even if target has SHIELD, but not if the target dodges or has PROTECT.",
