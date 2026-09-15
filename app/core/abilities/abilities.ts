@@ -265,6 +265,7 @@ import { HornLeechStrategy } from "./horn-leech"
 import { HurricaneStrategy } from "./hurricane"
 import { HydroPumpStrategy } from "./hydro-pump"
 import { HydroSteamStrategy } from "./hydro-steam"
+import { HydroVortexStrategy } from "./hydro-vortex"
 import { HyperBeamStrategy } from "./hyper-beam"
 import { HyperDrillStrategy } from "./hyper-drill"
 import { HyperVoiceStrategy } from "./hyper-voice"
@@ -1001,6 +1002,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.HURRICANE]: new HurricaneStrategy(),
   [Ability.HYDRO_PUMP]: new HydroPumpStrategy(),
   [Ability.HYDRO_STEAM]: new HydroSteamStrategy(),
+  [Ability.HYDRO_VORTEX]: new HydroVortexStrategy(),
   [Ability.HYPER_BEAM]: new HyperBeamStrategy(),
   [Ability.HYPER_DRILL]: new HyperDrillStrategy(),
   [Ability.HYPER_VOICE]: new HyperVoiceStrategy(),

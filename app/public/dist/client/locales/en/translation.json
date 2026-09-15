@@ -1805,7 +1805,8 @@
 		"BABY_BOOM": "Baby Boom",
 		"STOKED_SPARKSURFER": "Stoked Sparksurfer",
 		"KAIJU_ATTACK": "Kaiju Attack",
-		"BREAKNECK_BLITZ": "Breakneck Blitz"
+		"BREAKNECK_BLITZ": "Breakneck Blitz",
+		"HYDRO_VORTEX": "Hydro Vortex"
 	},
 	"ability_description": {
 		"DEFAULT": "",
@@ -2390,7 +2391,8 @@
 		"BABY_BOOM": "3 explosive eggs are thrown to random enemies and 3 other eggs appear on the bench. Each egg has [10,10,10,100,LK]% chance to be golden. The eggs deal [100,SP] SPECIAL damage to the target and adjacent enemies. Golden eggs deal double damage and grant 1 GOLD per KO.",
 		"STOKED_SPARKSURFER": "Unleash a tidal wave with power proportional to the caster's STAR level. An Alolan Raichu surfs on the wave through the 2 most crowded rows of the board, dealing [30,60,100,150,250,SP] SPECIAL and PARALYSIS for 4 seconds to enemies.",
 		"KAIJU_ATTACK": "Gain [100,100,100,120,150,SP]% additional base max HP and lets out a terrifying howl that causes all ennemies FLINCH for 4 seconds. Then target the enemy with the highest max HP and hurls a huge rock that deals [100,200,300,400,800,SP] SPECIAL to it and ADJACENT enemies.",
-		"BREAKNECK_BLITZ": "Builds up momentum for 1 second then crashes into the middle of the enemy team, dealing [60,120,200,300,500,SP] + [100,SP]% of current SHIELD as SPECIAL within a 3-tile radius with 30% of DAMAGE_REDUCTION_OVER_DISTANCE. The SHIELD explodes and is consumed upon impact."
+		"BREAKNECK_BLITZ": "Builds up momentum for 1 second then crashes into the middle of the enemy team, dealing [60,120,200,300,500,SP] + [100,SP]% of current SHIELD as SPECIAL within a 3-tile radius with 30% of DAMAGE_REDUCTION_OVER_DISTANCE. The SHIELD explodes and is consumed upon impact.",
+		"HYDRO_VORTEX": "A vortex of water forms at the center of the enemy team for 3 seconds, pulling all enemies within a 2-tile radius to its center and dealing [15,30,60,100,200,SP] SPECIAL every 500ms with 30% DAMAGE_REDUCTION_OVER_DISTANCE."
 	},
 	"effect": {
 		"STAMINA": "Stamina",
@@ -3388,7 +3390,7 @@
 		"ROCKIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"SLIMIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
 		"STEELIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
-		"WATERIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to ?????",
+		"WATERIUM_Z": "Given to a Z_RING holder, change their max PP to 200 and their ability to $t(ability.HYDRO_VORTEX)",
 		"POTION": "A potion that heals 10 player HP of the team",
 		"FORAGE_BAG": "Gift 3 random item components",
 		"COLLECTION_BOX": "Gift 1 SILK_SCARF, 1 random craftable item, 1 random tool, 2 berries and an apple.",

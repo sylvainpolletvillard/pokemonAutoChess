@@ -3579,6 +3579,21 @@ export const AbilitiesAnimations: {
     })
   ],
 
+  [Ability.HYDRO_VORTEX]: [
+    tweenAnimation({
+      startCoords: "target",
+      endCoords: "target",
+      scale: 0.1,
+      tweenProps: {
+        scale: [0.1, 2, 2.1, 2, 2.1, 0.1],
+        interpolation: "bezier"
+      },
+      duration: 3000,
+      animOptions: { repeat: 10 },
+      depth: DEPTH.ABILITY_BELOW_POKEMON
+    })
+  ],
+
   ["LIGHT_THAT_BURNS_THE_SKY_CHARGE"]: onCaster({
     scale: 3,
     animOptions: { repeat: 1 }
