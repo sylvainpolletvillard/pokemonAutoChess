@@ -25,6 +25,8 @@
 
 # Bugfix
 
+- Black Belt shield on damage dealt is now correctly using the damage post-mitigation instead of pre-mitigation, which was causing it to be stronger than intended against high defense Pokémon (thanks Felosion)
+
 # Misc
 
 - The post game screen has new victory jingles made by John Rei
