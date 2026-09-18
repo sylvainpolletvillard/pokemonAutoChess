@@ -279,6 +279,7 @@ import { IcicleCrashStrategy } from "./icicle-crash"
 import { IcicleMissileStrategy } from "./icicle-missile"
 import { IcyWindStrategy } from "./icy-wind"
 import { InfernalParadeStrategy } from "./infernal-parade"
+import { InfernoOverdriveStrategy } from "./inferno-overdrive";
 import { InfestationStrategy } from "./infestation"
 import { IngrainStrategy } from "./ingrain"
 import { IronDefenseStrategy } from "./iron-defense"
@@ -1016,6 +1017,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.ICICLE_MISSILE]: new IcicleMissileStrategy(),
   [Ability.ICY_WIND]: new IcyWindStrategy(),
   [Ability.INFERNAL_PARADE]: new InfernalParadeStrategy(),
+  [Ability.INFERNO_OVERDRIVE]: new InfernoOverdriveStrategy(),
   [Ability.INFESTATION]: new InfestationStrategy(),
   [Ability.INGRAIN]: new IngrainStrategy(),
   [Ability.IRON_DEFENSE]: new IronDefenseStrategy(),

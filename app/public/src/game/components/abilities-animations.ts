@@ -3904,6 +3904,27 @@ export const AbilitiesAnimations: {
     shakeCamera({ duration: 500, intensity: 0.02 })
   ],
 
+  [Ability.INFERNO_OVERDRIVE]: [
+    projectile({
+      ability: Ability.ARMOR_CANNON,
+      animOptions: { repeat: -1 },
+      scale: 3,
+      duration: 500,
+      hitAnim: [
+        onTarget({
+          ability: "INFERNO",
+          scale: 3,
+          animOptions: { frameRate: 30 }
+        }),
+        onTarget({
+          ability: "KAIJU_ATTACK_EXPLOSION",
+          scale: 2,
+          positionOffset: [0, -100]
+        })
+      ]
+    })
+  ],
+
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(
       (p) => p.positionX === positionX && p.positionY === positionY
