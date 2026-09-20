@@ -3925,6 +3925,67 @@ export const AbilitiesAnimations: {
     })
   ],
 
+  [Ability.FURIOUS_STAMPEDE]: [
+    (args) => {
+      const taurosForm = pickRandomIn([
+        Pkm.TAUROS,
+        Pkm.TAUROS_AQUA_BREED,
+        Pkm.TAUROS_BLAZE_BREED,
+        Pkm.TAUROS_COMBAT_BREED
+      ])
+
+      const spawnTauros = (row: number, delay: number) => {
+        const [_, y] = transformEntityCoordinates(0, row, args.flip)
+        const tauros = new PokemonSprite(
+          args.scene,
+          -50,
+          y,
+          PokemonFactory.createPokemonFromName(taurosForm),
+          "furious_stampede",
+          false,
+          args.flip
+        )
+        tauros.action = PokemonActionState.WALK
+        tauros.orientation = Orientation.RIGHT
+        args.scene.animationManager?.animatePokemon(
+          tauros,
+          PokemonActionState.WALK,
+          args.flip,
+          true,
+          { frameRate: 50 }
+        )
+
+        args.scene.add.tween({
+          targets: tauros,
+          x: args.scene.scale.width + 50,
+          ease: Phaser.Math.Easing.Linear,
+          duration: 2500,
+          delay,
+          onComplete: () => {
+            tauros.destroy()
+          }
+        })
+
+        for (let t = 0; t < 3000; t += 100) {
+          setTimeout(() => {
+            addAbilitySprite(
+              args.scene,
+              "FURIOUS_STAMPEDE_SMOKE",
+              0,
+              [tauros.x - 25, tauros.y],
+              { alpha: 0.5, scale: 2, depth: DEPTH.ABILITY_BELOW_POKEMON }
+            )
+          }, t)
+        }
+      }
+
+      const rows = args.data?.rows ?? []
+      rows.forEach((row, i) => {
+        spawnTauros(row, i * 100)
+      })
+    }
+  ],
+
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(
       (p) => p.positionX === positionX && p.positionY === positionY

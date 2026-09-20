@@ -191,6 +191,7 @@ import { FoulPlayStrategy } from "./foul-play"
 import { FreezeDryStrategy } from "./freeze-dry"
 import { FreezingGlareStrategy } from "./freezing-glare"
 import { FrostBreathStrategy } from "./frost-breath"
+import { FuriousStampedeStrategy } from "./furious-stampede"
 import { FurySwipesStrategy } from "./fury-swipes"
 import { FusionBoltStrategy } from "./fusion-bolt"
 import { FutureSightStrategy } from "./future-sight"
@@ -279,7 +280,7 @@ import { IcicleCrashStrategy } from "./icicle-crash"
 import { IcicleMissileStrategy } from "./icicle-missile"
 import { IcyWindStrategy } from "./icy-wind"
 import { InfernalParadeStrategy } from "./infernal-parade"
-import { InfernoOverdriveStrategy } from "./inferno-overdrive";
+import { InfernoOverdriveStrategy } from "./inferno-overdrive"
 import { InfestationStrategy } from "./infestation"
 import { IngrainStrategy } from "./ingrain"
 import { IronDefenseStrategy } from "./iron-defense"
@@ -931,6 +932,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.FREEZE_DRY]: new FreezeDryStrategy(),
   [Ability.FREEZING_GLARE]: new FreezingGlareStrategy(),
   [Ability.FROST_BREATH]: new FrostBreathStrategy(),
+  [Ability.FURIOUS_STAMPEDE]: new FuriousStampedeStrategy(),
   [Ability.FURY_SWIPES]: new FurySwipesStrategy(),
   [Ability.FUSION_BOLT]: new FusionBoltStrategy(),
   [Ability.FUTURE_SIGHT]: new FutureSightStrategy(),

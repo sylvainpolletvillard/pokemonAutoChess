@@ -335,7 +335,8 @@ export default class AnimationManager {
     pokemonSprite: PokemonSprite,
     action: PokemonActionState,
     flip: boolean,
-    loop: boolean = true
+    loop: boolean = true,
+    animConfig: Partial<Phaser.Types.Animations.PlayAnimationConfig> = {}
   ) {
     let animation = this.convertPokemonActionStateToAnimationType(
       action,
@@ -388,7 +389,8 @@ export default class AnimationManager {
         flip,
         lock: shouldLock,
         repeat: loop ? -1 : 0,
-        timeScale
+        timeScale,
+        animConfig
       })
     } catch (err) {
       logger.warn(
@@ -400,7 +402,7 @@ export default class AnimationManager {
     if (pokemonSprite.troopers) {
       pokemonSprite.troopers.forEach((trooper) => {
         trooper.orientation = pokemonSprite.orientation
-        this.animatePokemon(trooper, action, flip, loop)
+        this.animatePokemon(trooper, action, flip, loop, animConfig)
       })
     }
   }
@@ -413,10 +415,15 @@ export default class AnimationManager {
       repeat?: number
       lock?: boolean
       timeScale?: number
+      animConfig?: Partial<Phaser.Types.Animations.PlayAnimationConfig>
     } = {}
   ) {
     if (pkmSprite.animationLocked || !pkmSprite.sprite?.anims) return
-    if (pkmSprite.sprite.texture.key === "loading_pokeball") return // still loading the actual pokemon textures
+    if (pkmSprite.sprite.texture.key === "loading_pokeball") {
+      // still loading the actual pokemon textures, wait for it to load before playing the animation
+      pkmSprite.once("loaded", () => this.play(pkmSprite, animation, config))
+      return
+    }
 
     let orientation = config.flip
       ? OrientationFlip[pkmSprite.orientation]
@@ -448,13 +455,15 @@ export default class AnimationManager {
     pkmSprite.sprite.anims.play({
       key: animKey,
       repeat: config.repeat,
-      timeScale: config.timeScale
+      timeScale: config.timeScale,
+      ...config.animConfig
     })
     if (pkmSprite.shadow) {
       pkmSprite.shadow.anims.play({
         key: shadowKey,
         repeat: config.repeat,
-        timeScale: config.timeScale
+        timeScale: config.timeScale,
+        ...config.animConfig
       })
     }
     if (config.lock) {
