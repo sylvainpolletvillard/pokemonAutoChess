@@ -40,6 +40,7 @@ import {
   OrientationVector
 } from "../../../../utils/orientation"
 import { pickRandomIn, randomBetween } from "../../../../utils/random"
+import { durations } from "../../assets/pokemons/durations.json"
 import { transformEntityCoordinates } from "../../pages/utils/utils"
 import { preference } from "../../preferences"
 import { DEPTH } from "../depths"
@@ -3984,6 +3985,30 @@ export const AbilitiesAnimations: {
         spawnTauros(row, i * 100)
       })
     }
+  ],
+
+  [Ability.NEVER_ENDING_NIGHTMARE]: Array.from({ length: 4 }).map((_, i) =>
+    tweenAnimation({
+      startCoords: "caster",
+      scale: 2,
+      depth: DEPTH.ABILITY_BELOW_POKEMON,
+      delay: i * 250,
+      animOptions: { repeat: -1 },
+      tweenProps: {
+        scale: [2, 10, 12, 10, 8],
+        alpha: [0.5, 0.5, 0.5, 0.5, 0],
+        duration: 5000,
+        interpolation: "bezier"
+      }
+    })
+  ),
+
+  ["NEVER_ENDING_NIGHTMARE_ARM"]: [
+    onTarget({
+      scale: 2,
+      positionOffset: [0, -50],
+      depth: DEPTH.ABILITY_BELOW_POKEMON
+    })
   ],
 
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {

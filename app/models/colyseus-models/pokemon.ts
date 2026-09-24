@@ -4601,7 +4601,7 @@ export class Golem extends Pokemon {
   maxPP = 100
   range = 1
   //skill = Ability.ROCK_SLIDE
-  skill = Ability.BREAKNECK_BLITZ
+  skill = Ability.NEVER_ENDING_NIGHTMARE
 }
 
 export class Totodile extends Pokemon {

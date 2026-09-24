@@ -344,6 +344,7 @@ import { MultiAttackStrategy } from "./multi-attack"
 import { MysticalFireStrategy } from "./mystical-fire"
 import { NastyPlotStrategy } from "./nasty-plot"
 import { NaturalGiftStrategy } from "./natural-gift"
+import { NeverEndingNightmareStrategy } from "./never-ending-nightmare"
 import { NightDazeStrategy } from "./night-daze"
 import { NightShadeStrategy } from "./night-shade"
 import { NightSlashStrategy } from "./night-slash"
@@ -1086,6 +1087,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.MYSTICAL_FIRE]: new MysticalFireStrategy(),
   [Ability.NASTY_PLOT]: new NastyPlotStrategy(),
   [Ability.NATURAL_GIFT]: new NaturalGiftStrategy(),
+  [Ability.NEVER_ENDING_NIGHTMARE]: new NeverEndingNightmareStrategy(),
   [Ability.NIGHT_DAZE]: new NightDazeStrategy(),
   [Ability.NIGHT_SHADE]: new NightShadeStrategy(),
   [Ability.NIGHT_SLASH]: new NightSlashStrategy(),
