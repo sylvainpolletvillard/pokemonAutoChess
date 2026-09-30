@@ -12,10 +12,10 @@ export const AtlasTree: Tree = {
       position: rotToXY(-120, 90)
     },
     {
-      id: "encounter_croagunk",
+      id: "encounter_lapras",
       type: "encounter",
       position: rotToXY(-120, 150),
-      encounter: TownEncounters.CROAGUNK
+      encounter: TownEncounters.LAPRAS
     },
     {
       id: "step_2_root_legendary1",
@@ -35,10 +35,10 @@ export const AtlasTree: Tree = {
       position: rotToXY(-60, 90)
     },
     {
-      id: "encounter_wobbuffet",
+      id: "encounter_meowth",
       type: "encounter",
       position: rotToXY(-60, 150),
-      encounter: TownEncounters.WOBBUFFET
+      encounter: TownEncounters.MEOWTH
     },
     {
       id: "step_2_root_legendary2",
@@ -78,9 +78,9 @@ export const AtlasTree: Tree = {
       emera: "primal"
     },*/
 
-    // legendary1 - gold mask
+    // legendary1 - star piece
     {
-      id: "step1_legendary1_mask",
+      id: "step1_legendary1_starpiece",
       position: sumVectors(rotToXY(-120, 300), rotToXY(-60, 90)),
       type: "step"
     },
@@ -91,20 +91,20 @@ export const AtlasTree: Tree = {
       encounter: TownEncounters.MAGNEZONE
     },
     {
-      id: "step2_legendary1_mask",
+      id: "step2_legendary1_starpiece",
       position: sumVectors(rotToXY(-120, 300), rotToXY(-60, 210)),
       type: "step"
     },
     {
-      id: "gold_mask",
+      id: "starpiece",
       position: sumVectors(rotToXY(-120, 300), rotToXY(-60, 300)),
       type: "item",
-      item: Item.GOLD_MASK
+      item: Item.STAR_PIECE
     },
 
-    // legendary2 - mask
+    // legendary2 - star piece
     {
-      id: "step1_legendary2_mask",
+      id: "step1_legendary2_starpiece",
       position: sumVectors(rotToXY(-60, 300), rotToXY(-120, 90)),
       type: "step"
     },
@@ -115,7 +115,7 @@ export const AtlasTree: Tree = {
       encounter: TownEncounters.GROVYLE
     },
     {
-      id: "step2_legendary2_mask",
+      id: "step2_legendary2_starpiece",
       position: sumVectors(rotToXY(-60, 300), rotToXY(-120, 210)),
       type: "step"
     },
@@ -151,10 +151,10 @@ export const AtlasTree: Tree = {
       type: "step"
     },
     {
-      id: "encounter_electivire",
+      id: "encounter_croagunk",
       type: "encounter",
       position: rotToXY(120, 150),
-      encounter: TownEncounters.ELECTIVIRE
+      encounter: TownEncounters.CROAGUNK
     },
     {
       id: "step2_root_zmove",
@@ -175,10 +175,10 @@ export const AtlasTree: Tree = {
       type: "step"
     },
     {
-      id: "encounter_kangaskhan",
+      id: "encounter_wobbuffet",
       type: "encounter",
       position: rotToXY(60, 150),
-      encounter: TownEncounters.KANGASKHAN
+      encounter: TownEncounters.WOBBUFFET
     },
     {
       id: "step2_root_awakening",
@@ -196,42 +196,42 @@ export const AtlasTree: Tree = {
 
     {
       id: "step1_looplet",
-      position: rotToXY(-120, 390),
+      position: rotToXY(-60, 390),
       type: "step"
     },
     {
       id: "looplet",
-      position: rotToXY(-120, 480),
+      position: rotToXY(-60, 480),
       type: "item",
       item: Item.LOOPLET
     },
     {
       id: "looplet_pink_buff",
-      position: sumVectors(rotToXY(-120, 480), rotToXY(-180, 90)),
+      position: sumVectors(rotToXY(-60, 480), rotToXY(-120, 90)),
       type: "buff",
       buff: "pink"
     },
     {
       id: "looplet_red_buff",
-      position: sumVectors(rotToXY(-120, 480), rotToXY(-150, 90)),
+      position: sumVectors(rotToXY(-60, 480), rotToXY(-90, 90)),
       type: "buff",
       buff: "red"
     },
     {
       id: "looplet_gold_buff",
-      position: sumVectors(rotToXY(-120, 480), rotToXY(-120, 90)),
+      position: sumVectors(rotToXY(-60, 480), rotToXY(-60, 90)),
       type: "buff",
       buff: "yellow"
     },
     {
       id: "looplet_green_buff",
-      position: sumVectors(rotToXY(-120, 480), rotToXY(-90, 90)),
+      position: sumVectors(rotToXY(-60, 480), rotToXY(-30, 90)),
       type: "buff",
       buff: "green"
     },
     {
       id: "looplet_blue_buff",
-      position: sumVectors(rotToXY(-120, 480), rotToXY(-60, 90)),
+      position: sumVectors(rotToXY(-60, 480), rotToXY(0, 90)),
       type: "buff",
       buff: "blue"
     },
@@ -267,10 +267,10 @@ export const AtlasTree: Tree = {
       type: "step"
     },
     {
-      id: "encounter_lapras",
+      id: "encounter_electivire",
       type: "encounter",
       position: sumVectors(rotToXY(180, 300), rotToXY(-120, 150)),
-      encounter: TownEncounters.LAPRAS
+      encounter: TownEncounters.ELECTIVIRE
     },
     {
       id: "step2_stellar_goldbow",
@@ -315,9 +315,9 @@ export const AtlasTree: Tree = {
       item: Item.TERA_ORB
     },
 
-    // stellar - eviolite
+    // stellar - gold mask
     {
-      id: "step1_stellar_eviolite",
+      id: "step1_stellar_goldmask",
       position: sumVectors(rotToXY(180, 300), rotToXY(120, 90)),
       type: "step"
     },
@@ -328,31 +328,31 @@ export const AtlasTree: Tree = {
       encounter: TownEncounters.LUDICOLO
     },
     {
-      id: "step2_stellar_eviolite",
+      id: "step2_stellar_goldmask",
       position: sumVectors(rotToXY(180, 300), rotToXY(120, 210)),
       type: "step"
     },
     {
-      id: "eviolite",
+      id: "goldmask",
       position: sumVectors(rotToXY(180, 300), rotToXY(120, 300)),
       type: "item",
-      item: Item.EVIOLITE
+      item: Item.GOLD_MASK
     },
 
-    // zmove - eviolite
+    // zmove - gold mask
     {
-      id: "step1_zmove_eviolite",
+      id: "step1_zmove_goldmask",
       position: sumVectors(rotToXY(120, 300), rotToXY(180, 90)),
       type: "step"
     },
     {
-      id: "encounter_meowth",
+      id: "encounter_kangaskhan",
       type: "encounter",
       position: sumVectors(rotToXY(120, 300), rotToXY(180, 150)),
-      encounter: TownEncounters.MEOWTH
+      encounter: TownEncounters.KANGASKHAN
     },
     {
-      id: "step2_zmove_eviolite",
+      id: "step2_zmove_goldmask",
       position: sumVectors(rotToXY(120, 300), rotToXY(180, 210)),
       type: "step"
     },
@@ -364,10 +364,10 @@ export const AtlasTree: Tree = {
       type: "step"
     },
     {
-      id: "encounter_regirock",
+      id: "encounter_celebi",
       type: "encounter",
       position: sumVectors(rotToXY(180, 300), rotToXY(60, 150)),
-      encounter: TownEncounters.REGIROCK
+      encounter: TownEncounters.CELEBI
     },
     {
       id: "step2_stellar_zmove",
@@ -382,10 +382,10 @@ export const AtlasTree: Tree = {
       type: "step"
     },
     {
-      id: "encounter_spinda",
+      id: "encounter_chimecho",
       type: "encounter",
       position: sumVectors(rotToXY(120, 300), rotToXY(0, 150)),
-      encounter: TownEncounters.SPINDA
+      encounter: TownEncounters.CHIMECHO
     },
     {
       id: "step2_zmove_awakening",
@@ -393,33 +393,33 @@ export const AtlasTree: Tree = {
       type: "step"
     },
 
-    // zmove - star piece
+    // zmove - eviolite
     {
-      id: "step1_zmove_starpiece",
+      id: "step1_zmove_eviolite",
       position: sumVectors(rotToXY(120, 300), rotToXY(60, 90)),
       type: "step"
     },
     {
-      id: "encounter_chimecho",
+      id: "encounter_spinda",
       type: "encounter",
       position: sumVectors(rotToXY(120, 300), rotToXY(60, 150)),
-      encounter: TownEncounters.CHIMECHO
+      encounter: TownEncounters.SPINDA
     },
     {
-      id: "step2_zmove_starpiece",
+      id: "step2_zmove_eviolite",
       position: sumVectors(rotToXY(120, 300), rotToXY(60, 210)),
       type: "step"
     },
     {
-      id: "starpiece",
+      id: "eviolite",
       position: sumVectors(rotToXY(120, 300), rotToXY(60, 300)),
       type: "item",
-      item: Item.STAR_PIECE
+      item: Item.EVIOLITE
     },
 
-    // awakening - star piece
+    // awakening - eviolite
     {
-      id: "step1_awakening_starpiece",
+      id: "step1_awakening_eviolite",
       position: sumVectors(rotToXY(60, 300), rotToXY(120, 90)),
       type: "step"
     },
@@ -430,7 +430,7 @@ export const AtlasTree: Tree = {
       encounter: TownEncounters.XATU
     },
     {
-      id: "step2_awakening_starpiece",
+      id: "step2_awakening_eviolite",
       position: sumVectors(rotToXY(60, 300), rotToXY(120, 210)),
       type: "step"
     },
@@ -442,10 +442,10 @@ export const AtlasTree: Tree = {
       type: "step"
     },
     {
-      id: "encounter_cinccino",
+      id: "encounter_kingambit",
       type: "encounter",
       position: rotToXY(0, 150),
-      encounter: TownEncounters.CINCCINO
+      encounter: TownEncounters.KINGAMBIT
     },
     {
       id: "step2_root_dynamax",
@@ -453,10 +453,10 @@ export const AtlasTree: Tree = {
       type: "step"
     },
     {
-      id: "encounter_marowak",
+      id: "encounter_makuhita",
       type: "encounter",
       position: rotToXY(0, 300),
-      encounter: TownEncounters.MAROWAK
+      encounter: TownEncounters.MAKUHITA
     },
     {
       id: "dynamax",
@@ -480,13 +480,13 @@ export const AtlasTree: Tree = {
     // mega paths
     {
       id: "condition_mega_1",
-      position: rotToXY(-60, 400),
+      position: rotToXY(-120, 400),
       type: "condition",
       condition: "mega"
     },
     {
       id: "mega_1",
-      position: rotToXY(-60, 500),
+      position: rotToXY(-120, 500),
       type: "keystone",
       emera: "mega"
     },
@@ -504,38 +504,38 @@ export const AtlasTree: Tree = {
       emera: "mega"
     },
 
-    // marowak - legendary2
+    // makuhita - legendary2
     {
-      id: "step1_marowak_legendary2",
+      id: "step1_makuhita_legendary2",
       position: sumVectors(rotToXY(0, 300), rotToXY(-120, 90)),
       type: "step"
     },
     {
-      id: "encounter_duskull",
+      id: "encounter_regirock",
       type: "encounter",
       position: sumVectors(rotToXY(0, 300), rotToXY(-120, 150)),
-      encounter: TownEncounters.DUSKULL
+      encounter: TownEncounters.REGIROCK
     },
     {
-      id: "step2_marowak_legendary2",
+      id: "step2_makuhita_legendary2",
       position: sumVectors(rotToXY(0, 300), rotToXY(-120, 210)),
       type: "step"
     },
 
-    // marowak - awakening
+    // makuhita - awakening
     {
-      id: "step1_marowak_awakening",
+      id: "step1_makuhita_awakening",
       position: sumVectors(rotToXY(0, 300), rotToXY(120, 90)),
       type: "step"
     },
     {
-      id: "encounter_celebi",
+      id: "encounter_cinccino",
       type: "encounter",
       position: sumVectors(rotToXY(0, 300), rotToXY(120, 150)),
-      encounter: TownEncounters.CELEBI
+      encounter: TownEncounters.CINCCINO
     },
     {
-      id: "step2_marowak_awakening",
+      id: "step2_makuhita_awakening",
       position: sumVectors(rotToXY(0, 300), rotToXY(120, 210)),
       type: "step"
     },
@@ -564,38 +564,38 @@ export const AtlasTree: Tree = {
       item: Item.SACRED_ASH
     },
 
-    // marowak - sacred ash
+    // makuhita - sacred ash
     {
-      id: "step1_marowak_sacredash",
+      id: "step1_makuhita_sacredash",
       position: sumVectors(rotToXY(0, 300), rotToXY(-60, 90)),
       type: "step"
     },
     {
-      id: "encounter_kingambit",
+      id: "encounter_munchlax",
       position: sumVectors(rotToXY(0, 300), rotToXY(-60, 150)),
       type: "encounter",
-      encounter: TownEncounters.KINGAMBIT
+      encounter: TownEncounters.MUNCHLAX
     },
     {
-      id: "step2_marowak_sacredash",
+      id: "step2_makuhita_sacredash",
       position: sumVectors(rotToXY(0, 300), rotToXY(-60, 210)),
       type: "step"
     },
 
-    // marowak - rare candy
+    // makuhita - rare candy
     {
-      id: "step1_marowak_candy",
+      id: "step1_makuhita_candy",
       position: sumVectors(rotToXY(0, 300), rotToXY(60, 90)),
       type: "step"
     },
     {
-      id: "encounter_makuhita",
+      id: "encounter_marowak",
       position: sumVectors(rotToXY(0, 300), rotToXY(60, 150)),
       type: "encounter",
-      encounter: TownEncounters.MAKUHITA
+      encounter: TownEncounters.MAROWAK
     },
     {
-      id: "step2_marowak_candy",
+      id: "step2_makuhita_candy",
       position: sumVectors(rotToXY(0, 300), rotToXY(60, 210)),
       type: "step"
     },
@@ -613,10 +613,10 @@ export const AtlasTree: Tree = {
       type: "step"
     },
     {
-      id: "encounter_munchlax",
+      id: "encounter_duskull",
       position: sumVectors(rotToXY(60, 300), rotToXY(0, 150)),
       type: "encounter",
-      encounter: TownEncounters.MUNCHLAX
+      encounter: TownEncounters.DUSKULL
     },
     {
       id: "step2_awakening_candy",
@@ -626,13 +626,13 @@ export const AtlasTree: Tree = {
   ],
   connections: [
     { from: "root", to: "step_1_root_legendary1" },
-    { from: "step_1_root_legendary1", to: "encounter_croagunk" },
-    { from: "encounter_croagunk", to: "step_2_root_legendary1" },
+    { from: "step_1_root_legendary1", to: "encounter_lapras" },
+    { from: "encounter_lapras", to: "step_2_root_legendary1" },
     { from: "step_2_root_legendary1", to: "legendary1" },
 
     { from: "root", to: "step_1_root_legendary2" },
-    { from: "step_1_root_legendary2", to: "encounter_wobbuffet" },
-    { from: "encounter_wobbuffet", to: "step_2_root_legendary2" },
+    { from: "step_1_root_legendary2", to: "encounter_meowth" },
+    { from: "encounter_meowth", to: "step_2_root_legendary2" },
     { from: "step_2_root_legendary2", to: "legendary2" },
 
     { from: "legendary1", to: "condition_fusion" },
@@ -642,15 +642,15 @@ export const AtlasTree: Tree = {
     { from: "legendary2", to: "condition_primal" },
     { from: "condition_primal", to: "primal" },*/
 
-    { from: "legendary1", to: "step1_legendary1_mask" },
-    { from: "step1_legendary1_mask", to: "encounter_magnezone" },
-    { from: "encounter_magnezone", to: "step2_legendary1_mask" },
-    { from: "step2_legendary1_mask", to: "gold_mask" },
+    { from: "legendary1", to: "step1_legendary1_starpiece" },
+    { from: "step1_legendary1_starpiece", to: "encounter_magnezone" },
+    { from: "encounter_magnezone", to: "step2_legendary1_starpiece" },
+    { from: "step2_legendary1_starpiece", to: "starpiece" },
 
-    { from: "legendary2", to: "step1_legendary2_mask" },
-    { from: "step1_legendary2_mask", to: "encounter_grovyle" },
-    { from: "encounter_grovyle", to: "step2_legendary2_mask" },
-    { from: "step2_legendary2_mask", to: "gold_mask" },
+    { from: "legendary2", to: "step1_legendary2_starpiece" },
+    { from: "step1_legendary2_starpiece", to: "encounter_grovyle" },
+    { from: "encounter_grovyle", to: "step2_legendary2_starpiece" },
+    { from: "step2_legendary2_starpiece", to: "starpiece" },
 
     { from: "root", to: "step1_root_stellar" },
     { from: "step1_root_stellar", to: "encounter_kecleon" },
@@ -658,13 +658,13 @@ export const AtlasTree: Tree = {
     { from: "step2_root_stellar", to: "stellar" },
 
     { from: "root", to: "step1_root_zmove" },
-    { from: "step1_root_zmove", to: "encounter_electivire" },
-    { from: "encounter_electivire", to: "step2_root_zmove" },
+    { from: "step1_root_zmove", to: "encounter_croagunk" },
+    { from: "encounter_croagunk", to: "step2_root_zmove" },
     { from: "step2_root_zmove", to: "zmove" },
 
     { from: "root", to: "step1_root_awakening" },
-    { from: "step1_root_awakening", to: "encounter_kangaskhan" },
-    { from: "encounter_kangaskhan", to: "step2_root_awakening" },
+    { from: "step1_root_awakening", to: "encounter_wobbuffet" },
+    { from: "encounter_wobbuffet", to: "step2_root_awakening" },
     { from: "step2_root_awakening", to: "awakening" },
 
     { from: "legendary1", to: "step1_legendary1_goldbow" },
@@ -673,8 +673,8 @@ export const AtlasTree: Tree = {
     { from: "step2_legendary1_goldbow", to: "goldbow" },
 
     { from: "stellar", to: "step1_stellar_goldbow" },
-    { from: "step1_stellar_goldbow", to: "encounter_lapras" },
-    { from: "encounter_lapras", to: "step2_stellar_goldbow" },
+    { from: "step1_stellar_goldbow", to: "encounter_electivire" },
+    { from: "encounter_electivire", to: "step2_stellar_goldbow" },
     { from: "step2_stellar_goldbow", to: "goldbow" },
 
     { from: "stellar", to: "step1_stellar_legendary1" },
@@ -682,19 +682,19 @@ export const AtlasTree: Tree = {
     { from: "encounter_sableye", to: "step2_stellar_legendary1" },
     { from: "step2_stellar_legendary1", to: "legendary1" },
 
-    { from: "stellar", to: "step1_stellar_eviolite" },
-    { from: "step1_stellar_eviolite", to: "encounter_ludicolo" },
-    { from: "encounter_ludicolo", to: "step2_stellar_eviolite" },
-    { from: "step2_stellar_eviolite", to: "eviolite" },
+    { from: "stellar", to: "step1_stellar_goldmask" },
+    { from: "step1_stellar_goldmask", to: "encounter_ludicolo" },
+    { from: "encounter_ludicolo", to: "step2_stellar_goldmask" },
+    { from: "step2_stellar_goldmask", to: "goldmask" },
 
-    { from: "zmove", to: "step1_zmove_eviolite" },
-    { from: "step1_zmove_eviolite", to: "encounter_meowth" },
-    { from: "encounter_meowth", to: "step2_zmove_eviolite" },
-    { from: "step2_zmove_eviolite", to: "eviolite" },
+    { from: "zmove", to: "step1_zmove_goldmask" },
+    { from: "step1_zmove_goldmask", to: "encounter_kangaskhan" },
+    { from: "encounter_kangaskhan", to: "step2_zmove_goldmask" },
+    { from: "step2_zmove_goldmask", to: "goldmask" },
 
     { from: "stellar", to: "step1_stellar_zmove" },
-    { from: "step1_stellar_zmove", to: "encounter_regirock" },
-    { from: "encounter_regirock", to: "step2_stellar_zmove" },
+    { from: "step1_stellar_zmove", to: "encounter_celebi" },
+    { from: "encounter_celebi", to: "step2_stellar_zmove" },
     { from: "step2_stellar_zmove", to: "zmove" },
 
     { from: "stellar", to: "condition_tera_orb" },
@@ -702,39 +702,39 @@ export const AtlasTree: Tree = {
     { from: "step1_tera_orb", to: "tera_orb" },
 
     { from: "zmove", to: "step1_zmove_awakening" },
-    { from: "step1_zmove_awakening", to: "encounter_spinda" },
-    { from: "encounter_spinda", to: "step2_zmove_awakening" },
+    { from: "step1_zmove_awakening", to: "encounter_chimecho" },
+    { from: "encounter_chimecho", to: "step2_zmove_awakening" },
     { from: "step2_zmove_awakening", to: "awakening" },
 
-    { from: "zmove", to: "step1_zmove_starpiece" },
-    { from: "step1_zmove_starpiece", to: "encounter_chimecho" },
-    { from: "encounter_chimecho", to: "step2_zmove_starpiece" },
-    { from: "step2_zmove_starpiece", to: "starpiece" },
+    { from: "zmove", to: "step1_zmove_eviolite" },
+    { from: "step1_zmove_eviolite", to: "encounter_spinda" },
+    { from: "encounter_spinda", to: "step2_zmove_eviolite" },
+    { from: "step2_zmove_eviolite", to: "eviolite" },
 
-    { from: "awakening", to: "step1_awakening_starpiece" },
-    { from: "step1_awakening_starpiece", to: "encounter_xatu" },
-    { from: "encounter_xatu", to: "step2_awakening_starpiece" },
-    { from: "step2_awakening_starpiece", to: "starpiece" },
+    { from: "awakening", to: "step1_awakening_eviolite" },
+    { from: "step1_awakening_eviolite", to: "encounter_xatu" },
+    { from: "encounter_xatu", to: "step2_awakening_eviolite" },
+    { from: "step2_awakening_eviolite", to: "eviolite" },
 
     { from: "root", to: "step1_root_dynamax" },
-    { from: "step1_root_dynamax", to: "encounter_cinccino" },
-    { from: "encounter_cinccino", to: "step2_root_dynamax" },
-    { from: "step2_root_dynamax", to: "encounter_marowak" },
-    { from: "encounter_marowak", to: "dynamax" },
+    { from: "step1_root_dynamax", to: "encounter_kingambit" },
+    { from: "encounter_kingambit", to: "step2_root_dynamax" },
+    { from: "step2_root_dynamax", to: "encounter_makuhita" },
+    { from: "encounter_makuhita", to: "dynamax" },
     { from: "dynamax", to: "condition_gigantamax" },
     { from: "condition_gigantamax", to: "gigantamax" },
 
-    { from: "encounter_marowak", to: "step1_marowak_legendary2" },
-    { from: "step1_marowak_legendary2", to: "encounter_duskull" },
-    { from: "encounter_duskull", to: "step2_marowak_legendary2" },
-    { from: "step2_marowak_legendary2", to: "legendary2" },
+    { from: "encounter_makuhita", to: "step1_makuhita_legendary2" },
+    { from: "step1_makuhita_legendary2", to: "encounter_regirock" },
+    { from: "encounter_regirock", to: "step2_makuhita_legendary2" },
+    { from: "step2_makuhita_legendary2", to: "legendary2" },
 
-    { from: "encounter_marowak", to: "step1_marowak_awakening" },
-    { from: "step1_marowak_awakening", to: "encounter_celebi" },
-    { from: "encounter_celebi", to: "step2_marowak_awakening" },
-    { from: "step2_marowak_awakening", to: "awakening" },
+    { from: "encounter_makuhita", to: "step1_makuhita_awakening" },
+    { from: "step1_makuhita_awakening", to: "encounter_cinccino" },
+    { from: "encounter_cinccino", to: "step2_makuhita_awakening" },
+    { from: "step2_makuhita_awakening", to: "awakening" },
 
-    { from: "legendary2", to: "condition_mega_1" },
+    { from: "legendary1", to: "condition_mega_1" },
     { from: "condition_mega_1", to: "mega_1" },
 
     { from: "awakening", to: "condition_mega_2" },
@@ -745,22 +745,22 @@ export const AtlasTree: Tree = {
     { from: "encounter_wigglytuff", to: "step2_legendary2_sacredash" },
     { from: "step2_legendary2_sacredash", to: "sacred_ash" },
 
-    { from: "encounter_marowak", to: "step1_marowak_sacredash" },
-    { from: "step1_marowak_sacredash", to: "encounter_kingambit" },
-    { from: "encounter_kingambit", to: "step2_marowak_sacredash" },
-    { from: "step2_marowak_sacredash", to: "sacred_ash" },
+    { from: "encounter_makuhita", to: "step1_makuhita_sacredash" },
+    { from: "step1_makuhita_sacredash", to: "encounter_munchlax" },
+    { from: "encounter_munchlax", to: "step2_makuhita_sacredash" },
+    { from: "step2_makuhita_sacredash", to: "sacred_ash" },
 
-    { from: "encounter_marowak", to: "step1_marowak_candy" },
-    { from: "step1_marowak_candy", to: "encounter_makuhita" },
-    { from: "encounter_makuhita", to: "step2_marowak_candy" },
-    { from: "step1_marowak_candy", to: "rare_candy" },
+    { from: "encounter_makuhita", to: "step1_makuhita_candy" },
+    { from: "step1_makuhita_candy", to: "encounter_marowak" },
+    { from: "encounter_marowak", to: "step2_makuhita_candy" },
+    { from: "step2_makuhita_candy", to: "rare_candy" },
 
     { from: "awakening", to: "step1_awakening_candy" },
-    { from: "step1_awakening_candy", to: "encounter_munchlax" },
-    { from: "encounter_munchlax", to: "step2_awakening_candy" },
+    { from: "step1_awakening_candy", to: "encounter_duskull" },
+    { from: "encounter_duskull", to: "step2_awakening_candy" },
     { from: "step2_awakening_candy", to: "rare_candy" },
 
-    { from: "legendary1", to: "step1_looplet" },
+    { from: "legendary2", to: "step1_looplet" },
     { from: "step1_looplet", to: "looplet" },
     { from: "looplet", to: "looplet_pink_buff" },
     { from: "looplet", to: "looplet_red_buff" },

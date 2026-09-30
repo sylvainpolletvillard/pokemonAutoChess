@@ -1182,8 +1182,8 @@
 		"SKWOVET": "Skwovet",
 		"GREEDENT": "Greedent",
 		"QUAXLY": "Quaxly",
-    	"QUAXWELL": "Quaxwell",
-    	"QUAQUAVAL": "Quaquaval",
+		"QUAXWELL": "Quaxwell",
+		"QUAQUAVAL": "Quaquaval",
 		"KOMALA": "Komala",
 		"TAROUNTULA": "Tarountula",
 		"SPIDOPS": "Spidops",
@@ -2690,7 +2690,7 @@
 		"SHINY_STONE": "Shiny Stone",
 		"RARE_CANDY": "Rare Candy",
 		"EVIOLITE": "Eviolite",
-    	"GOLD_MASK": "Gold Mask",
+		"GOLD_MASK": "Gold Mask",
 		"GOLD_BOTTLE_CAP": "Gold Bottle Cap",
 		"ABSORB_BULB": "Absorb Bulb",
 		"SACRED_ASH": "Sacred Ash",
@@ -3513,7 +3513,7 @@
 		"ELECTRIC_FIELD": "Increase damage dealt by ELECTRIC Pokémon by 20%",
 		"PSYCHIC_FIELD": "Increase damage dealt by PSYCHIC Pokémon by 20%",
 		"GRASS_FIELD": "Increase damage dealt by GRASS Pokémon by 20%",
-		"FAIRY_FIELD": "Increase damage dealt by FAIRY Pokémon by 20%"		
+		"FAIRY_FIELD": "Increase damage dealt by FAIRY Pokémon by 20%"
 	},
 	"synergy": {
 		"NORMAL": "Normal",
@@ -3900,7 +3900,7 @@
 	"bench": "Bench",
 	"synergies": "Synergies",
 	"join_as_guest": "Join as Guest",
-	"welcome": "Welcome",	
+	"welcome": "Welcome",
 	"stage": "Stage",
 	"spectate": "Spectate",
 	"spectating": "Spectating {{ name }}",
@@ -3928,7 +3928,7 @@
 	"games_in_progress_other": "{{count}} games in progress",
 	"events": "Events",
 	"custom_room_short": "Custom",
-	"loading": "Loading...",	
+	"loading": "Loading...",
 	"no_data_available": "No data available",
 	"no_bots_found": "No bots found !",
 	"leaderboard": "Leaderboard",
@@ -4001,9 +4001,9 @@
 	"shiny_hunter": "Shiny Hunter",
 	"pokedex": "Pokédex",
 	"alt_forms": "Alternative Forms",
-	"unlocked": "Unlocked",	
+	"unlocked": "Unlocked",
 	"show_evolutions": "Show evolutions",
-	"show_alt_forms": "Show alternative forms",	
+	"show_alt_forms": "Show alternative forms",
 	"show_only_available_picks": "Show only available add picks / regionals",
 	"close": "Close",
 	"additional_pokemon_hint": "Each player picked additional Pokémon to be available in all players shop for this game.",
@@ -4249,7 +4249,7 @@
 	"add_bot": "Add Bot",
 	"bot_difficulty": {
 		"BEGINNER": "Beginner (<850)",
-		"EASY":  "Easy (850-999)",
+		"EASY": "Easy (850-999)",
 		"MEDIUM": "Medium (1000-1149)",
 		"HARD": "Hard (1150-1299)",
 		"EXTREME": "Extreme (1300-1449)",
@@ -4269,7 +4269,7 @@
 	"invalid": "Invalid",
 	"not_pokemons": "Not Pokémon",
 	"all": "All",
-	"status_label": "Status",	
+	"status_label": "Status",
 	"help": "Help",
 	"bot_admin": "Bot Admin",
 	"change": "Change",
@@ -4791,7 +4791,7 @@
 			"region_hint2": "You can travel to a different region by taking a portal at stages 0, 10 and 20. The portal symbols will influence the destination."
 		},
 		"atlas": {
-			"atlas_hint": "The Atlas is unlocked at stage 20 when player is given the Connection Orb. It allows you to use EMERA to unlock great rewards and call upon Pokémon from Treasure Town to help you. Each node in the atlas is activated by sealing one EMERA. One EMERA is given after every PvP fight after stage 20. Some special effects can also help you to obtain EMERA."
+			"atlas_hint": "The Atlas is unlocked at stage 20 when player is given the Connection Orb. It allows you to use EMERA to unlock great rewards and call upon Pokémon from Treasure Town to help you. Each node in the atlas is activated by sealing one EMERA. After stage 20, one EMERA is given after every fight. Some special effects can also help you to obtain EMERA."
 		},
 		"glossary": {
 			"damage_types": "Types of damage",
@@ -5029,7 +5029,7 @@
 		"count": "Count"
 	},
 	"notification": {
-		"info_title": "Information",		
+		"info_title": "Information",
 		"level_up_title": "Level Up!",
 		"level_up_message": "Congratulations!\nYou've reached level {{level}} and earned a booster pack!",
 		"new_title_title": "New Title Unlocked!",
@@ -5096,29 +5096,29 @@
 		"emera": "Emera",
 		"encounter": {
 			"KECLEON": "Pick 1 of 3 synergy stones",
-			"CHANSEY": "All your Hatch Pokémon gain 50 HP an 5 ATK",
+			"CHANSEY": "All your Hatch Pokémon gain 50 HP, 50 AP and +50% base ATK",
 			"ELECTIVIRE": "Pick 1 of 3 tools",
 			"XATU": "Get a random reward from a TREASURE_BOX",
 			"KANGASKHAN": "Pick 1 of 3 craftable items",
-			"DUSKULL": "Double all GOLD from interests",
+			"DUSKULL": "Gain 1 GOLD for each 10 GOLD you earned so far in this game",
 			"MEOWTH": "Gain 10 GOLD",
-			"MAROWAK": "Next PvE fight is more difficult just for you",
-			"WOBBUFFET": "Get a RECYCLE_TICKET",
+			"MAROWAK": "Next PvE fight is more difficult but brings extra rewards if you win",
+			"WOBBUFFET": "Get 3 RECYCLE_TICKET",
 			"SPINDA": "Activate and get the reward of another random encounter in the atlas",
 			"REGIROCK": "Heal 15 player HP",
 			"MUNCHLAX": "Get a PICNIC_SET",
 			"SABLEYE": "Pick 1 of 3 synergy gems",
-			"CELEBI": "Heal 1 player HP after every round",
-			"MAKUHITA": "Get a GOLD_DOJO_TICKET",
-			"CROAGUNK": "Get an EXCHANGE_TICKET",
-			"WIGGLYTUFF": "Gain 5 GOLD per encounter activated in the atlas, including this one",
+			"CELEBI": "Heal 5 player HP immediately, then 5 player HP after every fight",
+			"MAKUHITA": "Get a GOLD_DOJO_TICKET. Pokémon now only spend one stage at the dojo before coming back.",
+			"CROAGUNK": "Get 3 EXCHANGE_TICKET",
+			"WIGGLYTUFF": "Your Pokémon gain 20 max HP per encounter activated in the atlas, including this one",
 			"CINCCINO": "Pick 1 of 3 SILK_SCARF made item",
 			"CHIMECHO": "Get a SOOTHE_BELL",
 			"KINGAMBIT": "Gain 5 GOLD, or 15 GOLD and a LEADERS_CREST if you are currently leading",
 			"LAPRAS": "Get a LAPRAS_PASSPORT and 10 free shop rerolls",
-			"LUDICOLO": "Pick 1 of 3 music instruments. Music instruments increase their associated synergy level by 1.",
-			"MAGNEZONE": "Limits HP lost upon defeat to a maximum of 10",
-			"GROVYLE": "Gain 1 more EMERA after each PvP round"
+			"LUDICOLO": "Pick 1 of 7 music instruments. Music instruments increase their associated synergy level by 1.",
+			"MAGNEZONE": "Prevents you from losing HP upon your next defeat",
+			"GROVYLE": "Gain 1 more EMERA after every fight"
 		},
 		"keystone": {
 			"fusion": "Fusion Emera",
@@ -5134,7 +5134,7 @@
 			"mega": "Get a MEGA_STONE which allows you to mega evolve a pokémon. $t(atlas.pokemon_that_can_mega_evolve)",
 			"gigantamax": "Pokémon that can gigantamax and hold a DYNAMAX_BAND will increase their HP by 400% instead of 200%, and change their ability to a new G-Max one.",
 			"stellar": "Get a STELLAR_GEM which increases the level of all your active synergies by 1.",
-			"legendary": "Pick 1 of 6 Legendary Pokémon. For each portal symbol, you are guaranteed to get one proposal of that type.",
+			"legendary": "Pick 1 of 6 Legendary Pokémon. For each symbol, you are guaranteed to get one proposal of that type.",
 			"zmove": "Get a Z_POWER_RING and pick 1 Z-Move among the ones matching with your portal symbols.",
 			"awakening": "Allow to reach level 10. All common and uncommon 1 STAR Pokémon on your board evolve immediately."
 		},
@@ -5146,11 +5146,11 @@
 		},
 		"buff": {
 			"looplet": "Additional effect for the LOOPLET:\n",
-			"pink": "$t(atlas.buff.looplet)Get 10 LUCK. Prevents the holder from taking critical hits.",
-			"red": "$t(atlas.buff.looplet)Get 5 ATK. Attacks inflict BURN for 3 seconds.",
+			"pink": "$t(atlas.buff.looplet)Get 20 LUCK. Prevents the holder from taking critical hits.",
+			"red": "$t(atlas.buff.looplet)Get 20% base ATK. Attacks inflict BURN for 3 seconds ON_HIT.",
 			"yellow": "$t(atlas.buff.looplet)Get 20 SPEED. +1 GOLD each time holder knocks out an opponent.",
-			"green": "$t(atlas.buff.looplet)Gain 20% base MAX HP. Holder heals for 20% of all damage inflicted.",
-			"blue": "$t(atlas.buff.looplet)Gain 10 PP. Holder restores 5 additional PP ON_ATTACK."
+			"green": "$t(atlas.buff.looplet)Gain 20% base max HP. Holder heals for 20% of all damage inflicted.",
+			"blue": "$t(atlas.buff.looplet)Gain 20 PP. Holder restores 5 additional PP ON_ATTACK."
 		},
 		"connection_orb": "Connection Orb",
 		"connection_orb_description": "The start of your journey. You can only activate nodes connected to already activated nodes.",

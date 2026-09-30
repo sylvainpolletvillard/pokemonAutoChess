@@ -9,7 +9,7 @@ export default function WikiAtlas() {
       <div className="my-box" style={{ marginBottom: "0.5em" }}>
         <p>{addIconsToDescription(t("wiki.atlas.atlas_hint"))}</p>
       </div>
-      <Atlas />
+      <Atlas origin="wiki" />
     </div>
   )
 }

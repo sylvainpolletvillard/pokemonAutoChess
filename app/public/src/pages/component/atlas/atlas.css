@@ -5,8 +5,13 @@
   aspect-ratio: 1 / 1;
   overflow: hidden;
   position: relative;
-  border: var(--border-thick);
-  mask-image: radial-gradient(black 50%, transparent 70%);
+}
+
+.atlas-mask {
+  width: 800px;
+  height: 800px;
+  overflow: hidden;
+  mask-image: radial-gradient(black 55%, transparent 70%);
 }
 
 .atlas-node {

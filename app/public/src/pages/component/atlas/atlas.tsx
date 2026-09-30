@@ -1,7 +1,11 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
-import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch"
+import {
+  TransformComponent,
+  TransformWrapper,
+  useControls
+} from "react-zoom-pan-pinch"
 import { AtlasTree } from "../../../../../core/atlas"
 import type { Emera, TreeNode } from "../../../../../types/atlas"
 import { PkmIndex } from "../../../../../types/enum/Pokemon"
@@ -13,14 +17,23 @@ import { cc } from "../../utils/jsx"
 import PokemonPortrait from "../pokemon-portrait"
 import "./atlas.css"
 
-export function Atlas() {
+export function Atlas({ origin = "game" }: { origin?: "game" | "wiki" }) {
   const [allocatedNodes, setAllocatedNodes] = useState<Set<string>>(
     new Set(["root"])
   )
 
+  const canUnallocateNodes = origin === "wiki"
+
   const handleNodeClick = (node: TreeNode) => {
-    if (allocatedNodes.has(node.id)) return // Already allocated
-    if (isConnectedAndAllocatable(node.id, allocatedNodes)) {
+    if (allocatedNodes.has(node.id)) {
+      if (canUnallocateNodes && node.id !== "root") {
+        setAllocatedNodes((prev) => {
+          const newSet = new Set(prev)
+          newSet.delete(node.id)
+          return newSet
+        })
+      }
+    } else if (isConnectedAndAllocatable(node.id, allocatedNodes)) {
       playSound(
         node.type === "keystone" || node.type === "item"
           ? SOUNDS.EMERA_KEYSTONE
@@ -34,97 +47,101 @@ export function Atlas() {
 
   return (
     <div id="atlas-container">
-      <TransformWrapper
-        initialScale={3.4}
-        minScale={2.5}
-        maxScale={8}
-        smooth={true}
-        centerOnInit={true}
-        centerZoomedOut={true}
-        wheel={{ step: 0.005 }}
-      >
-        <video
-          autoPlay
-          loop
-          muted
-          src="/assets/atlas/atlasbg.webm"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            zIndex: -1
-          }}
-        ></video>
-        <TransformComponent wrapperStyle={{ width: "100%", height: "100%" }}>
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="-750 -750 1500 1500" // Centers the (0,0) coordinate
-          >
-            {/* DEFINE ASSETS (Background patterns, borders) */}
-            <defs>
-              <radialGradient id="allocatedGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor={COLOR_GLOW} stopOpacity="0.4" />
-                <stop offset="100%" stopColor={COLOR_GLOW} stopOpacity="0" />
-              </radialGradient>
-            </defs>
+      <div className="atlas-mask">
+        <TransformWrapper
+          initialScale={origin === "wiki" ? 3 : 5}
+          minScale={2.5}
+          maxScale={8}
+          smooth={true}
+          centerOnInit={true}
+          centerZoomedOut={true}
+          wheel={{ step: 0.005 }}
+        >
+          <video
+            autoPlay
+            loop
+            muted
+            src="/assets/atlas/atlasbg.webm"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: -1
+            }}
+          ></video>
+          <TransformComponent wrapperStyle={{ width: "100%", height: "100%" }}>
+            <svg
+              width="100%"
+              height="100%"
+              viewBox="-750 -750 1500 1500" // Centers the (0,0) coordinate
+            >
+              {/* DEFINE ASSETS (Background patterns, borders) */}
+              <defs>
+                <radialGradient id="allocatedGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor={COLOR_GLOW} stopOpacity="0.4" />
+                  <stop offset="100%" stopColor={COLOR_GLOW} stopOpacity="0" />
+                </radialGradient>
+              </defs>
 
-            {/* 1. RENDER CONNECTIONS */}
-            <g id="connections">
-              {AtlasTree.connections.map((conn, index) => {
-                const fromNode = AtlasTree.nodes.find((n) => n.id === conn.from)
-                const toNode = AtlasTree.nodes.find((n) => n.id === conn.to)
-                const isAllocated =
-                  allocatedNodes.has(conn.from) && allocatedNodes.has(conn.to)
-                if (!fromNode || !toNode) {
-                  console.error(
-                    `Connection references non-existent node: ${conn.from} or ${conn.to}`
+              {/* 1. RENDER CONNECTIONS */}
+              <g id="connections">
+                {AtlasTree.connections.map((conn, index) => {
+                  const fromNode = AtlasTree.nodes.find(
+                    (n) => n.id === conn.from
                   )
-                  return null // Safety check
-                }
+                  const toNode = AtlasTree.nodes.find((n) => n.id === conn.to)
+                  const isAllocated =
+                    allocatedNodes.has(conn.from) && allocatedNodes.has(conn.to)
+                  if (!fromNode || !toNode) {
+                    console.error(
+                      `Connection references non-existent node: ${conn.from} or ${conn.to}`
+                    )
+                    return null // Safety check
+                  }
 
-                return (
-                  <line
-                    key={index}
-                    x1={fromNode.position[0]}
-                    y1={fromNode.position[1]}
-                    x2={toNode.position[0]}
-                    y2={toNode.position[1]}
-                    stroke={COLOR_GLOW}
-                    strokeWidth={isAllocated ? 6 : 2}
-                  />
-                )
-              })}
-            </g>
+                  return (
+                    <line
+                      key={index}
+                      x1={fromNode.position[0]}
+                      y1={fromNode.position[1]}
+                      x2={toNode.position[0]}
+                      y2={toNode.position[1]}
+                      stroke={COLOR_GLOW}
+                      strokeWidth={isAllocated ? 6 : 2}
+                    />
+                  )
+                })}
+              </g>
 
-            {/* 2. RENDER NODES */}
-            <g id="nodes">
-              {AtlasTree.nodes.map((node) => {
-                const isAllocated = allocatedNodes.has(node.id)
-                const isAllocatable = isConnectedAndAllocatable(
-                  node.id,
-                  allocatedNodes
-                )
+              {/* 2. RENDER NODES */}
+              <g id="nodes">
+                {AtlasTree.nodes.map((node) => {
+                  const isAllocated = allocatedNodes.has(node.id)
+                  const isAllocatable = isConnectedAndAllocatable(
+                    node.id,
+                    allocatedNodes
+                  )
 
-                return (
-                  <AtlasNode
-                    key={node.id}
-                    node={node}
-                    isAllocated={isAllocated}
-                    isAllocatable={isAllocatable}
-                    onClick={handleNodeClick}
-                  />
-                )
-              })}
-            </g>
-          </svg>
-        </TransformComponent>
-      </TransformWrapper>
+                  return (
+                    <AtlasNode
+                      key={node.id}
+                      node={node}
+                      isAllocated={isAllocated}
+                      isAllocatable={isAllocatable}
+                      onClick={handleNodeClick}
+                    />
+                  )
+                })}
+              </g>
+            </svg>
+          </TransformComponent>
+        </TransformWrapper>
+      </div>
       <Tooltip
-        id="atlas-node-detail"
+        id="atlas-node-detail-tooltip"
         className="custom-theme-tooltip"
         float
         render={({ content }) => <AtlasNodeDetail nodeId={content as string} />}
@@ -146,6 +163,13 @@ function AtlasNode({
 }) {
   const size = NodeSizes[node.type] || 12
   const shouldShowTooltip = node.type !== "step"
+  const { zoomToElement } = useControls()
+
+  function handleClick(e: React.MouseEvent<SVGGElement, MouseEvent>) {
+    e.preventDefault()
+    zoomToElement(e.target as HTMLElement, 5, 200, "easeOutCubic")
+    onClick(node)
+  }
 
   return (
     <g
@@ -154,8 +178,8 @@ function AtlasNode({
         allocated: isAllocated
       })}
       transform={`translate(${node.position[0]}, ${node.position[1]})`}
-      onClick={() => onClick(node)}
-      data-tooltip-id={shouldShowTooltip ? "atlas-node-detail" : null}
+      onClick={(e) => handleClick(e)}
+      data-tooltip-id={shouldShowTooltip ? "atlas-node-detail-tooltip" : null}
       data-tooltip-content={node.id}
     >
       {/* Glow Effect if Active */}
