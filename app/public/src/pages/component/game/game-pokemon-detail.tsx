@@ -231,7 +231,7 @@ export function GamePokemonDetail(props: {
     const skill = pokemon.tm !== Ability.DEFAULT ? pokemon.tm : pokemon.skill
     return InimitableAbilities.includes(skill) ? (
       <img
-        src="assets/ui/inimitable.png"
+        src="assets/ui/inimitable.svg"
         className="game-pokemon-detail-ability-icon"
         alt={t("inimitable")}
         title={t("technical_terms_definitions.INIMITABLE")}

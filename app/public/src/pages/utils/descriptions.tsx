@@ -308,7 +308,7 @@ export function addIconsToHtml(
     if (!matchIcon) return
 
     const descriptionParts = text.split(iconRegExp)
-    const newHTML = ""
+    let newHTML = ""
 
     descriptionParts.forEach((part, i) => {
       const token = matchIcon[i - 1]
