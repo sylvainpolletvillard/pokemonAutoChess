@@ -9,6 +9,7 @@ import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
 import type GameRoom from "../rooms/game-room"
 import {
+  AtlasItems,
   Berries,
   CraftableItemsNoScarves,
   Dishes,
@@ -17,7 +18,6 @@ import {
   Item,
   ItemComponentsNoFossilOrScarf,
   NonSpecialBerries,
-  ShinyItems,
   Sweets,
   SynergyGems,
   SynergyGivenByGem,
@@ -287,7 +287,7 @@ export const GiftEffects: {
     giftAmountOfItem(2, NonSpecialBerries)
   ],
   [Item.PRETTY_BOX]: giftAmountOfItem(2, CraftableItemsNoScarves),
-  [Item.DELUXE_BOX]: giftAmountOfItem(1, ShinyItems),
+  [Item.DELUXE_BOX]: giftAmountOfItem(1, AtlasItems),
   [Item.TOOLBOX]: giftAmountOfItem(3, Tools),
   [Item.COMMON_GIFT]: giftRandomPokemonByRarity(Rarity.COMMON),
   [Item.UNCOMMON_GIFT]: giftRandomPokemonByRarity(Rarity.UNCOMMON),

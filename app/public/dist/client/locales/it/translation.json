@@ -3927,7 +3927,7 @@
 	"tm": "Macchine Tecniche (TM)",
 	"tm_short": "TM",
 	"special_items": "Oggetti speciali",
-	"shiny_items": "Oggetti Shiny",
+	"atlas_items": "Oggetti dell'Atlante",
 	"news": "Notizie",
 	"full_patch_notes": "Note complete della Patch",
 	"patch_notes": "Note della Patch",
@@ -4372,8 +4372,7 @@
 		},
 		"items": {
 			"item_recipes": "Ricetta degli Oggetti",
-			"craftable_items_description": "Combina due componenti per creare oggetti molto potenti!",
-			"shiny_items_description": "Se sei fortunato abbastanza da combattere contro Pokèmon Shiny duranti i round PvE o di trovare un uovo dorato, otterrai un oggetto shiny come ricompensa.",
+			"craftable_items_description": "Combina due componenti per creare oggetti molto potenti!",			
 			"town_items": "Strumenti di Paese",
 			"town_items_description": "Questi strumenti possono essere ottenuti dai mercanti che incontri in paese:",
 			"special_items_description": "Questi oggetti sono esclusivi ad alcuni Pokèmon, e non possono essere ottenuti in altro modo.",

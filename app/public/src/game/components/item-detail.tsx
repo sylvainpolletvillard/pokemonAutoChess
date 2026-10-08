@@ -7,14 +7,14 @@ import { Tooltip } from "react-tooltip"
 import { ItemStats } from "../../../../config"
 import { Stat } from "../../../../types/enum/Game"
 import {
-    AbsorbedItems,
+  AbsorbedItems,
+  AtlasItems,
   ConsumableItems,
   Gifts,
   Item,
   ItemComponents,
   ItemRecipe,
   RemovableItems,
-  ShinyItems,
   UnholdableItems
 } from "../../../../types/enum/Item"
 import { isIn } from "../../../../utils/array"
@@ -61,7 +61,7 @@ export function ItemDetailTooltipContent({
     if (isIn(RemovableItems, item)) return t("removable_item")
     if (isIn(AbsorbedItems, item)) return t("absorbed_item")
     if (isIn(ItemComponents, item)) return t("item_component")
-    if (isIn(ShinyItems, item)) return t("shiny")
+    if (isIn(AtlasItems, item)) return t("atlas.atlas")
     return null
   }, [item, t])
 

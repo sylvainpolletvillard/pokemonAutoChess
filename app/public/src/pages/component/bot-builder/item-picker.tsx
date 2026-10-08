@@ -3,6 +3,7 @@ import type React from "react"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { Dishes, type PkmWithCustom } from "../../../../../types"
 import {
+  AtlasItems,
   Berries,
   CraftableItems,
   DubiousGadgets,
@@ -10,7 +11,6 @@ import {
   Item,
   ItemComponents,
   MemoryDiscs,
-  ShinyItems,
   TMs,
   Tools,
   UnholdableItems,
@@ -50,9 +50,9 @@ export default function ItemPicker(props: {
 
     { label: t("tools"), key: "tools", items: [...Tools, ...DubiousGadgets] },
     {
-      label: t("shiny_items"),
-      key: "shiny_items",
-      items: ShinyItems
+      label: t("atlas_items"),
+      key: "atlas_items",
+      items: AtlasItems
     },
     {
       label: t("tm_short"),

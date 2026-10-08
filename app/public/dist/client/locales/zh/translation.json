@@ -4477,7 +4477,6 @@
 	"special_items": "特殊道具",
 	"wands": "魔杖",
 	"gifts": "礼品",
-	"shiny_items": "闪光道具",
 	"inimitable": "不可模仿",
 	"news": "新闻",
 	"full_patch_notes": "完整更新内容",
@@ -4988,7 +4987,6 @@
 		"items": {
 			"item_recipes": "道具配方",
 			"craftable_items_description": "将两件组件合成，创造强大的道具！",
-			"shiny_items_description": "如果你的运气足够好，在对战野生宝可梦时遭遇了闪光队伍或是找到了金蛋，那么能收到闪光道具的奖励。",
 			"town_items": "商人独有道具",
 			"town_items_description": "这些道具可以从城镇商人处买到：",
 			"special_items_description": "这些道具和某些宝可梦绑定：",

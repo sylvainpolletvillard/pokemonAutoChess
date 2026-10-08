@@ -4248,7 +4248,7 @@
 	"tools": "Herramientas",
 	"tm": "Máquinas Técnicas (MT)",
 	"special_items": "Objetos Especiales",
-	"shiny_items": "Objetos Variocolor",
+	"atlas_items": "Objetos del Atlas",
 	"news": "Noticias",
 	"patch_notes": "Notas del Parche",
 	"remove_bot": "Quitar Bot",
@@ -4707,8 +4707,7 @@
 		},
 		"items": {
 			"item_recipes": "Recetas de Objetos",
-			"craftable_items_description": "¡Combina dos componentes para crear objetos poderosos!",
-			"shiny_items_description": "Si tienes la suficiente suerte para enfrentarte a un equipo variocolor durante una ronda PvE o de encontrar un huevo dorado, recibirás un objeto variocolor como recompensa.",
+			"craftable_items_description": "¡Combina dos componentes para crear objetos poderosos!",			
 			"special_items_description": "Estos objetos son exclusivos para algunos Pokémon y no se pueden obtener por otros medios.",
 			"tools_description": "La sinergia ARTIFICIAL te da objetos exclusivos tras ser activada. Tres de ellos se eligen aleatoriamente para cada jugador al principio de la partida. Estos objetos pueden desequiparse de una unidad poniéndola en la banca.",
 			"gems": "Gemas",

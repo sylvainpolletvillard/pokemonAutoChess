@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import type { PlayerChoice } from "../../../../../models/colyseus-models/player-choice"
-import { type Item, ShinyItems } from "../../../../../types/enum/Item"
+import { AtlasItems, type Item } from "../../../../../types/enum/Item"
 import {
   type Pkm,
   PkmDuo,
@@ -167,7 +167,7 @@ export default function GameChoice() {
                     />
                   )}
 
-                  {item && isIn(ShinyItems, item) === false && (
+                  {item && (
                     <div className="choice-additional-item">
                       <span
                         style={{

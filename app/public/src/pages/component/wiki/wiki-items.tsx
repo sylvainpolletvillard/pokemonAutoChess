@@ -2,6 +2,7 @@ import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import {
   ArtificialItems,
+  AtlasItems,
   Berries,
   BuriedTrash,
   BuriedTreasures,
@@ -14,7 +15,6 @@ import {
   ItemRecipe,
   MemoryDiscs,
   Mulches,
-  ShinyItems,
   SpecialItems,
   SynergyGems,
   SynergyGemsBuried,
@@ -142,10 +142,10 @@ export default function WikiItems() {
         </table>
       </article>
       <article>
-        <h2>{t("shiny_items")}</h2>
-        <p>{addIconsToDescription(t("wiki.items.shiny_items_description"))}</p>
+        <h2>{t("atlas_items")}</h2>
+        <p>{addIconsToDescription(t("wiki.items.atlas_items_description"))}</p>
         <ul className="shiny">
-          <ItemList items={ShinyItems} />
+          <ItemList items={AtlasItems} />
         </ul>
 
         <h2>{t("wiki.items.town_items")}</h2>

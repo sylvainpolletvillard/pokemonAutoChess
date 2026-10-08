@@ -1,11 +1,11 @@
 import { Emotion } from "../types"
 import { Stat } from "../types/enum/Game"
 import {
+  AtlasItems,
   CraftableItemsNoScarves,
   CraftableNoStonesOrScarves,
   Item,
-  ItemComponentsNoFossilOrScarf,
-  ShinyItems
+  ItemComponentsNoFossilOrScarf
 } from "../types/enum/Item"
 import { Pkm } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
@@ -146,7 +146,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
     },
     getRewardsPropositions(_player: Player, shinyEncounter: boolean) {
       if (shinyEncounter) {
-        return pickNRandomIn(ShinyItems, 3)
+        return pickNRandomIn(AtlasItems, 3)
       } else {
         return pickNRandomIn(
           [...ItemComponentsNoFossilOrScarf, Item.FOSSIL_STONE],

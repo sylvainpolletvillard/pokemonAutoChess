@@ -804,7 +804,7 @@ export const DubiousGadgets = [
   Item.UTILITY_UMBRELLA
 ] satisfies Item[]
 
-export const ShinyItems = [
+export const AtlasItems = [
   Item.DYNAMAX_BAND,
   Item.SHINY_STONE,
   Item.RARE_CANDY,
@@ -821,7 +821,7 @@ export const ShinyItems = [
   Item.Z_RING
 ] satisfies Item[]
 
-export type ShinyItem = (typeof ShinyItems)[number]
+export type AtlasItem = (typeof AtlasItems)[number]
 
 export const WeatherRocks = [
   Item.SUN_STONE,

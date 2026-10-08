@@ -4741,8 +4741,7 @@
 		},
 		"items": {
 			"item_recipes": "Fórmulas de Ítems",
-			"craftable_items_description": "Combine dois componentes para criar itens poderosos!",
-			"shiny_items_description": "Se você tiver a sorte de enfrentar uma equipe shiny durante as rodadas PvE ou encontrar um ovo dourado, receberá um item brilhante como recompensa.",
+			"craftable_items_description": "Combine dois componentes para criar itens poderosos!",			
 			"town_items": "Itens da Cidade",
 			"town_items_description": "Esses itens podem ser obtidos com os comerciantes encontrados na cidade:",
 			"special_items_description": "Esses itens são exclusivos de alguns Pokémon:",
@@ -5080,7 +5079,7 @@
 	"tm": "Máquinas Técnicas (TM)",
 	"tm_short": "TM",
 	"special_items": "Itens Especiais",
-	"shiny_items": "Itens Brilhantes",
+	"atlas_items": "Itens do Atlas",
 	"banned": "Banido",
 	"see_game_history": "Ver histórico de partidas",
 	"see_chat_history": "Ver histórico do chat",

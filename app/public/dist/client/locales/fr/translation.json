@@ -4319,7 +4319,7 @@
 	"tm": "Capacités Techniques (CT)",
 	"tm_short": "CT",
 	"special_items": "Objets spéciaux",
-	"shiny_items": "Objets Shiny",
+	"atlas_items": "Objets de l'Atlas",
 	"news": "Actualités",
 	"full_patch_notes": "Notes de patch complètes",
 	"patch_notes": "Notes de patch",
@@ -4794,7 +4794,7 @@
 		"items": {
 			"item_recipes": "Combos d'objets",
 			"craftable_items_description": "Combinez deux composants pour créer des objets puissants !",
-			"shiny_items_description": "Si vous êtes assez chanceux pour combattre un Pokémon Shiny pendant un tour PvE ou pour trouver un Œuf d'Or, vous recevrez un objet Shiny en récompense.",
+			"atlas_items_description": "Ces puissants objets peuvent être obtenus par le biais de l'Atlas:",
 			"town_items": "Objets trouvables en ville",
 			"town_items_description": "Ces objets peuvent être achetés auprès des marchands rencontrés en ville :",
 			"special_items_description": "Ces objets sont exclusifs à certains Pokémon, et ne peuvent pas être obtenus autrement.",
