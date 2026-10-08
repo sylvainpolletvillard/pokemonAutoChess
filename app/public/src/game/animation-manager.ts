@@ -1,4 +1,3 @@
-import type Phaser from "phaser"
 import { getPokemonData } from "../../../models/precomputed/precomputed-pokemon-data"
 import { AnimationOriented, AnimationType } from "../../../types/Animation"
 import delays from "../../../types/delays.json"
@@ -11,16 +10,19 @@ import {
 } from "../../../types/enum/Game"
 import { Berries, Item } from "../../../types/enum/Item"
 import { Passive } from "../../../types/enum/Passive"
-import { PkmByIndex } from "../../../types/enum/Pokemon"
+import { PkmByIndex, PkmIndex } from "../../../types/enum/Pokemon"
 import { logger } from "../../../utils/logger"
 import { fpsToDuration } from "../../../utils/number"
+import { OrientationArray } from "../../../utils/orientation"
 import atlas from "../assets/atlas.json"
 import durations from "../assets/pokemons/durations.json"
-import type PokemonSprite from "./components/pokemon"
 import {
   DEFAULT_POKEMON_ANIMATION_CONFIG,
   PokemonAnimations
 } from "./components/pokemon-animations"
+import type PokemonSprite from "./components/pokemon-sprite"
+import type { DebugScene } from "./scenes/debug-scene"
+import type GameScene from "./scenes/game-scene"
 
 const FPS_EFFECTS = 20
 const FPS_POKEMON_ANIMS = 36
@@ -36,9 +38,9 @@ export const isAnimationOriented = (action: AnimationType, index: string) => {
 }
 
 export default class AnimationManager {
-  game: Phaser.Scene
+  game: GameScene | DebugScene
 
-  constructor(game: Phaser.Scene) {
+  constructor(game: GameScene | DebugScene) {
     this.game = game
 
     for (const pack in atlas.packs) {
@@ -97,7 +99,7 @@ export default class AnimationManager {
         : [SpriteType.ANIM, SpriteType.SHADOW]
       spriteTypes.forEach((mode) => {
         const directionArray = isAnimationOriented(action, index)
-          ? Object.values(Orientation)
+          ? OrientationArray
           : [Orientation.DOWN]
         directionArray.forEach((direction) => {
           const durationArray: number[] =
@@ -177,7 +179,7 @@ export default class AnimationManager {
         : [SpriteType.ANIM, SpriteType.SHADOW]
       spriteTypes.forEach((mode) => {
         const directionArray = isAnimationOriented(action, index)
-          ? Object.values(Orientation)
+          ? OrientationArray
           : [Orientation.DOWN]
         directionArray.forEach((direction) => {
           this.game.anims.remove(
@@ -235,8 +237,9 @@ export default class AnimationManager {
     this.game.anims.create({
       key: "open_chest",
       frames: this.game.anims.generateFrameNames("chest", {
-        start: 1,
-        end: 4,
+        start: 0,
+        end: 8,
+        zeroPad: 3,
         suffix: ".png"
       }),
       duration: 600,
@@ -316,6 +319,7 @@ export default class AnimationManager {
       case PokemonActionState.EAT:
         return config.eat
       case PokemonActionState.WALK:
+      case PokemonActionState.COOK:
         return config.walk
       case PokemonActionState.ATTACK:
       case PokemonActionState.TRAINING:
@@ -334,7 +338,8 @@ export default class AnimationManager {
     pokemonSprite: PokemonSprite,
     action: PokemonActionState,
     flip: boolean,
-    loop: boolean = true
+    loop: boolean = true,
+    animConfig: Partial<Phaser.Types.Animations.PlayAnimationConfig> = {}
   ) {
     let animation = this.convertPokemonActionStateToAnimationType(
       action,
@@ -378,16 +383,13 @@ export default class AnimationManager {
       )
     }
 
-    if (action === PokemonActionState.TRAINING) {
-      pokemonSprite.orientation = Orientation.LEFT
-    }
-
     try {
       this.play(pokemonSprite, animation, {
         flip,
         lock: shouldLock,
         repeat: loop ? -1 : 0,
-        timeScale
+        timeScale,
+        animConfig
       })
     } catch (err) {
       logger.warn(
@@ -399,8 +401,17 @@ export default class AnimationManager {
     if (pokemonSprite.troopers) {
       pokemonSprite.troopers.forEach((trooper) => {
         trooper.orientation = pokemonSprite.orientation
-        this.animatePokemon(trooper, action, flip, loop)
+        this.animatePokemon(trooper, action, flip, loop, animConfig)
       })
+    }
+
+    if (pokemonSprite.pokemon.passive === Passive.ILLUSION) {
+      pokemonSprite.sprite.setAlpha(
+        pokemonSprite.pokemon.index !== PkmIndex[pokemonSprite.pokemon.name] &&
+          pokemonSprite.playerId === this.game.uid
+          ? 0.5
+          : 1
+      )
     }
   }
 
@@ -412,10 +423,15 @@ export default class AnimationManager {
       repeat?: number
       lock?: boolean
       timeScale?: number
+      animConfig?: Partial<Phaser.Types.Animations.PlayAnimationConfig>
     } = {}
   ) {
     if (pkmSprite.animationLocked || !pkmSprite.sprite?.anims) return
-    if (pkmSprite.sprite.texture.key === "loading_pokeball") return // still loading the actual pokemon textures
+    if (pkmSprite.sprite.texture.key === "loading_pokeball") {
+      // still loading the actual pokemon textures, wait for it to load before playing the animation
+      pkmSprite.once("loaded", () => this.play(pkmSprite, animation, config))
+      return
+    }
 
     let orientation = config.flip
       ? OrientationFlip[pkmSprite.orientation]
@@ -447,13 +463,15 @@ export default class AnimationManager {
     pkmSprite.sprite.anims.play({
       key: animKey,
       repeat: config.repeat,
-      timeScale: config.timeScale
+      timeScale: config.timeScale,
+      ...config.animConfig
     })
     if (pkmSprite.shadow) {
       pkmSprite.shadow.anims.play({
         key: shadowKey,
         repeat: config.repeat,
-        timeScale: config.timeScale
+        timeScale: config.timeScale,
+        ...config.animConfig
       })
     }
     if (config.lock) {

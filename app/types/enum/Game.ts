@@ -15,7 +15,8 @@ export enum GameMode {
   CLASSIC = "CLASSIC",
   RANKED = "RANKED",
   SCRIBBLE = "SCRIBBLE",
-  TOURNAMENT = "TOURNAMENT"
+  TOURNAMENT = "TOURNAMENT",
+  DOUBLE_UP = "DOUBLE_UP"
 }
 
 export enum GamePhaseState {
@@ -37,7 +38,8 @@ export enum PokemonActionState {
   FISH = "Fish",
   BLOSSOM = "Blossom",
   NEST = "Nest",
-  TRAINING = "Training"
+  TRAINING = "Training",
+  COOK = "Cook"
 }
 
 export enum Orientation {
@@ -115,13 +117,13 @@ export enum BattleResult {
 }
 
 export enum BotDifficulty {
-  BEGINNER,
-  EASY,
-  MEDIUM,
-  HARD,
-  EXTREME,
-  MASTER,
-  CUSTOM
+  BEGINNER = "BEGINNER",
+  EASY = "EASY",
+  MEDIUM = "MEDIUM",
+  HARD = "HARD",
+  EXTREME = "EXTREME",
+  MASTER = "MASTER",
+  CUSTOM = "CUSTOM"
 }
 
 export enum PokemonTint {

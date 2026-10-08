@@ -11,6 +11,8 @@ import {
 } from "../../config"
 import {
   FIRE_ATK_BUFF_PER_SYNERGY_TIER,
+  FOSSIL_ATK_BUFF_PER_SYNERGY_TIER,
+  FOSSIL_SHIELD_PER_SYNERGY_TIER,
   GROUND_ATK_BUFF_PER_SYNERGY_TIER,
   GROUND_DEF_BUFF_PER_SYNERGY_TIER,
   SOUND_ATK_BUFF_PER_SYNERGY_TIER,
@@ -55,6 +57,7 @@ import { DelayedCommand } from "../simulation-command"
 import { getSynergyTier } from "../synergies"
 import { getUnitScore } from "../unit-score"
 import {
+  BeforeTakingDamageEffect,
   type Effect,
   OnAbilityCastEffect,
   OnAttackEffect,
@@ -73,7 +76,7 @@ import {
   OnSpawnEffect,
   OnStageStartEffect
 } from "./effect"
-import { PassiveEffects } from "./passives"
+import { drumBeat, PassiveEffects } from "./passives"
 
 export class MonsterKillEffect extends OnKillEffect {
   hpBoosted: number = 0
@@ -175,8 +178,22 @@ export const electricTripleAttackEffect = new OnAttackEffect(
         target.status.triggerWound(4000, target, pokemon)
       }
 
-      pokemon.state.attack(pokemon, board, target, true)
-      pokemon.state.attack(pokemon, board, target, true)
+      if (
+        pokemon.passive === Passive.DRUMMER &&
+        board.cells.some(
+          (entity) =>
+            entity?.team === pokemon.team &&
+            entity?.passive !== Passive.DRUMMER &&
+            entity?.passive !== Passive.INANIMATE
+        )
+      ) {
+        drumBeat(pokemon, board)
+        drumBeat(pokemon, board)
+      } else {
+        pokemon.state.attack(pokemon, board, target, true)
+        pokemon.state.attack(pokemon, board, target, true)
+      }
+
       if (isSupercharged && target) {
         target.addPP(-10, pokemon, 0, false)
         target.count.manaBurnCount++
@@ -315,6 +332,15 @@ export class FightingKnockbackEffect extends OnDamageReceivedEffect {
     super(undefined, effect)
   }
   apply({ pokemon, board, isRetaliation }: OnDamageReceivedEffectArgs) {
+    // Fighting knockback for Pikachu Libre
+    if (
+      pokemon.passive === Passive.PIKACHU_LIBRE &&
+      pokemon.count.fightingBlockCount > 0 &&
+      pokemon.count.fightingBlockCount % 10 === 0
+    ) {
+      pokemon.status.triggerRage(2000, pokemon)
+    }
+
     // Fighting knockback
     if (
       pokemon.count.fightingBlockCount > 0 &&
@@ -491,7 +517,9 @@ export const bugSwarmSpawnEffect = new OnStageStartEffect(
   ({ player, room }) => {
     if (getFreeSpaceOnBench(player.board) > 0 && !player.isBot) {
       const bugsNotFinal = [...player.board.values()]
-        .filter((p) => p.hasSynergy(Synergy.BUG) && !p.final)
+        .filter(
+          (p) => p.hasSynergy(Synergy.BUG) && !EvolutionManager.isFinal(p)
+        )
         .sort((a, b) => RarityCost[a.rarity] - RarityCost[b.rarity])
       if (bugsNotFinal.length > 0) {
         const spawn = getPokemonBaseline(bugsNotFinal[0]!.name)
@@ -504,7 +532,6 @@ export const bugSwarmSpawnEffect = new OnStageStartEffect(
 export function applyWandEffects(
   pokemon: PokemonEntity,
   target: PokemonEntity,
-  attackDamage: number,
   crit: boolean
 ): { takenDamage: number; death: boolean } {
   const board = pokemon.simulation.board
@@ -548,7 +575,7 @@ export function applyWandEffects(
       }
       case Item.BLAST_WAND: {
         if (crit) {
-          specialDamageFactor += 0.2
+          specialDamageFactor += 0.3
           pokemon.broadcastAbility({ skill: "PUFF_PINK" })
         }
         break
@@ -592,13 +619,13 @@ export function applyWandEffects(
         break
       }
       case Item.TWO_EDGED_WAND: {
-        specialDamageFactor += 0.2
+        specialDamageFactor += 0.3
         break
       }
     }
   }
 
-  const specialDamage = specialDamageFactor * attackDamage
+  const specialDamage = specialDamageFactor * pokemon.atk
   let { takenDamage, death } = target.handleSpecialDamage(
     specialDamage,
     board,
@@ -931,14 +958,7 @@ const growBerryTreesEffect = new OnStageStartEffect(({ player }) => {
 const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
   if (getSynergyTier(player.synergies, Synergy.GROUND) > 0) {
     player.board.forEach((pokemon, pokemonId) => {
-      if (
-        pokemon.hasSynergy(Synergy.GROUND) &&
-        !isOnBench(pokemon) &&
-        !(
-          pokemon.items.has(Item.CHEF_HAT) &&
-          player.synergies.hasSynergyActive(Synergy.GOURMET)
-        )
-      ) {
+      if (pokemon.hasSynergy(Synergy.GROUND) && !isOnBench(pokemon)) {
         const index = (pokemon.positionY - 1) * BOARD_WIDTH + pokemon.positionX
         const hasAlreadyReachedMaxDepth = player.groundHoles[index] === 5
         const isReachingMaxDepth = player.groundHoles[index] === 4
@@ -1009,6 +1029,51 @@ const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
   }
 })
 
+export class FossilPowerEffect extends BeforeTakingDamageEffect {
+  synergyTier: number
+  constructor(effect: SynergyTier<Synergy.FOSSIL>) {
+    super(undefined, effect)
+    this.synergyTier = SynergyTiers[Synergy.FOSSIL].indexOf(effect) + 1
+  }
+
+  apply({ pokemon, residualDamage, takenDamage }) {
+    if (
+      pokemon.hasSynergyEffect(Synergy.FOSSIL) &&
+      pokemon.hp - residualDamage <= 0.3 * pokemon.maxHP
+    ) {
+      const shield = Math.round(
+        pokemon.maxHP *
+          (FOSSIL_SHIELD_PER_SYNERGY_TIER[this.synergyTier - 1] ?? 1)
+      )
+      const attackBonus =
+        FOSSIL_ATK_BUFF_PER_SYNERGY_TIER[this.synergyTier - 1] ?? 1
+      pokemon.addShield(shield, pokemon, 0, false)
+
+      //  When the Fossil Synergy effect is triggered, the received shield takes a maximum initial damage equal to 50% of the shield amount
+      const damageOnShield = max(0.5 * shield)(residualDamage)
+
+      pokemon.shieldDamageTaken += damageOnShield
+      takenDamage += damageOnShield
+      pokemon.shield -= damageOnShield
+      residualDamage = 0
+
+      pokemon.addAttack(pokemon.baseAtk * attackBonus, pokemon, 0, false)
+      pokemon.resetCooldown(500)
+      pokemon.broadcastAbility({ skill: "FOSSIL_RESURRECT" })
+      SynergyTiers[Synergy.FOSSIL].forEach((e) => {
+        pokemon.effects.delete(e)
+      })
+      pokemon.effectsSet.delete(this)
+
+      return {
+        newResidualDamage: residualDamage,
+        newTakenDamage: takenDamage
+      }
+    }
+  }
+}
+
+//TODO: move more synergy effects from applyEffect to here
 export const SynergyEffects: Partial<
   Record<EffectEnum, (Effect | (() => Effect))[]>
 > = {

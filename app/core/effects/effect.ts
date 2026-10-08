@@ -3,7 +3,6 @@ import type Player from "../../models/colyseus-models/player"
 import type { Pokemon } from "../../models/colyseus-models/pokemon"
 import type GameRoom from "../../rooms/game-room"
 import type GameState from "../../rooms/states/game-state"
-import type { IPokemonEntity } from "../../types"
 import type { Ability } from "../../types/enum/Ability"
 import type { EffectEnum } from "../../types/enum/Effect"
 import type { AttackType } from "../../types/enum/Game"
@@ -65,7 +64,7 @@ export class OnItemGainedEffect extends Effect {
 }
 
 // item effect applied when item is removed during a fight (stolen, destroyed, consummed...)
-export class OnItemRemovedEffect extends Effect {
+export class OnItemLostInCombatEffect extends Effect {
   constructor(effect?: (pokemon: PokemonEntity, item: Item) => void) {
     super(effect)
   }
@@ -95,7 +94,7 @@ interface OnChangePositionEffectArgs {
   pokemon: Pokemon
   player: Player
   state?: GameState // can be undefined for bots updatePlayerTeam method
-  room?: GameRoom   // can be undefined for bots updatePlayerTeam method
+  room?: GameRoom // can be undefined for bots updatePlayerTeam method
   oldX: number
   oldY: number
   newX: number
@@ -160,7 +159,7 @@ export class OnBenchedDuringFightEffect extends Effect {
 interface OnSimulationStartEffectArgs {
   simulation: Simulation
   player?: Player
-  team: MapSchema<IPokemonEntity>
+  team: MapSchema<PokemonEntity>
   entity: PokemonEntity
 }
 
@@ -189,6 +188,22 @@ export class OnItemDroppedEffect extends Effect {
   }
   constructor(
     effect?: (args: OnItemDroppedEffectArgs) => boolean,
+    origin?: EffectOrigin
+  ) {
+    super(effect, origin)
+  }
+}
+
+interface OnItemUnequippedEffectArgs {
+  pokemon: Pokemon
+  player: Player
+  item: Item
+}
+
+export class OnItemUnequippedEffect extends Effect {
+  apply(args: OnItemUnequippedEffectArgs) {}
+  constructor(
+    effect?: (args: OnItemUnequippedEffectArgs) => void,
     origin?: EffectOrigin
   ) {
     super(effect, origin)
@@ -230,10 +245,28 @@ export class OnDeathEffect extends Effect {
   }
 }
 
-export class OnResurrectEffect extends Effect {
+// applied when a pokemon start the resurrecting animation
+
+export class OnResurrectingEffect extends Effect {
   apply(args: OnDeathEffectArgs) {}
   constructor(
     effect?: (args: OnDeathEffectArgs) => void,
+    origin?: EffectOrigin
+  ) {
+    super(effect, origin)
+  }
+}
+
+export interface OnResurrectionEffectArgs {
+  pokemon: PokemonEntity
+  board: Board
+}
+
+// applied after a pokemon is resurrected
+export class OnResurrectionEffect extends Effect {
+  apply(args: OnResurrectionEffectArgs) {}
+  constructor(
+    effect?: (args: OnResurrectionEffectArgs) => void,
     origin?: EffectOrigin
   ) {
     super(effect, origin)
@@ -248,11 +281,12 @@ export class PeriodicEffect extends Effect {
   constructor(
     effect: (entity: PokemonEntity, board: Board, ...others: any[]) => void,
     origin: EffectOrigin,
-    intervalMs: number
+    intervalMs: number,
+    callImmediately: boolean = false
   ) {
     super(effect, origin)
     this.intervalMs = intervalMs
-    this.timer = intervalMs
+    this.timer = callImmediately ? 0 : intervalMs
     this.count = 0
   }
 
@@ -295,19 +329,10 @@ interface OnAttackEffectArgs {
   specialDamage: number
   trueDamage: number
   totalDamage: number
+  totalTakenDamage: number
   crit: boolean
   isTripleAttack?: boolean
   hasAttackKilled?: boolean
-}
-
-export class BeforeAttackEffect extends Effect {
-  override apply(args: OnAttackEffectArgs) {}
-  constructor(
-    effect?: (args: OnAttackEffectArgs) => void,
-    origin?: EffectOrigin
-  ) {
-    super(effect, origin)
-  }
 }
 
 export class OnAttackEffect extends Effect {
@@ -335,6 +360,37 @@ export class OnAbilityCastEffect extends Effect {
       target: PokemonEntity | null,
       crit: boolean
     ) => void,
+    origin?: EffectOrigin
+  ) {
+    super(effect, origin)
+  }
+}
+
+// applied when receiving the damage, just before applying the damage
+
+export interface BeforeTakingDamageEffectArgs {
+  pokemon: PokemonEntity
+  attacker: PokemonEntity | null
+  board: Board
+  takenDamage: number // damage taken so far including shield damage and damage not applied yet
+  residualDamage: number // damage not applied yet after damage reduction
+  damageBeforeReduction: number // initial damage before any reduction
+  attackType?: AttackType
+  isRetaliation: boolean
+}
+
+export type BeforeTakingDamageEffectReturn = {
+  newDeath?: boolean
+  newResidualDamage?: number
+  newTakenDamage?: number
+} | void
+
+export class BeforeTakingDamageEffect extends Effect {
+  apply(args: BeforeTakingDamageEffectArgs): BeforeTakingDamageEffectReturn {}
+  constructor(
+    effect?: (
+      args: BeforeTakingDamageEffectArgs
+    ) => BeforeTakingDamageEffectReturn,
     origin?: EffectOrigin
   ) {
     super(effect, origin)
@@ -406,24 +462,19 @@ export class OnDamageDealtEffect extends Effect {
   }
 }
 
+export interface OnMoveEffectArgs {
+  pokemon: PokemonEntity
+  board: Board
+  oldX: number
+  oldY: number
+  newX: number
+  newY: number
+}
+
 export class OnMoveEffect extends Effect {
-  override apply(
-    pokemon: PokemonEntity,
-    board: Board,
-    oldX: number,
-    oldY: number,
-    newX: number,
-    newY: number
-  ) {}
+  override apply(args: OnMoveEffectArgs) {}
   constructor(
-    effect?: (
-      pokemon: PokemonEntity,
-      board: Board,
-      oldX: number,
-      oldY: number,
-      newX: number,
-      newY: number
-    ) => void,
+    effect?: (args: OnMoveEffectArgs) => void,
     origin?: EffectOrigin
   ) {
     super(effect, origin)

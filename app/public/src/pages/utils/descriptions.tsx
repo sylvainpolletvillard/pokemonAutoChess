@@ -1,5 +1,6 @@
 import { t } from "i18next"
 import React, { type ReactElement } from "react"
+import { BoardEffects } from "../../../../types/enum/Effect"
 import { Damage, Stat } from "../../../../types/enum/Game"
 import { Item } from "../../../../types/enum/Item"
 import {
@@ -9,7 +10,10 @@ import {
 } from "../../../../types/enum/Status"
 import { Synergy } from "../../../../types/enum/Synergy"
 import { Weather } from "../../../../types/enum/Weather"
-import { TechnicalTerms } from "../../../../types/strings/TechnicalTerm"
+import {
+  TechnicalTerms,
+  TechnicalTermsWithoutIcons
+} from "../../../../types/strings/TechnicalTerm"
 import { isIn } from "../../../../utils/array"
 import { max, roundToNDigits } from "../../../../utils/number"
 import { keys } from "../../../../utils/object"
@@ -27,12 +31,14 @@ export const iconRegExp = new RegExp(
     ...DamageTypes,
     ...Stats,
     ...DocumentedStatuses,
+    ...BoardEffects,
     ...Weathers,
     ...Synergies,
     ...Items,
     ...TechnicalTerms,
     "GOLD",
     "STAR",
+    "XP",
     "EMERA"
   ].join("|")}|\\[[^\\]]+\\])(?=\\W|$)`,
   "g"
@@ -55,9 +61,9 @@ export function addIconsToDescription(
     const token = matchIcon![i - 1]
     let icon: ReactElement | null = null
     const isAtStartOfSentence =
-      i === 0 || descriptionParts[i - 1].trim().endsWith(".")
-    const capitalize = (s: string) =>
-      isAtStartOfSentence ? s.charAt(0).toUpperCase() + s.slice(1) : s
+      i === 0 ||
+      descriptionParts[i - 1].trim().endsWith(".") ||
+      descriptionParts[i - 1].length === 0
 
     if (token) {
       if (token === "GOLD") {
@@ -81,6 +87,13 @@ export function addIconsToDescription(
           <span className="description-icon icon-emera">
             <img src="/assets/atlas/BLANK_EMERA.png" alt="💎" />
             <span className="item-label">{t(`atlas.emera`)}</span>
+          </span>
+        )
+      } else if (token === "XP") {
+        icon = (
+          <span className="description-icon stat">
+            <img src={`assets/icons/${token}.png`} />
+            <span className="stat-label">{t(`stat.${token}`)}</span>
           </span>
         )
       } else if (isIn(DamageTypes, token)) {
@@ -120,6 +133,16 @@ export function addIconsToDescription(
             </span>
           </span>
         )
+      } else if (isIn(BoardEffects, token)) {
+        icon = (
+          <span
+            className="description-icon board-effect"
+            title={t(`effect_description.${token}`)}
+          >
+            <img src={`assets/icons/effects/${token}.svg`} />
+            <span className="board-effect-label">{t(`effect.${token}`)}</span>
+          </span>
+        )
       } else if (isIn(Weathers, token)) {
         icon = (
           <span
@@ -150,12 +173,16 @@ export function addIconsToDescription(
       } else if (isIn(TechnicalTerms, token)) {
         icon = (
           <span
-            className="description-icon technical-term"
+            className={cc("description-icon", "technical-term", {
+              capitalized: isAtStartOfSentence
+            })}
             title={t(`technical_terms_definitions.${token}`)}
           >
-            <img src={`assets/ui/${token.toLowerCase()}.svg`} />
+            {TechnicalTermsWithoutIcons.includes(token) ? null : (
+              <img src={`assets/ui/${token.toLowerCase()}.svg`} />
+            )}
             <i className="technical-term-label">
-              {capitalize(t(`technical_terms.${token}`))}
+              {t(`technical_terms.${token}`)}
             </i>
           </span>
         )
@@ -178,7 +205,7 @@ export function addIconsToDescription(
         const tier = params?.stars
         const maxTier = params?.stages ? params.stages + 1 : 5
         const tierValues =
-          params?.stars && !params?.showAbilityTiers
+          params?.stars && !params?.showAbilityTiers && array.length > 1
             ? [array[params.stars - 1]] // only show relevant tier
             : array.slice(0, maxTier) // show tier scaling
 
@@ -281,7 +308,7 @@ export function addIconsToHtml(
     if (!matchIcon) return
 
     const descriptionParts = text.split(iconRegExp)
-    let newHTML = ""
+    const newHTML = ""
 
     descriptionParts.forEach((part, i) => {
       const token = matchIcon[i - 1]
@@ -297,6 +324,11 @@ export function addIconsToHtml(
         } else if (token === "EMERA") {
           iconHTML =
             '<span class="description-icon icon-emera"><img src="/assets/atlas/BLANK_EMERA.png" alt="💎" /><span class="item-label">{t(`atlas.emera`)}</span></span>'
+        } else if (token === "XP") {
+          iconHTML = `<span className="description-icon stat">
+            <img src={${`assets/icons/${token}.png`}} />
+            <span className="stat-label">{${t(`stat.${token}`)}}</span>
+          </span>`
         } else if (isIn(DamageTypes, token)) {
           const className =
             token === Damage.PHYSICAL
@@ -315,6 +347,11 @@ export function addIconsToHtml(
           iconHTML = `<span class="description-icon status" title="${t(`status_description.${token}`)}">
             <img src="assets/icons/${token}.svg" />
             <span class="status-label${isPositive ? " positive" : ""}">${t(`status.${token}`)}</span>
+          </span>`
+        } else if (isIn(BoardEffects, token)) {
+          iconHTML = `<span class="description-icon board-effect" title="${t(`effect_description.${token}`)}">
+            <img src="assets/icons/effects/${token}.svg" />
+            <span class="board-effect-label">${t(`effect.${token}`)}</span>
           </span>`
         } else if (isIn(Weathers, token)) {
           iconHTML = `<span class="description-icon weather" title="${t(`weather_description.${token}`)}">
@@ -344,7 +381,8 @@ export function addIconsToHtml(
 
           if (array.at(-1)?.includes("ND")) {
             nbDigits = Number(array.pop()?.replace("ND=", "")) || 0
-          } else if (array.at(-1)?.includes("SP")) {
+          }
+          if (array.at(-1)?.includes("SP")) {
             scaleType = "AP"
             scaleFactor = Number(array.pop()?.replace("SP=", "")) || 1
           } else if (array.at(-1)?.includes("LK")) {

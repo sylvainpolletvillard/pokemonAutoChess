@@ -26,11 +26,11 @@ import {
   displayHit
 } from "../components/abilities-animations"
 import LoadingManager from "../components/loading-manager"
-import PokemonSprite, { resetSpriteCounts } from "../components/pokemon"
 import {
   DEFAULT_POKEMON_ANIMATION_CONFIG,
   PokemonAnimations
 } from "../components/pokemon-animations"
+import PokemonSprite, { resetSpriteCounts } from "../components/pokemon-sprite"
 import WeatherManager from "../components/weather-manager"
 import { DEPTH } from "../depths"
 
@@ -285,13 +285,7 @@ export class DebugScene extends Phaser.Scene {
   }
 
   applyStatusAnimation(
-    status:
-      | Status
-      | Boost
-      | "BALM_MUSHROOM"
-      | "STELLAR"
-      | "POISONNED_BADLY"
-      | ""
+    status: Status | Boost | "BALM_MUSHROOM" | "STELLAR" | "POISONED_BADLY" | ""
   ) {
     if (this.pokemonSprite) {
       this.pokemonSprite.sprite.setTint(
@@ -324,10 +318,10 @@ export class DebugScene extends Phaser.Scene {
       this.pokemonSprite.removeFairyField()
       this.pokemonSprite.removeStellarEffect()
 
-      if (status === Status.POISONNED) {
+      if (status === Status.POISONED) {
         this.pokemonSprite.addPoison(1)
       }
-      if (status === "POISONNED_BADLY") {
+      if (status === "POISONED_BADLY") {
         this.pokemonSprite.addPoison(3)
       }
       if (status === Status.SLEEP) {
@@ -378,7 +372,7 @@ export class DebugScene extends Phaser.Scene {
       if (status === Status.CURSE) {
         this.pokemonSprite.addCurse()
       }
-      if (status == Status.RUNE_PROTECT) {
+      if (status == Status.SAFEGUARD) {
         this.pokemonSprite.addRuneProtect()
       }
       if (status == Status.RAGE) {
@@ -507,7 +501,7 @@ export class DebugScene extends Phaser.Scene {
     const showAbilityAnim = () => {
       displayAbility({
         scene: this,
-        pokemonsOnBoard: [this.target!],
+        pokemonsOnBoard: [this.pokemonSprite!, this.target!],
         ability: this.pokemonSprite!.pokemon.skill,
         orientation: this.pokemonSprite!.orientation,
         positionX: this.pokemonSprite!.positionX,
@@ -515,11 +509,12 @@ export class DebugScene extends Phaser.Scene {
         targetX: this.pokemonSprite!.targetX ?? -1,
         targetY: this.pokemonSprite!.targetY ?? -1,
         flip: this.pokemonSprite!.flip,
-        ap: 0
+        ap: 0,
+        data: {}
       })
     }
     showAbilityAnim()
-    this.attackAnimInterval = setInterval(showAbilityAnim, 2000)
+    this.attackAnimInterval = setInterval(showAbilityAnim, 3000)
   }
 
   shakeCamera(options?: { intensity?: number; duration?: number }) {

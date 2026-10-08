@@ -6,11 +6,13 @@ import { useNavigate } from "react-router"
 import pkg from "../../../../../../package.json"
 import { GADGETS } from "../../../../../config/game/gadgets"
 import { Role } from "../../../../../types"
+import { isReplayRoom } from "../../../game/replay-room-id"
 import {
   selectConnectedPlayer,
   useAppDispatch,
   useAppSelector
 } from "../../../hooks"
+import { rooms } from "../../../network"
 import { usePreferences } from "../../../preferences"
 import { setSearchedUser } from "../../../stores/LobbyStore"
 import { toggleFullScreen } from "../../utils/fullscreen"
@@ -35,6 +37,7 @@ import TierListMakerModal from "../tier-list/tier-list-maker-modal"
 import Wiki from "../wiki/wiki"
 
 import "./main-sidebar.css"
+import { getGameScene } from "../../game"
 
 export type Page = "main_lobby" | "preparation" | "game"
 
@@ -138,6 +141,15 @@ export function MainSidebar(props: MainSidebarProps) {
     }
   }
 
+  function onClickLeaveReplay() {
+    // a replay exits straight to the lobby (the live leave() would hit the /after flow)
+    if (isReplayRoom(rooms.game)) {
+      rooms.game.pause()
+    }
+    getGameScene()?.music?.destroy()
+    navigate("/lobby")
+  }
+
   return (
     <Sidebar
       collapsed={collapsed}
@@ -237,6 +249,15 @@ export function MainSidebar(props: MainSidebarProps) {
           </NavLink>
         )}
 
+        {page === "main_lobby" &&
+          ((!GADGETS.recorder.disabled &&
+            profileLevel >= GADGETS.recorder.levelRequired) ||
+            profile?.role === Role.ADMIN) && (
+            <NavLink svg="recorder" onClick={() => navigate("/replay")}>
+              {t("replay.nav")}
+            </NavLink>
+          )}
+
         {page !== "game" &&
           ((!GADGETS.pokeguesser.disabled &&
             profileLevel >= GADGETS.pokeguesser.levelRequired) ||
@@ -267,7 +288,7 @@ export function MainSidebar(props: MainSidebarProps) {
             profileLevel >= GADGETS.bot_builder.levelRequired) ||
             profile?.role === Role.ADMIN) && (
             <NavLink svg="bot" onClick={() => navigate("/bot-builder")}>
-              {t("bot_builder")}
+              {t("gadget.bot_builder")}
             </NavLink>
           )}
 
@@ -376,9 +397,23 @@ export function MainSidebar(props: MainSidebarProps) {
           </NavLink>
         )}
 
-        <NavLink svg="exit-door" className="red logout" onClick={onClickLeave}>
-          {leaveLabel}
-        </NavLink>
+        {isReplayRoom(rooms.game) ? (
+          <NavLink
+            svg="exit-door"
+            className="red logout"
+            onClick={onClickLeaveReplay}
+          >
+            {t("replay.leave_replay")}
+          </NavLink>
+        ) : (
+          <NavLink
+            svg="exit-door"
+            className="red logout"
+            onClick={onClickLeave}
+          >
+            {leaveLabel}
+          </NavLink>
+        )}
       </Menu>
 
       <Modals modal={modal} setModal={setModal} page={page} />

@@ -5,6 +5,8 @@ import { Dishes, type PkmWithCustom } from "../../../../../types"
 import {
   Berries,
   CraftableItems,
+  DubiousGadgets,
+  Gifts,
   Item,
   ItemComponents,
   MemoryDiscs,
@@ -46,7 +48,7 @@ export default function ItemPicker(props: {
       items: [Item.CHEF_HAT, ...Berries, ...Dishes]
     },
 
-    { label: t("tools"), key: "tools", items: Tools },
+    { label: t("tools"), key: "tools", items: [...Tools, ...DubiousGadgets] },
     {
       label: t("shiny_items"),
       key: "shiny_items",
@@ -61,6 +63,12 @@ export default function ItemPicker(props: {
       label: t("wands"),
       key: "wands",
       items: Wands,
+      hidden: props.origin === "team-planner" || props.origin === "bot-builder"
+    },
+    {
+      label: t("gifts"),
+      key: "gifts",
+      items: Gifts,
       hidden: props.origin === "team-planner" || props.origin === "bot-builder"
     },
     {

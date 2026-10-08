@@ -46,7 +46,7 @@ export class OnJoinCommand extends Command<
     user: IUserMetadataMongo | null
   }) {
     try {
-      //logger.info(`${client.auth.displayName} ${client.id} join lobby room`)
+      //logger.info(`${client.auth.displayName} ${client.sessionId} join lobby room`)
       client.send(Transfer.ROOMS, this.room.rooms)
       client.userData = { joinedAt: Date.now() }
 
@@ -75,19 +75,16 @@ export class OnJoinCommand extends Command<
         const randomName = generateRandomName(starterPokemon)
         const starterAvatar = PkmIndex[starterPokemon] + "/Normal"
         const starterCollection = new Map<string, IPokemonCollectionItemMongo>()
+        const starterUnlocked = Buffer.alloc(5, 0)
         const starterCollectionItem: IPokemonCollectionItemMongo = {
           id: PkmIndex[starterPokemon],
-          unlocked: Buffer.alloc(5, 0),
+          unlocked: starterUnlocked,
           dust: 0,
           selectedEmotion: Emotion.NORMAL,
           selectedShiny: false,
           played: 0
         }
-        CollectionUtils.unlockEmotion(
-          starterCollectionItem.unlocked,
-          Emotion.NORMAL,
-          false
-        )
+        CollectionUtils.unlockEmotion(starterUnlocked, Emotion.NORMAL, false)
         starterCollection.set(PkmIndex[starterPokemon], starterCollectionItem)
 
         await UserMetadata.create({
@@ -111,6 +108,7 @@ export class OnJoinCommand extends Command<
           eventPoints: 0,
           maxEventPoints: 0,
           eventFinishTime: null,
+          eventData: {},
           pokemonCollection: starterCollection,
           booster: starterBoosters,
           titles: [],
@@ -132,7 +130,7 @@ export class OnLeaveCommand extends Command<
   execute({ client }: { client: Client }) {
     try {
       if (client && client.auth && client.auth.displayName && client.auth.uid) {
-        //logger.info(`${client.auth.displayName} ${client.id} leave lobby`)
+        //logger.info(`${client.auth.displayName} ${client.sessionId} leave lobby`)
         this.room.users.delete(client.auth.uid)
       }
     } catch (error) {
@@ -371,6 +369,7 @@ export class ChangeAvatarCommand extends Command<
       const collectionItem = mongoUser.pokemonCollection.get(index)
       if (
         !collectionItem ||
+        !collectionItem.unlocked ||
         !CollectionUtils.hasUnlocked(collectionItem.unlocked, emotion, shiny)
       )
         return
@@ -380,22 +379,6 @@ export class ChangeAvatarCommand extends Command<
       user.avatar = portrait
       mongoUser.avatar = portrait
       mongoUser.save()
-    } catch (error) {
-      logger.error(error)
-    }
-  }
-}
-
-export class OnSearchByIdCommand extends Command<
-  CustomLobbyRoom,
-  { client: Client; uid: string }
-> {
-  async execute({ client, uid }: { client: Client; uid: string }) {
-    try {
-      const user = await UserMetadata.findOne({ uid: uid })
-      if (user) {
-        client.send(Transfer.USER, user)
-      }
     } catch (error) {
       logger.error(error)
     }
@@ -521,6 +504,35 @@ export class SelectLanguageCommand extends Command<
   }
 }
 
+export class ChoosePalCommand extends Command<
+  CustomLobbyRoom,
+  { client: Client; playerUid: string | null }
+> {
+  async execute({ client, playerUid }: { client: Client; playerUid: string }) {
+    try {
+      if (playerUid === client.auth.uid) return // can't choose yourself as pal
+      const u = this.room.users.get(client.auth.uid)
+      if (client.auth.uid && u) {
+        let eventData = {}
+        const user = await UserMetadata.findOne({ uid: client.auth.uid })
+        if (user) {
+          eventData = { ...(user.eventData || {}), pal: playerUid }
+          user.eventData = eventData
+          await user.save()
+        }
+        u.eventData = eventData
+        const pal = this.room.clients.find((cli) => cli.auth.uid === playerUid)
+        if (pal) {
+          // if pal online, let them know they have been chosen
+          pal.send(Transfer.SELECT_PAL, client.auth.uid)
+        }
+      }
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+}
+
 export class JoinOrOpenRoomCommand extends Command<
   CustomLobbyRoom,
   { client: Client; gameMode: GameMode }
@@ -561,23 +573,23 @@ export class JoinOrOpenRoomCommand extends Command<
         let maxRank = EloRank.BEAST_BALL
         switch (userRank) {
           case EloRank.LEVEL_BALL:
-          case EloRank.NET_BALL:
-            // 0- 1099
+            // 0- 1050
             minRank = EloRank.LEVEL_BALL
-            maxRank = EloRank.NET_BALL
+            maxRank = EloRank.LEVEL_BALL
             break
+          case EloRank.NET_BALL:
           case EloRank.SAFARI_BALL:
-          case EloRank.LOVE_BALL:
-            // 1050-1200
+            // 1050-1150
             minRank = EloRank.NET_BALL
-            maxRank = EloRank.LOVE_BALL
+            maxRank = EloRank.SAFARI_BALL
             break
+          case EloRank.LOVE_BALL:
           case EloRank.PREMIER_BALL:
-          case EloRank.QUICK_BALL:
-            // 1150-1299
+            // 1150-1250
             minRank = EloRank.LOVE_BALL
-            maxRank = EloRank.QUICK_BALL
+            maxRank = EloRank.PREMIER_BALL
             break
+          case EloRank.QUICK_BALL:
           case EloRank.POKE_BALL:
           case EloRank.SUPER_BALL:
           case EloRank.ULTRA_BALL:
@@ -631,6 +643,21 @@ export class JoinOrOpenRoomCommand extends Command<
         }
         break
       }
+
+      case GameMode.DOUBLE_UP: {
+        const existingDoubleUp = this.room.rooms?.find(
+          (room) =>
+            room.name === "preparation" &&
+            room.metadata?.gameMode === GameMode.DOUBLE_UP &&
+            room.clients < MAX_PLAYERS_PER_GAME
+        )
+        if (existingDoubleUp) {
+          client.send(Transfer.REQUEST_ROOM, existingDoubleUp.roomId)
+        } else {
+          return [new OpenGameCommand().setPayload({ gameMode, client })]
+        }
+        break
+      }
     }
   }
 }
@@ -677,6 +704,9 @@ export class OpenGameCommand extends Command<
         .toUpperCase()
     } else if (gameMode === GameMode.CLASSIC) {
       roomName = "Classic"
+    } else if (gameMode === GameMode.DOUBLE_UP) {
+      roomName = "Double Up"
+      ownerId = user.uid
     }
 
     const newRoom = await matchMaker.createRoom("preparation", {

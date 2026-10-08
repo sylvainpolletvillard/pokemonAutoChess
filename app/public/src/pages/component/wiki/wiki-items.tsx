@@ -3,8 +3,12 @@ import { useTranslation } from "react-i18next"
 import {
   ArtificialItems,
   Berries,
+  BuriedTrash,
+  BuriedTreasures,
   Dishes,
+  DubiousGadgets,
   FishingRods,
+  Gifts,
   Item,
   ItemComponentsNoScarf,
   ItemRecipe,
@@ -14,6 +18,7 @@ import {
   SpecialItems,
   SynergyGems,
   SynergyGemsBuried,
+  TeraShards,
   TMsBronze,
   TMsGold,
   TMsSilver,
@@ -41,18 +46,12 @@ function ItemList(props: { items: readonly Item[]; icon?: string }) {
 
 export default function WikiItems() {
   const { t } = useTranslation()
-  const otherBuriedItems = [
-    Item.TRASH,
-    Item.LEFTOVERS,
-    Item.COIN,
-    Item.NUGGET,
-    Item.BIG_NUGGET
-  ]
   const specialItems = useMemo(() => {
     const specialItemsToExclude: Item[] = [
       ...MemoryDiscs,
       ...TownItems,
-      ...otherBuriedItems,
+      ...BuriedTrash,
+      Item.BIG_NUGGET,
       ...FishingRods,
       ...Mulches,
       Item.CHEF_HAT,
@@ -249,11 +248,28 @@ export default function WikiItems() {
             items={Tools.filter((i) => isIn(ArtificialItems, i) === false)}
           />
         </ul>
+        <p>
+          {addIconsToDescription(t("wiki.items.dubious_gadgets_description"))}
+        </p>
+        <ul>
+          <ItemList items={DubiousGadgets} />
+        </ul>
 
         <h3>
-          <SynergyIcon type={Synergy.GROUND} /> {t("wiki.items.gems")}
+          <SynergyIcon type={Synergy.GROUND} /> {t("wiki.items.buried_items")}
         </h3>
-        <p>{addIconsToDescription(t("wiki.items.gems_description"))}</p>
+        <p>{addIconsToDescription(t("wiki.items.buried_items_description"))}</p>
+        <p>
+          {addIconsToDescription(t("wiki.items.buried_treasures_description"))}
+        </p>
+        <ul>
+          <ItemList items={BuriedTreasures} />
+        </ul>
+        <p>{addIconsToDescription(t("wiki.items.buried_trash_description"))}</p>
+        <ul>
+          <ItemList items={BuriedTrash} />
+        </ul>
+        <p>{addIconsToDescription(t("wiki.items.gems_buried_description"))}</p>
         <ul>
           <ItemList items={SynergyGemsBuried} />
         </ul>
@@ -266,14 +282,6 @@ export default function WikiItems() {
               (gem) => SynergyGemsBuried.includes(gem) === false
             )}
           />
-        </ul>
-        <p>
-          {addIconsToDescription(
-            t("wiki.items.you_may_also_find_in_the_ground")
-          )}
-        </p>
-        <ul>
-          <ItemList items={otherBuriedItems} />
         </ul>
 
         <h3>
@@ -365,6 +373,22 @@ export default function WikiItems() {
         <p>{addIconsToDescription(t("wiki.items.fire_shard_description"))}</p>
         <ul>
           <ItemList items={[Item.FIRE_SHARD]} />
+        </ul>
+
+        <h3>
+          <SynergyIcon type={Synergy.STELLAR} /> {t("wiki.items.tera_shards")}
+        </h3>
+        <p>{addIconsToDescription(t("wiki.items.tera_shards_description"))}</p>
+        <ul>
+          <ItemList items={TeraShards} />
+        </ul>
+      </article>
+
+      <article className="double-up-items">
+        <h2>{t("wiki.items.gifts")}</h2>
+        <p>{t("wiki.items.gifts_description")}</p>
+        <ul className="gifts">
+          <ItemList items={Gifts} />
         </ul>
       </article>
 

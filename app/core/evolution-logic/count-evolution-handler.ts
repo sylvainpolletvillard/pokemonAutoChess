@@ -8,7 +8,7 @@ import { isOnBench } from "../../utils/board"
 import { logger } from "../../utils/logger"
 import { shuffleArray } from "../../utils/random"
 import { schemaValues } from "../../utils/schemas"
-import { carryOverPermanentStats, EvolutionHandler } from "./evolution-handler"
+import { carryOverChangedAbilities, carryOverPermanentStats, carryOverTeraShards, EvolutionHandler } from "./evolution-handler"
 
 export class CountEvolutionHandler extends EvolutionHandler {
   numberRequired: number
@@ -32,7 +32,7 @@ export class CountEvolutionHandler extends EvolutionHandler {
     }
 
     const copies = schemaValues(player.board).filter(
-      (p) => p.index === pokemon.index && !p.items.has(Item.EVIOLITE)
+      (p) => p.name === pokemon.name && !p.items.has(Item.EVIOLITE)
     )
     return copies.length >= this.numberRequired
   }
@@ -51,7 +51,7 @@ export class CountEvolutionHandler extends EvolutionHandler {
     }
 
     const copies = schemaValues(player.board).filter(
-      (p) => p.index === pokemon.index && !p.items.has(Item.EVIOLITE)
+      (p) => p.name === pokemon.name && !p.items.has(Item.EVIOLITE)
     )
     return copies.length === this.numberRequired - 1
   }
@@ -68,7 +68,7 @@ export class CountEvolutionHandler extends EvolutionHandler {
 
     player.board.forEach((pkm, id) => {
       if (
-        pkm.index == pokemon.index &&
+        pkm.name === pokemon.name &&
         !pkm.items.has(Item.EVIOLITE) &&
         pokemonsBeforeEvolution.length < this.numberRequired
       ) {
@@ -113,6 +113,8 @@ export class CountEvolutionHandler extends EvolutionHandler {
     )
 
     carryOverPermanentStats(pokemonEvolved, pokemonsBeforeEvolution)
+    carryOverChangedAbilities(pokemonEvolved, pokemonsBeforeEvolution, player)
+    carryOverTeraShards(pokemonEvolved, pokemonsBeforeEvolution)
     pokemonEvolved.stacks = pokemon.stacks // carry over the stacks (since they're not supposed to be linked to the evolution rule)
 
     shuffleArray(itemsCompleteOnBench)
@@ -165,7 +167,7 @@ export class CountEvolutionHandler extends EvolutionHandler {
       }
     }
 
-    if(pokemonsBeforeEvolution.some(p => p.supercharged)) {
+    if (pokemonsBeforeEvolution.some((p) => p.supercharged)) {
       pokemonEvolved.supercharged = true // preserve supercharged state on evolution
     }
 

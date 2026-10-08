@@ -1,4 +1,5 @@
 import { Ability } from "../../types/enum/Ability"
+import { ZMoves } from "../../types/enum/ZMoves"
 
 export const InimitableAbilities: Ability[] = [
   Ability.ASSIST,
@@ -36,8 +37,13 @@ export const InimitableAbilities: Ability[] = [
   Ability.MAGNET_PULL,
   Ability.METRONOME,
   Ability.MIMIC,
+  Ability.ORDER_UP,
+  Ability.REVELATION_DANCE,
   Ability.SHADOW_FORCE,
   Ability.SKETCH,
   Ability.SKILL_SWAP,
-  Ability.SWARM
+  Ability.SWARM,
+  Ability.TRANSE,
+  Ability.UNBOUND,
+  ...ZMoves
 ]

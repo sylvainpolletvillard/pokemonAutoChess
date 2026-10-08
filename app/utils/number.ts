@@ -40,7 +40,7 @@ export const fpsToDuration =
   (targetFramesPerSecond: number) => (nbFrames: number) =>
     Math.round(nbFrames * (1000 / targetFramesPerSecond))
 
-export function calcAngleDegrees(x: number, y: number) {
+export function calcAngleDegrees(x: number, y: number): number {
   return (Math.atan2(y, x) * 180) / Math.PI
 }
 
@@ -52,3 +52,6 @@ export function angleBetween(
   const dy = pointB[1] - pointA[1]
   return Math.atan2(dy, dx)
 }
+
+// prevent overflow uint16 values
+export const capUint16 = max(65535)

@@ -1,10 +1,11 @@
-import { type IPokemonEntity, Transfer } from "../types"
+import { type IPokemonEntity, Item, Transfer } from "../types"
 import { type BoardEffect, EffectEnum } from "../types/enum/Effect"
 import { Orientation, OrientationKnockback, Team } from "../types/enum/Game"
 import { distanceC, distanceM } from "../utils/distance"
 import { logger } from "../utils/logger"
 import { OrientationArray, OrientationVector } from "../utils/orientation"
 import { pickRandomIn } from "../utils/random"
+import { OnMoveEffect } from "./effects/effect"
 import type { PokemonEntity } from "./pokemon-entity"
 import type Simulation from "./simulation"
 
@@ -70,6 +71,30 @@ export class Board {
     const entity1 = this.getEntityOnCell(x1, y1)
     this.setEntityOnCell(x1, y1, entity0)
     this.setEntityOnCell(x0, y0, entity1)
+    if (entity0) {
+      entity0.getEffects(OnMoveEffect).forEach((effect) => {
+        effect.apply({
+          pokemon: entity0,
+          board: this,
+          oldX: x0,
+          oldY: y0,
+          newX: x1,
+          newY: y1
+        })
+      })
+    }
+    if (entity1) {
+      entity1.getEffects(OnMoveEffect).forEach((effect) => {
+        effect.apply({
+          pokemon: entity1,
+          board: this,
+          oldX: x1,
+          oldY: y1,
+          newX: x0,
+          newY: y0
+        })
+      })
+    }
   }
 
   forEach(
@@ -101,8 +126,7 @@ export class Board {
     y0: number,
     x1: number,
     y1: number,
-    pokemon: IPokemonEntity,
-    target: IPokemonEntity | undefined
+    pokemon: { positionX: number; positionY: number } | IPokemonEntity
   ) {
     const dx = x1 - x0
     const dy = y1 - y0
@@ -116,7 +140,7 @@ export class Board {
       }
     } else if (dx == 0) {
       if (dy == 0) {
-        if (pokemon.status.confusion) {
+        if ("status" in pokemon && pokemon.status.confusion) {
           return pickRandomIn(Orientation)
         }
         logger.error("failed to get pokemon orientation", {
@@ -124,12 +148,9 @@ export class Board {
           y0,
           x1,
           y1,
-          pokemon: pokemon.name,
+          pokemon: "name" in pokemon ? pokemon.name : "unknown",
           pokemonPosX: pokemon.positionX,
-          pokemonPosY: pokemon.positionY,
-          target: target?.name,
-          targetPosX: target?.positionX,
-          targetPosY: target?.positionY
+          pokemonPosY: pokemon.positionY
         })
         logger.trace("orientation error")
         return Orientation.DOWNRIGHT
@@ -197,8 +218,7 @@ export class Board {
       pokemon.positionY,
       target.positionX,
       target.positionY,
-      pokemon,
-      target
+      pokemon
     )
 
     const orientations = [
@@ -543,7 +563,8 @@ export class Board {
 
   getClosestAvailablePlace(
     targetX: number,
-    targetY: number
+    targetY: number,
+    excludingCells: { x: number; y: number }[] = []
   ): { x: number; y: number; distance: number } | null {
     const candidateCells = new Array<{
       distance: number
@@ -552,7 +573,10 @@ export class Board {
     }>()
 
     this.forEach((x: number, y: number, value: PokemonEntity | undefined) => {
-      if (value === undefined) {
+      if (
+        value === undefined &&
+        !excludingCells.some((cell) => cell.x === x && cell.y === y)
+      ) {
         candidateCells.push({
           x,
           y,
@@ -637,7 +661,10 @@ export class Board {
   ) {
     const previousEffects = this.boardEffects[y * this.columns + x]
     const entityOnCell = this.getEntityOnCell(x, y)
-    if (entityOnCell) {
+    if (
+      entityOnCell &&
+      entityOnCell.items.has(Item.HEAVY_DUTY_BOOTS) === false
+    ) {
       entityOnCell.effects.add(effect)
     }
 
@@ -741,7 +768,10 @@ export class Board {
     const closestEnemy = this.cells
       .filter(
         (entity): entity is PokemonEntity =>
-          entity != null && entity.team === enemyTeam && entity.hp > 0
+          entity != null &&
+          entity.team === enemyTeam &&
+          entity.hp > 0 &&
+          !entity.status.resurrecting
       )
       .sort(
         (a, b) =>
@@ -809,7 +839,7 @@ export class Board {
 
 export function effectInOrientation(
   board: Board,
-  pokemon: PokemonEntity,
+  pokemon: { positionX: number; positionY: number; team: Team },
   target: PokemonEntity | Orientation,
   effect: (cell: Cell) => void,
   maxRange?: number
@@ -822,8 +852,7 @@ export function effectInOrientation(
           pokemon.positionY,
           target.positionX,
           target.positionY,
-          pokemon,
-          target
+          pokemon
         )
 
   const targetsHit = new Set()

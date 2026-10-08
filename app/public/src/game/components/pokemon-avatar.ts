@@ -3,10 +3,18 @@ import { GameObjects } from "phaser"
 import PokemonFactory from "../../../../models/pokemon-factory"
 import {
   AvatarEmotions,
-  type Emotion,
+  CollectionEmotions,
+  Emotion,
   type IPokemonAvatar
 } from "../../../../types"
 import { GamePhaseState } from "../../../../types/enum/Game"
+import { Item } from "../../../../types/enum/Item"
+import {
+  type PlayerDialog,
+  PlayerDialogs
+} from "../../../../types/enum/PlayerDialog"
+import { Pkm, PkmIndex } from "../../../../types/enum/Pokemon"
+import { isIn } from "../../../../utils/array"
 import { getAvatarString } from "../../../../utils/avatar"
 import { throttle } from "../../../../utils/function"
 import { showEmote } from "../../network"
@@ -18,7 +26,7 @@ import type GameScene from "../scenes/game-scene"
 import { EmoteBubble } from "./emote-bubble"
 import EmoteMenu from "./emote-menu"
 import LifeBar from "./life-bar"
-import PokemonSprite from "./pokemon"
+import PokemonSprite from "./pokemon-sprite"
 
 export default class PokemonAvatar extends PokemonSprite {
   scene: GameScene
@@ -196,17 +204,20 @@ export default class PokemonAvatar extends PokemonSprite {
   }
 
   drawLifebar() {
-    this.lifebar = new LifeBar(
-      this.scene,
-      0,
-      28,
-      100,
-      100,
-      0,
-      this.isCurrentPlayerAvatar ? 0 : 1,
-      false
-    )
+    this.lifebar = new LifeBar({
+      scene: this.scene,
+      x: 0,
+      y: 0,
+      maxHP: 100,
+      hp: 100,
+      shield: 0,
+      team: this.isCurrentPlayerAvatar ? 0 : 1,
+      flip: false,
+      showHP: true,
+      showPP: false
+    })
     this.add(this.lifebar)
+    this.lifebar.draw()
   }
 
   showEmoteMenu() {
@@ -233,14 +244,23 @@ export default class PokemonAvatar extends PokemonSprite {
     else this.showEmoteMenu()
   }
 
-  sendEmote(emotion: Emotion) {
+  sendEmote(emote: Emotion | Item | Pkm | PlayerDialog) {
     const state = store.getState()
-    if (state.game.emotesUnlocked.includes(emotion)) {
-      showEmote(
-        getAvatarString(this.pokemon.index, this.pokemon.shiny, emotion)
-      )
-      this.hideEmoteMenu()
+    if (isIn(CollectionEmotions, emote)) {
+      if (state.game.emotesUnlocked.includes(emote)) {
+        showEmote(
+          getAvatarString(this.pokemon.index, this.pokemon.shiny, emote)
+        )
+      }
+    } else if (emote in Pkm) {
+      showEmote(getAvatarString(PkmIndex[emote], false, Emotion.NORMAL))
+    } else if (emote in Item) {
+      showEmote("item/" + emote)
+    } else if (isIn(PlayerDialogs, emote)) {
+      showEmote("player_dialog/" + emote)
     }
+
+    this.hideEmoteMenu()
   }
 
   playAnimation() {

@@ -1,5 +1,5 @@
 import type Phaser from "phaser"
-import type PokemonSprite from "../public/src/game/components/pokemon"
+import type PokemonSprite from "../public/src/game/components/pokemon-sprite"
 import type { DebugScene } from "../public/src/game/scenes/debug-scene"
 import type GameScene from "../public/src/game/scenes/game-scene"
 import type { Ability } from "./enum/Ability"
@@ -400,13 +400,14 @@ export interface AbilityAnimationOptions {
   origin?: [number, number]
   depth?: number
   tint?: number
-  tintFill?: number
+  tintMode?: Phaser.TintModes
   alpha?: number
   destroyOnComplete?: boolean
   animOptions?: Omit<Phaser.Types.Animations.PlayAnimationConfig, "key">
   delay?: number
   flipX?: boolean
   flipY?: boolean
+  apScaling?: boolean
 }
 
 export type AbilityAnimationArgs = {
@@ -421,6 +422,7 @@ export type AbilityAnimationArgs = {
   flip: boolean
   delay?: number
   ap: number
+  data: { [key: string]: any }
 }
 
 export type AbilityAnimation = (args: AbilityAnimationArgs) => any

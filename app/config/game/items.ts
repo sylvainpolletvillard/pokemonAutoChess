@@ -38,7 +38,7 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.RAZOR_FANG]: {
     [Stat.SPEED]: 10,
     [Stat.CRIT_CHANCE]: 10,
-    [Stat.CRIT_POWER]: 100
+    [Stat.CRIT_POWER]: 50
   },
   [Item.LOADED_DICE]: { [Stat.SPEED]: 10, [Stat.SPE_DEF]: 3, [Stat.LUCK]: 20 },
   [Item.PUNCHING_GLOVE]: { [Stat.SPEED]: 10, [Stat.ATK]: 3 },
@@ -99,7 +99,7 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.HEARTHFLAME_MASK]: { [Stat.SHIELD]: 100, [Stat.ATK]: 10 },
   [Item.SILK_SCARF]: { [Stat.SHIELD]: 15 },
   [Item.FRIEND_BOW]: { [Stat.SHIELD]: 30 },
-  [Item.BLACK_BELT]: { [Stat.SHIELD]: 15, [Stat.CRIT_CHANCE]: 20 },
+  [Item.BLACK_BELT]: { [Stat.SHIELD]: 15, [Stat.CRIT_CHANCE]: 30 },
   [Item.NULLIFY_BANDANNA]: { [Stat.SHIELD]: 30 },
   [Item.LUCKY_RIBBON]: { [Stat.SHIELD]: 15, [Stat.AP]: 50, [Stat.LUCK]: 20 },
   [Item.EXPLOSIVE_BAND]: { [Stat.SHIELD]: 50, [Stat.ATK]: 3 },
@@ -108,9 +108,16 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.MACH_RIBBON]: { [Stat.SHIELD]: 15, [Stat.SPEED]: 10 },
   [Item.COVER_BAND]: { [Stat.DEF]: 12, [Stat.SHIELD]: 50 },
   [Item.EFFICIENT_BANDANNA]: { [Stat.SHIELD]: 15, [Stat.PP]: 15 },
-  [Item.TATSUGIRI_CURLY]: { [Stat.ATK]: 8 },
-  [Item.TATSUGIRI_DROOPY]: { [Stat.DEF]: 8 },
-  [Item.TATSUGIRI_STRETCHY]: { [Stat.SPEED]: 25 }
+  [Item.TATSUGIRI_CURLY]: { [Stat.HP]: 50, [Stat.ATK]: 8 },
+  [Item.TATSUGIRI_DROOPY]: { [Stat.HP]: 50, [Stat.DEF]: 8 },
+  [Item.TATSUGIRI_STRETCHY]: { [Stat.HP]: 50, [Stat.SPEED]: 25 },
+  [Item.DIRE_HIT]: { [Stat.ATK]: 10, [Stat.CRIT_CHANCE]: 30 },
+  [Item.DUBIOUS_DISC]: {},
+  [Item.EJECT_BUTTON]: { [Stat.SPEED]: 10, [Stat.DEF]: 3 },
+  [Item.GRIP_CLAW]: { [Stat.ATK]: 10, [Stat.DEF]: 10 },
+  [Item.LUCKY_PUNCH]: { [Stat.ATK]: 5, [Stat.CRIT_CHANCE]: 30 },
+  [Item.PROGRESS_DEVICE]: { [Stat.HP]: 50 },
+  [Item.UTILITY_UMBRELLA]: { [Stat.SPE_DEF]: 30 }
 }
 
 export const ItemSellPricesAtTown: { [item in ItemsSoldAtTown]?: number } = {
@@ -118,3 +125,5 @@ export const ItemSellPricesAtTown: { [item in ItemsSoldAtTown]?: number } = {
   [Item.BIG_MUSHROOM]: 2,
   [Item.BALM_MUSHROOM]: 5
 }
+
+export const ZMOVE_MAX_PP = 200
