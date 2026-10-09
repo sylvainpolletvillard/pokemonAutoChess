@@ -4495,6 +4495,14 @@
 	"show_alt_forms": "Show alternative forms",
 	"show_only_available_picks": "Show only available add picks / regionals",
 	"close": "Close",
+	"hud": {
+		"life_info": {
+			"hint": "You lose the game when you have no more Health Points"
+		},
+		"connection_orb": {
+			"hint": "Use the power of the Emera to restore the Atlas connections"
+		}
+	},
 	"additional_pokemon_hint": "Each player picked additional Pokémon to be available in all players shop for this game.",
 	"regional_pokemon_hint": "After travelling to a new region, you will encounter new regional species of Pokémon.",
 	"total": "Total",
@@ -4503,7 +4511,6 @@
 	"clicks_one": "{{count}} click",
 	"clicks_other": "{{count}} clicks",
 	"max_level_reached": "Maximum level reached",
-	"lose_game_hint": "You lose the game when you have no more Health Points",
 	"unlock": "Unlock",
 	"lock": "Lock",
 	"new": "NEW !",

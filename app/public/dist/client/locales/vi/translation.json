@@ -1447,7 +1447,11 @@
 	},
 	"total": "Tổng ",
 	"lvl": "Lvl",
-	"lose_game_hint": "Bạn sẽ thua khi HP của bạn bị chuyển về 0",
+	"hud": {
+		"life_info": {
+			"hint": "Bạn sẽ thua khi HP của bạn bị chuyển về 0"
+		}
+	},
 	"unlock": "Mở khóa",
 	"lock": "Khóa",
 	"current_shop_for_next_turn": "Cửa hàng hiện tại cho đến lượt tiếp theo",

@@ -1,6 +1,7 @@
 import { ToastContainer } from "react-toastify"
 import { DEPTH } from "../../../game/depths"
 import { GameAdditionalPokemonsIcon } from "./game-additional-pokemons"
+import { GameConnectionOrb } from "./game-connexion-orb"
 import GameExperience from "./game-experience"
 import { GameLifeInfo } from "./game-life-info"
 import GameLock from "./game-lock"
@@ -25,6 +26,7 @@ export default function GameShop() {
           <GameMoneyInfo />
           <GameStreakInfo variant="shop" />
           <div className="spacer"></div>
+          <GameConnectionOrb />
           <GameTeamInfo />
         </div>
         <div className="game-shop-actions">

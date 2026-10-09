@@ -1,3 +1,9 @@
+#game-atlas {
+  position: absolute;
+  bottom: 8vw;
+  right: 4vw;
+}
+
 #atlas-container {
   width: 800px;
   height: 800px;
@@ -7,11 +13,55 @@
   position: relative;
 }
 
+@property --atlas-mask-opening-t {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
 .atlas-mask {
   width: 800px;
   height: 800px;
   overflow: hidden;
-  mask-image: radial-gradient(black 55%, transparent 70%);
+  mask-image: radial-gradient(
+    rgba(0, 0, 0, var(--atlas-mask-opening-t))
+      calc(50% * var(--atlas-mask-opening-t)),
+    transparent 70%
+  );
+}
+
+#game-atlas .atlas-mask {
+  --atlas-mask-opening-t: 0;
+  pointer-events: none;
+}
+
+#game-atlas .atlas-mask.opening {
+  pointer-events: auto;
+  animation: atlas-open 400ms ease-in-out both;
+}
+
+#game-atlas .atlas-mask.closing {
+  animation: atlas-close 400ms ease-in-out both;
+}
+
+@keyframes atlas-open {
+  from {
+    --atlas-mask-opening-t: 0;
+  }
+
+  to {
+    --atlas-mask-opening-t: 1;
+  }
+}
+
+@keyframes atlas-close {
+  from {
+    --atlas-mask-opening-t: 1;
+  }
+
+  to {
+    --atlas-mask-opening-t: 0;
+  }
 }
 
 .atlas-node {

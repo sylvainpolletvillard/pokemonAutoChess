@@ -3752,7 +3752,11 @@
 	},
 	"total": "Total",
 	"lvl": "Lv.",
-	"lose_game_hint": "Du verlierst das Spiel, wenn du keine Gesundheitspunkte mehr haben",
+	"hud": {
+		"life_info": {
+			"hint": "Du verlierst das Spiel, wenn du keine Gesundheitspunkte mehr haben"
+		}
+	},
 	"unlock": "Freischalten",
 	"lock": "Sperren",
 	"new": "NEU !",

@@ -108,6 +108,7 @@ import {
   transformBoardCoordinates,
   transformEntityCoordinates
 } from "./utils/utils"
+import GameAtlas from "./component/game/game-atlas";
 
 let gameContainer: GameContainer
 
@@ -1155,6 +1156,7 @@ export default function Game() {
           <GameSynergies />
           <GameChoice />
           <GameDpsMeter />
+          <GameAtlas />
           <GameToasts />
           {currentGameEvent === GameEvent.EXPEDITIONS && !spectate && (
             <GameExpeditions />

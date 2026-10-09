@@ -54,6 +54,7 @@ export interface GameStateStore {
   additionalPokemons: Pkm[]
   podium: ILeaderboardInfo[]
   spectatorCount: number
+  atlasVisible: boolean
 }
 
 const initialState: GameStateStore = {
@@ -87,7 +88,8 @@ const initialState: GameStateStore = {
   additionalPokemons: new Array<Pkm>(),
   specialGameRule: null,
   podium: new Array<ILeaderboardInfo>(),
-  spectatorCount: 0
+  spectatorCount: 0,
+  atlasVisible: false
 }
 
 const gameSlice = createSlice({
@@ -334,6 +336,10 @@ const gameSlice = createSlice({
       state.spectatorCount = action.payload
     },
 
+    setAtlasVisible: (state, action: PayloadAction<boolean>) => {
+      state.atlasVisible = action.payload
+    },
+
     leaveGame: () => initialState
   }
 })
@@ -373,7 +379,8 @@ export const {
   refreshShopUI,
   setItemsProposition,
   setPodium,
-  setSpectatorCount
+  setSpectatorCount,
+  setAtlasVisible
 } = gameSlice.actions
 
 export default gameSlice.reducer

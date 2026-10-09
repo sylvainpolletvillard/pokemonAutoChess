@@ -4074,7 +4074,11 @@
 		"dittosUsed": "Quantidade de Dittos usados na partida"
 	},
 	"lvl": "Lvl",
-	"lose_game_hint": "Você perde o jogo quando não tem mais Pontos de Vida",
+	"hud": {
+		"life_info": {
+			"hint": "Você perde o jogo quando não tem mais Pontos de Vida"
+		}
+	},
 	"unlock": "Desbloquear",
 	"lock": "Trancar",
 	"current_shop_for_next_turn": "loja atual para o próximo turno",

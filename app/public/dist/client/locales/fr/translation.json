@@ -4163,7 +4163,11 @@
 	"clicks_one": "{{count}} clic",
 	"clicks_other": "{{count}} clics",
 	"max_level_reached": "Niveau maximum atteint",
-	"lose_game_hint": "Vous perdez la partie lorsque vous n'avez plus de Points de Vie",
+	"hud": {
+		"life_info": {
+			"hint": "Vous perdez la partie lorsque vous n'avez plus de Points de Vie"
+		}
+	},
 	"unlock": "Déverrouiller",
 	"lock": "Verrouiller",
 	"new": "NOUVEAU !",

@@ -4110,7 +4110,11 @@
 	"regional_pokemon_hint": "Después de viajar a una nueva región, encontrarás nuevas especies regionales de Pokémon.",
 	"total": "Total",
 	"lvl": "Nivel",
-	"lose_game_hint": "Pierdes el juego cuando no tienes más puntos de salud.",
+	"hud": {
+		"life_info": {
+			"hint":  "Pierdes el juego cuando no tienes más puntos de salud."
+		}
+	},
 	"unlock": "Desbloquear",
 	"lock": "Bloquear",
 	"new": "¡NUEVO!",

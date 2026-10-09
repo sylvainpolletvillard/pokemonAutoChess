@@ -4127,7 +4127,11 @@
 	"regional_pokemon_hint": "새로운 지역을 돌아다니다 보면, 새로운 지역 포켓몬을 만날 수 있습니다.",
 	"total": "합계",
 	"lvl": "Lv.",
-	"lose_game_hint": "체력이 다 떨어지면 패배하게 됩니다.",
+	"hud": {
+		"life_info": {
+			"hint": "체력이 다 떨어지면 패배하게 됩니다."
+		}
+	},
 	"unlock": "잠금해제",
 	"lock": "잠금",
 	"current_shop_for_next_turn": "다음 턴을 위한 현재 상점",

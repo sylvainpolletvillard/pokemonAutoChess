@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import type { PlayerChoice } from "../../../../../models/colyseus-models/player-choice"
-import { AtlasItems, type Item } from "../../../../../types/enum/Item"
+import type { Item } from "../../../../../types/enum/Item"
 import {
   type Pkm,
   PkmDuo,
@@ -10,7 +10,6 @@ import {
 } from "../../../../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import type { IDetailledPokemon } from "../../../../../types/interfaces/IDetailledPokemon"
-import { isIn } from "../../../../../utils/array"
 import { DEPTH } from "../../../game/depths"
 import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
 import { pickChoice } from "../../../network"

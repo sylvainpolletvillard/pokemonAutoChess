@@ -3789,7 +3789,11 @@
 	"clicks_one": "{{count}} click",
 	"clicks_other": "{{count}} click",
 	"max_level_reached": "Livello massimo raggiunto",
-	"lose_game_hint": "Perdi la partita quando non hai più punti salute",
+	"hud": {
+		"life_info": {
+			"hint": "Perdi la partita quando non hai più punti salute"
+		}
+	},
 	"unlock": "Sblocca il",
 	"lock": "Blocca il",
 	"new": "NUOVO !",
