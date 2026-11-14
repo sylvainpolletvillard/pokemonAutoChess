@@ -4646,7 +4646,7 @@
 		"super": "Super",
 		"autumn": "Autumn",
 		"lilac": "Lilac",
-		"rainbow": "Rainbow Peaks",
+		"rainbow": "Rainbow Peak",
 		"umbra": "Umbra",
 		"unown": "Unown Black",
 		"zengarden": "Zen Garden",
@@ -5620,6 +5620,18 @@
 		"not_confirmed": "Your pal has to enter your name in return to lock the team.",
 		"enter_pal_name": "Enter the name of your pal",
 		"change_pal": "Change pal"
+	},
+	"rainbow_peak": {
+		"title": "Rainbow Peak",
+		"points": "{{points}} points",
+		"your_points": "Your points: {{points}}",
+		"current_synergy": "Current synergy: {{synergy}}",
+		"instructions": "Climb Rainbow Peak, one synergy at a time!",
+		"help1": "Finish at 1st place in a Classic game while your currently highlighted synergy is at its max tier to earn a point and move to the next synergy.",
+		"help2": "BABY is special: you need to win with at least 3 Hatch Pokémon in your team.",
+		"help3": "STELLAR will be your final step! Win with STELLAR active to reach the stars and complete the event!",
+		"runners": "Climbers",
+		"finishers": "Finishers"
 	},
 	"events_reset_info": "All scores will be reset at midnight UTC on the first day of each month, that is in {{resetCountdown}}. The event leaderboard is refreshed every 10 minutes.",
 	"stage_type": {

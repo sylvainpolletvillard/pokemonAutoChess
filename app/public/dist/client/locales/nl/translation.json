@@ -2033,5 +2033,17 @@
 		"town": {},
 		"regions": {},
 		"data": {}
+	},
+	"rainbow_peak": {
+		"title": "Regenboogtoppen",
+		"points": "{{points}} punten",
+		"your_points": "Jouw punten: {{points}}",
+		"current_synergy": "Huidige synergie: {{synergy}}",
+		"instructions": "Beklim de Regenboogtoppen, één synergie tegelijk!",
+		"help1": "Eindig op plek 1 in een Klassiek potje terwijl je momenteel gemarkeerde synergie op zijn hoogste niveau staat om een punt te verdienen en naar de volgende synergie te gaan.",
+		"help2": "BABY is speciaal: je moet winnen met minstens 3 Hatch-Pokémon in je team.",
+		"help3": "STELLAR is je laatste stap! Win met STELLAR actief om het evenement te voltooien!",
+		"runners": "Klimmers",
+		"finishers": "Finishers"
 	}
 }

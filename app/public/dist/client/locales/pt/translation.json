@@ -4928,6 +4928,18 @@
 		"runners": "Corredores",
 		"finishers": "Finalistas"
 	},
+	"rainbow_peak": {
+		"title": "Picos Arco-Íris",
+		"points": "{{points}} pontos",
+		"your_points": "Seus pontos: {{points}}",
+		"current_synergy": "Sinergia atual: {{synergy}}",
+		"instructions": "Escalone os Picos Arco-Íris, uma sinergia de cada vez!",
+		"help1": "Termine em 1º lugar em uma partida Clássica enquanto sua sinergia atualmente destacada estiver no nível máximo para ganhar um ponto e avançar para a próxima sinergia.",
+		"help2": "BABY é especial: você precisa vencer com pelo menos 3 Pokémon Hatch no seu time.",
+		"help3": "STELLAR será seu passo final! Vença com STELLAR ativa para completar o evento!",
+		"runners": "Escaladores",
+		"finishers": "Finalizadores"
+	},
 	"events_reset_info": "Todas as pontuações serão zeradas à meia-noite UTC do primeiro dia de cada mês, que será em {{resetCountdown}}. A classificação do evento é atualizada a cada 10 minutos.",
 	"stage_type": {
 		"pve": "Encontro PvE",

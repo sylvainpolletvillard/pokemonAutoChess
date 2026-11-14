@@ -5285,6 +5285,18 @@
 		"enter_pal_name": "输入搭档用户名",
 		"change_pal": "更换搭档"
 	},
+	"rainbow_peak": {
+		"title": "彩虹之巅",
+		"points": "{{points}} 分",
+		"your_points": "你的分数：{{points}}",
+		"current_synergy": "当前协同：{{synergy}}",
+		"instructions": "一次一个协同，攀登彩虹之巅！",
+		"help1": "在经典模式中以第1名完赛，同时当前高亮的协同达到最高层级，即可获得1分并进入下一个协同。",
+		"help2": "BABY 很特别：你需要队伍中至少有3只 Hatch 宝可梦并获胜。",
+		"help3": "STELLAR 将是你的最后一步！在 STELLAR 激活的情况下获胜即可完成活动！",
+		"runners": "攀登者",
+		"finishers": "登顶者"
+	},
 	"events_reset_info": "每月第一天的午夜12点（UTC）重置所有分数，当前距离重置还有{{resetCountdown}}。活动排行榜每10分钟刷新一次。",
 	"stage_type": {
 		"pve": "野生宝可梦轮次",

@@ -5085,6 +5085,18 @@
 		"DELIVERY_DESCRIPTION": "Ayez {{quantity}} {{item}} dans votre inventaire ou équippé sur un de vos Pokémon à la fin de la partie.",
 		"reward": "Récompense: {{points}} XP"
 	},
+	"rainbow_peak": {
+		"title": "Cime Arc-en-Ciel",
+		"points": "{{points}} points",
+		"your_points": "Vos points : {{points}}",
+		"current_synergy": "Synergie actuelle : {{synergy}}",
+		"instructions": "Escaladez la Cime Arc-en-Ciel, une synergie à la fois !",
+		"help1": "Terminez à la 1re place d'une partie Classique alors que votre synergie actuellement mise en évidence est à son niveau maximal pour gagner un point et passer à la synergie suivante.",
+		"help2": "BABY est spécial : vous devez gagner avec au moins 3 Pokémon Hatch dans votre équipe.",
+		"help3": "STELLAR sera votre dernière étape ! Gagnez avec STELLAR activée pour atteindre les étoiles et terminer l'événement !",
+		"runners": "Grimpeurs",
+		"finishers": "Finisseurs"
+	},
 	"events_reset_info": "Tous les scores seront réinitialisés à minuit UTC au premier jour de chaque mois, c'est à dire dans {{resetCountdown}}. Le classement d'événement est actualisé toutes les dix minutes.",
 	"notification": {
 		"level_up_title": "Niveau supérieur !",

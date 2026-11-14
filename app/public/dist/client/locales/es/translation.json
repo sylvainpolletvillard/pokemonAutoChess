@@ -4884,6 +4884,18 @@
 		"runners": "Participantes",
 		"finishers": "Campeones"
 	},
+	"rainbow_peak": {
+		"title": "Picos Arcoíris",
+		"points": "{{points}} puntos",
+		"your_points": "Tus puntos: {{points}}",
+		"current_synergy": "Sinergia actual: {{synergy}}",
+		"instructions": "¡Escala los Picos Arcoíris, una sinergia a la vez!",
+		"help1": "Termina en 1.er lugar en una partida Clásica mientras tu sinergia resaltada actualmente está en su nivel máximo para ganar un punto y pasar a la siguiente sinergia.",
+		"help2": "BABY es especial: debes ganar con al menos 3 Pokémon Hatch en tu equipo.",
+		"help3": "¡STELLAR será tu paso final! Gana con STELLAR activa para completar el evento.",
+		"runners": "Escaladores",
+		"finishers": "Finalizadores"
+	},
 	"events_reset_info": "Todos los puntos se actualizarán las 00:00 UTC el primer día de cada mes, faltan {{resetCountdown}}. El marcador se actualiza cada 10 minutos.",
 	"stage_type": {
 		"pve": "Encuentro PvE",
