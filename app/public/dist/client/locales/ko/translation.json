@@ -3775,7 +3775,9 @@
 		"PAL": "우리는 모두 친구",
 		"BODYBUILDER": "보디빌더",
 		"GUILD_HERO": "길드의 영웅",
-		"BESTIE": "베스트프렌드"
+		"BESTIE": "베스트프렌드",
+		"ASCENDANT": "승천자",
+		"RADIANT": "광휘"
 	},
 	"title_description": {
 		"NOVICE": "첫 게임을 플레이하기",
@@ -3876,7 +3878,9 @@
 		"PAL": "파트너와 함께 포켓단즈 이벤트에 참여하기",
 		"BODYBUILDER": "FIGHTING 포켓몬을 대기석에서 수련시켜 ATK을 40 올리기",
 		"GUILD_HERO": "탐험 리더보드를 1위로 마무리하기",
-		"BESTIE": "파트너와 함께 포켓단즈 리더보드에서 1위로 마무리하기"
+		"BESTIE": "파트너와 함께 포켓단즈 리더보드에서 1위로 마무리하기",
+		"ASCENDANT": "무지개 봉우리 이벤트를 완료하기",
+		"RADIANT": "무지개 봉우리 이벤트를 가장 먼저 완료하기"
 	},
 	"weather": {
 		"NEUTRAL": "평범한 날씨",

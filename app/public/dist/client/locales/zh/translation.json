@@ -3775,7 +3775,9 @@
 		"BESTIE": "挚友",
 		"LEGIONNAIRE": "军团长",
 		"FIVE_STARS": "★★★★★",
-		"BODYBUILDER": "健美者"
+		"BODYBUILDER": "健美者",
+		"ASCENDANT": "登顶者",
+		"RADIANT": "光辉者"
 	},
 	"title_description": {
 		"NOVICE": "玩一局游戏",
@@ -3876,7 +3878,9 @@
 		"BESTIE": "在口袋之友活动结束时和你的搭档位于排行榜第一名",
 		"LEGIONNAIRE": "以至少8只列阵兵跟班组成阵型",
 		"FIVE_STARS": "派出一只五星宝可梦出战",
-		"BODYBUILDER": "使一只FIGHTING宝可梦在一次备战区训练后ATK增幅额度达到40。"
+		"BODYBUILDER": "使一只FIGHTING宝可梦在一次备战区训练后ATK增幅额度达到40。",
+		"ASCENDANT": "完成彩虹之巅活动",
+		"RADIANT": "第一个完成彩虹之巅活动"
 	},
 	"weather": {
 		"NEUTRAL": "无天气",

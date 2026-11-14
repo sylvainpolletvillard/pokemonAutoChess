@@ -930,5 +930,13 @@
 		"help3": "STELLAR będzie Twoim ostatnim krokiem! Wygraj z aktywną STELLAR, aby ukończyć wydarzenie!",
 		"runners": "Wspinacze",
 		"finishers": "Finaliści"
+	},
+	"title": {
+		"ASCENDANT": "Wstępujący",
+		"RADIANT": "Promienny"
+	},
+	"title_description": {
+		"ASCENDANT": "Ukończ wydarzenie Tęczowe Szczyty",
+		"RADIANT": "Ukończ wydarzenie Tęczowe Szczyty jako pierwszy"
 	}
 }

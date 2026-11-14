@@ -3406,7 +3406,9 @@
 		"FINISHER": "Finisher",
 		"VICTORIOUS": "Siegreich",
 		"MOLE": "Maulwurf",
-		"GUILDMASTER": "Gildenmeister"
+		"GUILDMASTER": "Gildenmeister",
+		"ASCENDANT": "Aufsteigend",
+		"RADIANT": "Strahlend"
 	},
 	"title_description": {
 		"NOVICE": "Spielen Sie Ihr erstes Spiel",
@@ -3493,7 +3495,9 @@
 		"FINISHER": "Schließe eine Siegesstraßen Rennen ab",
 		"VICTORIOUS": "Schließe ein Siegesstraßen Rennen als Erster ab",
 		"MOLE": "Grabe dein gesamtes Feld komplett aus.",
-		"POFFIN_MASTER": "Koche eine POFFIN aus drei verschiedenen goldenen Beeren"
+		"POFFIN_MASTER": "Koche eine POFFIN aus drei verschiedenen goldenen Beeren",
+		"ASCENDANT": "Schließe das Regenbogen-Gipfel-Ereignis ab",
+		"RADIANT": "Schließe das Regenbogen-Gipfel-Ereignis als Erster ab"
 	},
 	"weather": {
 		"NEUTRAL": "Bewölkt",

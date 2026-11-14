@@ -1746,5 +1746,13 @@
 		"help3": "STELLAR sẽ là bước cuối cùng của bạn! Thắng với STELLAR được kích hoạt để hoàn thành sự kiện!",
 		"runners": "Người leo núi",
 		"finishers": "Người chinh phục"
+	},
+	"title": {
+		"ASCENDANT": "Thăng Thiên",
+		"RADIANT": "Rực Rỡ"
+	},
+	"title_description": {
+		"ASCENDANT": "Hoàn thành sự kiện Đỉnh Cầu Vồng",
+		"RADIANT": "Hoàn thành sự kiện Đỉnh Cầu Vồng đầu tiên"
 	}
 }

@@ -1167,6 +1167,18 @@ export default class GameRoom extends Room<{ state: GameState }> {
           if (usr.eventPoints >= RAINBOW_PEAK_MAX_EVENT_POINTS) {
             usr.eventFinishTime = new Date()
             usr.markModified("eventFinishTime")
+
+            const nbFinishers = await UserMetadata.countDocuments({
+              eventFinishTime: { $exists: true, $ne: null }
+            })
+            if (nbFinishers === 0) {
+              player.titles.add(Title.RADIANT)
+              this.presence.publish(
+                "announcement",
+                `${player.name} reached the summit of Rainbow Peak first!`
+              )
+            }
+            player.titles.add(Title.ASCENDANT)
           }
           shouldRefetchEventLeaderboard = true
         }

@@ -3768,7 +3768,9 @@
 		"MOLE": "Toupeira",
 		"PAL": "Parceiro",
 		"LEGIONNAIRE": "Legionário",
-		"FIVE_STARS": "★★★★★"
+		"FIVE_STARS": "★★★★★",
+		"ASCENDANT": "Ascendente",
+		"RADIANT": "Radiante"
 	},
 	"title_description": {
 		"NOVICE": "Jogue seu primeiro jogo",
@@ -3867,7 +3869,9 @@
 		"LUCKY": "Obtenha um prêmio de 5 GOLD ou mais com uma AMULET_COIN",
 		"PAL": "Jogue em Dobles com seu parceiro durante o evento Poképals",
 		"LEGIONNAIRE": "Forme um Falinks com 8 ou mais soldados",
-		"FIVE_STARS": "Jogue com um Pokémon de cinco estrelas em sua equipe"
+		"FIVE_STARS": "Jogue com um Pokémon de cinco estrelas em sua equipe",
+		"ASCENDANT": "Conclua o evento Picos Arco-Íris",
+		"RADIANT": "Conclua o evento Picos Arco-Íris em primeiro lugar"
 	},
 	"weather": {
 		"NEUTRAL": "Tempo calmo",

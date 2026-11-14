@@ -3771,7 +3771,9 @@
 		"GUILDMASTER": "Maître de Guilde",
 		"LEGIONNAIRE": "Légionnaire",
 		"PAL": "Équipier",
-		"FIVE_STARS": "★★★★★"
+		"FIVE_STARS": "★★★★★",
+		"ASCENDANT": "Ascendant",
+		"RADIANT": "Radieux"
 	},
 	"title_description": {
 		"NOVICE": "Jouez votre première partie",
@@ -3871,7 +3873,9 @@
 		"GUILDMASTER": "Compléter une expédition de rang S",
 		"LEGIONNAIRE": "Réaliser une formation composée d'un Hexadron et de 8 troupes ou plus.",
 		"PAL": "Jouez une Partie de Double Up avec votre Équipier durant un évènement Pokéquipiers.",
-		"FIVE_STARS": "Jouez avec un Pokémon ayant 5 étoiles dans votre équipe."
+		"FIVE_STARS": "Jouez avec un Pokémon ayant 5 étoiles dans votre équipe.",
+		"ASCENDANT": "Terminez l'évènement Cime Arc-en-Ciel",
+		"RADIANT": "Terminez premier à l'évènement Cime Arc-en-Ciel"
 	},
 	"weather": {
 		"NEUTRAL": "Temps calme",

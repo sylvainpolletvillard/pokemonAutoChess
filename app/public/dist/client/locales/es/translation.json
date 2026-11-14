@@ -3731,7 +3731,9 @@
 		"GUILDMASTER": "Maestro del Gremio",
 		"FIVE_STARS": "★★★★★",
 		"PAL": "Compañero",
-		"BODYBUILDER": "Físicoculturista"
+		"BODYBUILDER": "Físicoculturista",
+		"ASCENDANT": "Ascendente",
+		"RADIANT": "Radiante"
 	},
 	"title_description": {
 		"NOVICE": "Juega tu primera partida",
@@ -3831,7 +3833,9 @@
 		"LEGIONNAIRE": "Haz una formación de Falinks con 8 soldados o más",
 		"FIVE_STARS": "Juega con un Pokémon de cinco estrellas en tu equipo",
 		"PAL": "Juega en Dobles con tu compañero durante el evento Poképals",
-		"BODYBUILDER": "Consigue un Pokémon FIGHTING a +40 de ATK después de entrenar en la banca."
+		"BODYBUILDER": "Consigue un Pokémon FIGHTING a +40 de ATK después de entrenar en la banca.",
+		"ASCENDANT": "Completa el evento Picos Arcoíris",
+		"RADIANT": "Completa el evento Picos Arcoíris en primer lugar"
 	},
 	"weather": {
 		"NEUTRAL": "Clima tranquilo",

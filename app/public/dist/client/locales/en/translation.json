@@ -4074,7 +4074,9 @@
 		"FIVE_STARS": "★★★★★",
 		"BODYBUILDER": "Bodybuilder",
 		"AWAKENED": "Awakened",
-		"MAD_TITAN": "Mad Titan"
+		"MAD_TITAN": "Mad Titan",
+		"ASCENDANT": "Ascendant",
+		"RADIANT": "Radiant"
 	},
 	"title_description": {
 		"NOVICE": "Play your first game",
@@ -4179,7 +4181,9 @@
 		"FIVE_STARS": "Play with a five stars Pokémon in your team",
 		"BODYBUILDER": "Get a FIGHTING Pokémon to +40 ATK after training on the bench.",
 		"AWAKENED": "Reach level 10",
-		"MAD_TITAN": "Get a fully sealed LOOPLET"
+		"MAD_TITAN": "Get a fully sealed LOOPLET",
+		"ASCENDANT": "Finish the Rainbow Peak event",
+		"RADIANT": "Finish first at the Rainbow Peak event"
 	},
 	"weather": {
 		"NEUTRAL": "Calm weather",

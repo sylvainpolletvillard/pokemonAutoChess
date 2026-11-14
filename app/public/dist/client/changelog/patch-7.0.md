@@ -102,4 +102,4 @@ Climb Rainbow Peak, one synergy at a time! Finish at 1st place in a Classic game
 
 # Misc
 
-- New titles: Terastal, Awakened, Mad Titan
+- New titles: Terastal, Awakened, Mad Titan, Ascendant, Radiant

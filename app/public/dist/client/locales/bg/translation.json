@@ -2094,7 +2094,9 @@
 		"ARCHEOLOGIST": "Археолог",
 		"ALCHEMIST": "Алхимик",
 		"DENTIST": "Зъболекар",
-		"FISHERMAN": "рибар"
+		"FISHERMAN": "рибар",
+		"ASCENDANT": "Възнесен",
+		"RADIANT": "Сияещ"
 	},
 	"title_description": {
 		"NOVICE": "Играйте първата си игра",
@@ -2151,7 +2153,9 @@
 		"SHINY_SEEKER": "Имайте над 30 лъскави аватари на покемони",
 		"ARCHEOLOGIST": "Дешифрирайте тайното послание на Unowns",
 		"DENTIST": "Притежавайте ядосания Арбок",
-		"FISHERMAN": "Вземете Gyarados"
+		"FISHERMAN": "Вземете Gyarados",
+		"ASCENDANT": "Завършете събитието Дъгови върхове",
+		"RADIANT": "Завършете събитието Дъгови върхове първи"
 	},
 	"weather": {
 		"NEUTRAL": "Спокойно време",
